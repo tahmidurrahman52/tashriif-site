@@ -368,7 +368,15 @@ const unitRows=(u,mis)=>rows(mis,k=>FLOOR[k].u===u);
 const effCls=e=>e>=70?'g':e>=60?'a':'r';
 function pill(v,good,txt){return `<span class="pill ${good===null?'n':good?'g':'r'}">${txt}</span>`}
 function corr(x,y){const n=x.length,mx=sum(x,v=>v)/n,my=sum(y,v=>v)/n;let a=0,b=0,c=0;for(let i=0;i<n;i++){a+=(x[i]-mx)*(y[i]-my);b+=(x[i]-mx)**2;c+=(y[i]-my)**2}return a/Math.sqrt(b*c)}
-function mk(id,cfg){if(charts[id])charts[id].destroy();const el=document.getElementById(id);if(!el)return;charts[id]=new Chart(el,cfg)}
+function mk(id,cfg){if(charts[id])charts[id].destroy();const el=document.getElementById(id);if(!el)return;
+  // one month selected: a line with a single point is invisible, so show every series as side-by-side bars
+  const L=cfg.data&&cfg.data.labels;
+  if(L&&L.length===1&&!['doughnut','scatter'].includes(cfg.type)){
+    if(cfg.type==='line')cfg.type='bar';
+    cfg.data.datasets.forEach(d=>{if(!d.type||d.type==='line'){const c=d.backgroundColor||d.borderColor;d.type='bar';d.fill=false;d.borderDash=undefined;d.backgroundColor=c;d.borderColor=c;d.borderRadius=6;d.maxBarThickness=70}});
+    const sc=cfg.options&&cfg.options.scales;if(sc&&sc.y&&sc.y.min!=null&&cfg.data.datasets.every(d=>d.yAxisID!=='y1')){}
+  }
+  charts[id]=new Chart(el,cfg)}
 Chart.defaults.font.family="Inter,system-ui,sans-serif";Chart.defaults.font.size=11.5;Chart.defaults.color='#64748b';
 Chart.defaults.plugins.legend.labels.boxWidth=10;Chart.defaults.plugins.legend.labels.boxHeight=10;Chart.defaults.plugins.legend.labels.usePointStyle=true;
 Chart.defaults.plugins.tooltip.backgroundColor='#0f172a';Chart.defaults.plugins.tooltip.padding=10;Chart.defaults.plugins.tooltip.cornerRadius=8;
