@@ -122,6 +122,10 @@ tr.tot td{font-weight:700;background:#f1f5f9;border-top:2px solid #cbd5e1}
 body.present aside{display:none}body.present .app{grid-template-columns:1fr}
 body.present .wrap{max-width:1600px;margin:0 auto}
 /* ===== animation & target page ===== */
+/* chart entrance: CSS only, so charts never depend on the browser's animation frames */
+.chart canvas{animation:chartIn .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes chartIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+
 .rise{animation:rise .65s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*55ms)}
 @keyframes rise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
 .card,.uc{transition:transform .25s ease,box-shadow .25s ease,border-color .25s}
@@ -389,7 +393,7 @@ const unitRows=(u,mis)=>rows(mis,k=>FLOOR[k].u===u);
 const effCls=e=>e>=70?'g':e>=60?'a':'r';
 function pill(v,good,txt){return `<span class="pill ${good===null?'n':good?'g':'r'}">${txt}</span>`}
 function corr(x,y){const n=x.length,mx=sum(x,v=>v)/n,my=sum(y,v=>v)/n;let a=0,b=0,c=0;for(let i=0;i<n;i++){a+=(x[i]-mx)*(y[i]-my);b+=(x[i]-mx)**2;c+=(y[i]-my)**2}return a/Math.sqrt(b*c)}
-let NOANIM=false;
+let NOANIM=true;
 function mk(id,cfg){if(charts[id])charts[id].destroy();const el=document.getElementById(id);if(!el)return;
   if(NOANIM){cfg.options=cfg.options||{};cfg.options.animation=false}
   // one month selected: a line with a single point is invisible, so show every series as side-by-side bars
@@ -404,7 +408,7 @@ Chart.defaults.font.family="Inter,system-ui,sans-serif";Chart.defaults.font.size
 Chart.defaults.plugins.legend.labels.boxWidth=10;Chart.defaults.plugins.legend.labels.boxHeight=10;Chart.defaults.plugins.legend.labels.usePointStyle=true;
 Chart.defaults.plugins.tooltip.backgroundColor='#0f172a';Chart.defaults.plugins.tooltip.padding=10;Chart.defaults.plugins.tooltip.cornerRadius=8;
 Chart.defaults.maintainAspectRatio=false;
-Chart.defaults.animation={duration:1100,easing:'easeOutQuart'};
+Chart.defaults.animation=false; // charts paint immediately in every viewer; the entrance motion is done in CSS (.chart canvas)
 const gridC={color:'#eef2f7'};
 function sortable(id,headers,data,rowHtml,totHtml,onRow){
   const key=S.sort[id]||{c:null,d:1};
