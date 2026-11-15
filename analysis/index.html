@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>My Analysis · Tahmidur Rahman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: navy header band → featured live dashboard → grid of case-study cards (expand for detail) → more-work strip. Palette matches the CV. */
+:root{--navy:#0f2744;--navy2:#1a3a5c;--navy3:#1d4a7a;--blue:#3a7bc8;--sky:#8ab8e0;--ice:#e8f0f8;--mid:#d0e4f5;
+  --bg:#f5f7fa;--panel:#fff;--ink:#1e2a3a;--ink2:#334155;--muted:#4a6080;--line:#dde5ef;--good:#1e8e5a;--good-bg:#ddf3e8;--amber:#d98e2b;
+  --display:'Playfair Display',Georgia,serif;--body:'DM Sans',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.55}
+.in{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2) 55%,var(--navy3));color:#fff}
+header .in{padding-block:22px 40px}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px}
+.nav a{color:#c5ddf0;text-decoration:none}.nav a:hover{color:#fff}
+.nav .links{display:flex;gap:16px}
+.eyebrow{margin-top:34px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--sky);font-weight:600}
+h1{font-family:var(--display);font-size:clamp(32px,5vw,46px);font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.lede{color:#c5ddf0;max-width:62ch;margin-top:10px;font-size:15.5px}
+main .in{padding-block:28px 56px}
+.feature{display:grid;grid-template-columns:1.2fr 1fr;gap:0;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 6px 30px rgba(15,39,68,.08);margin-top:-28px}
+@media(max-width:760px){.feature{grid-template-columns:minmax(0,1fr)}}
+.feature .txt{padding:26px 28px;min-width:0}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--good);background:var(--good-bg);border-radius:999px;padding:3px 10px}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--good)}
+h2{font-family:var(--display);font-size:24px;font-weight:700;color:var(--navy);margin-top:10px}
+.feature p{color:var(--ink2);font-size:14px;margin-top:8px;max-width:58ch}
+.kv{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px}
+.kv div{min-width:90px}.kv b{display:block;font-family:var(--mono);font-size:20px;color:var(--navy)}.kv span{font-size:11.5px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:6px;margin-top:20px;background:var(--navy2);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px}
+.btn:hover{background:var(--navy3)}.btn:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.preview{background:var(--navy);padding:20px;display:flex;align-items:flex-end;min-height:220px}
+.preview svg{width:100%;height:auto;display:block}
+.sec{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:40px 0 14px;flex-wrap:wrap}
+.sec h3{font-family:var(--display);font-size:22px;color:var(--navy)}
+.sec span{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+@media(max-width:760px){.grid{grid-template-columns:minmax(0,1fr)}}
+.case{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px;min-width:0}
+.tag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);font-weight:600}
+.case h4{font-family:var(--display);font-size:19px;color:var(--navy);margin-top:4px}
+.case .sum{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.nums{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.nums div b{display:block;font-family:var(--mono);font-size:18px;color:var(--navy)}.nums div span{font-size:11.5px;color:var(--muted)}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--blue);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:" ▾"}details[open] summary::after{content:" ▴"}
+.body{margin-top:10px;font-size:13px;color:var(--ink2)}
+.body h5{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy2);margin:12px 0 4px}
+.body ul{padding-left:18px}.body li{margin-bottom:4px}
+.tblw{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;min-width:460px;font-size:12.5px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:170px}
+th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--ice)}
+tfoot td{font-weight:700;color:var(--navy)}
+.tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tools span{font-size:11px;background:var(--ice);color:var(--navy2);border-radius:6px;padding:2px 8px}
+.more{display:flex;flex-wrap:wrap;gap:8px}
+.more span{font-size:12.5px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink2)}
+footer{color:var(--muted);font-size:12px;margin-top:40px}
+</style>
+</head>
+<body>
+<header><div class="in">
+  <div class="nav"><a href="/">← Tahmidur Rahman</a><div class="links"><a href="/cv/">My CV</a><a href="/analysis/" aria-current="page">My Analysis</a></div></div>
+  <div class="eyebrow">Portfolio · Industrial Engineering</div>
+  <h1>My Analysis</h1>
+  <p class="lede">Dashboards, studies and business cases I have built on the factory floor: production performance, process improvement, manpower and machine analytics.</p>
+</div></header>
+
+<main><div class="in">
+
+  <section class="feature" aria-label="Featured">
+    <div class="txt">
+      <span class="live"><i></i>Live · updates from Google Sheets</span>
+      <h2>Sewing Performance Dashboard</h2>
+      <p>Group-wide sewing KPIs for 6 units and 15 floors, read live from the ERP Sewing Summary Report. Month and year-to-date views, monthly trend, floor ranking on any metric, floor × month heatmap, CM productivity and CM shortfall.</p>
+      <div class="kv">
+        <div><b>10</b><span>months tracked</span></div>
+        <div><b>20+</b><span>KPIs per floor</span></div>
+        <div><b>5 min</b><span>auto-refresh</span></div>
+      </div>
+      <a class="btn" href="/analysis/sewing/">Open dashboard →</a>
+    </div>
+    <div class="preview" aria-hidden="true">
+      <svg viewBox="0 0 320 200">
+        <g fill="#1d4a7a"><rect x="10" y="90" width="22" height="100" rx="3"/><rect x="42" y="80" width="22" height="110" rx="3"/><rect x="74" y="100" width="22" height="90" rx="3"/><rect x="106" y="70" width="22" height="120" rx="3"/><rect x="138" y="85" width="22" height="105" rx="3"/><rect x="170" y="95" width="22" height="95" rx="3"/><rect x="202" y="75" width="22" height="115" rx="3"/><rect x="234" y="72" width="22" height="118" rx="3"/><rect x="266" y="78" width="22" height="112" rx="3"/></g>
+        <rect x="298" y="88" width="14" height="102" rx="3" fill="#d98e2b"/>
+        <polyline points="21,60 53,54 85,72 117,58 149,82 181,84 213,66 245,66 277,56 305,64" fill="none" stroke="#8ab8e0" stroke-width="3" stroke-linejoin="round"/>
+        <polyline points="21,110 53,112 85,118 117,106 149,128 181,140 213,128 245,116 277,108 305,104" fill="none" stroke="#4cc38a" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="feature" aria-label="Management review" style="margin-top:18px">
+    <div class="txt">
+      <span class="live" style="color:#1d4ed8;background:#e8f0fe"><i style="background:#1d4ed8"></i>New · Management review 2026</span>
+      <h2>Sewing Performance Review — Target vs Achievement</h2>
+      <p>Executive review for the MD, Chairman and COO: Jan–Nov 2026 efficiency against management targets for EKL, BC, TEX-1, TEX-2, EKGL and CAL, the CM value of the gap, unit and floor scorecards, financials, and an action plan.</p>
+      <div class="kv">
+        <div><b>8</b><span>pages</span></div>
+        <div><b>6 · 15</b><span>units · floors</span></div>
+        <div><b>65.0%</b><span>Jan–Oct efficiency</span></div>
+      </div>
+      <a class="btn" href="/analysis/sewing-review/">Open review →</a>
+    </div>
+    <div class="preview" aria-hidden="true">
+      <svg viewBox="0 0 320 200">
+        <g fill="none" stroke-width="12" stroke-linecap="round"><circle cx="70" cy="100" r="44" stroke="#1d4a7a"/><circle cx="70" cy="100" r="44" stroke="#8ab8e0" stroke-dasharray="248 277" transform="rotate(-90 70 100)"/>
+        <circle cx="180" cy="100" r="44" stroke="#1d4a7a"/><circle cx="180" cy="100" r="44" stroke="#4cc38a" stroke-dasharray="248 277" transform="rotate(-90 180 100)"/></g>
+        <g fill="#fff" font-family="IBM Plex Mono,monospace" font-size="15" text-anchor="middle"><text x="70" y="105">58%</text><text x="180" y="105">76%</text></g>
+        <g fill="#d98e2b"><rect x="250" y="70" width="16" height="90" rx="3"/><rect x="274" y="95" width="16" height="65" rx="3"/><rect x="298" y="60" width="16" height="100" rx="3"/></g>
+      </svg>
+    </div>
+  </section>
+
+  <div class="sec"><h3>Case studies</h3><span>Click a card to see the detail</span></div>
+  <section class="grid">
+
+    <article class="case">
+      <div class="tag">Lean · Kaizen</div>
+      <h4>Sewing Process Kaizen Programme</h4>
+      <p class="sum">Method improvements on hoodie, long pant and polo styles: removing marking steps and merging operations so fewer people do the same work in less time.</p>
+      <div class="nums"><div><b>17</b><span>manpower freed</span></div><div><b>18–57%</b><span>time reduction</span></div><div><b>Tk 2.35 lakh</b><span>saving, 5 projects</span></div></div>
+      <details><summary>Project results</summary><div class="body">
+        <div class="tblw"><table>
+          <thead><tr><th>Project</th><th>MP before → after</th><th>Sec before → after</th><th>Improvement</th><th>Saving (Tk)</th></tr></thead>
+          <tbody>
+            <tr><td>Kangaroo pocket join without mark</td><td>8 → 4</td><td>54 → 38</td><td>29.6%</td><td>52,000</td></tr>
+            <tr><td>Body mark for pocket join, no middle mark</td><td>12 → 6</td><td>23 → 18</td><td>21.7%</td><td>78,000</td></tr>
+            <tr><td>Hood servicing with tuck (2 ops → 1)</td><td>8 → 4</td><td>30 → 22</td><td>26.7%</td><td>60,000</td></tr>
+            <tr><td>Label &amp; loop join combined</td><td>4 → 2</td><td>35 → 15</td><td>57.1%</td><td>30,000</td></tr>
+            <tr><td>Placket close &amp; top stitch combined</td><td>4 → 3</td><td>44 → 36</td><td>18.2%</td><td>15,000</td></tr>
+          </tbody>
+          <tfoot><tr><td>Total</td><td>17 freed</td><td></td><td></td><td>2,35,000</td></tr></tfoot>
+        </table></div>
+        <h5>How</h5><ul><li>Time study before and after on running lines, video of both methods.</li><li>Eliminated non-value marking, combined adjacent operations on one machine.</li><li>Savings calculated over each style's run (26–30 days).</li></ul>
+      </div></details>
+      <div class="tools"><span>Time study</span><span>Method study</span><span>PowerPoint</span><span>Excel tracker</span></div>
+    </article>
+
+    <article class="case">
+      <div class="tag">Manpower · Costing</div>
+      <h4>Helper Reduction &amp; Piece-Rate Analysis</h4>
+      <p class="sum">A contractual-operator knit-dress factory ran with a 42–45% helper share. I built the case to cut helpers through small devices and operator-side task changes, with a piece-rate offer to keep operators on side.</p>
+      <div class="nums"><div><b>13</b><span>lines in scope</span></div><div><b>3</b><span>improvement cases</span></div><div><b>1 / line</b><span>helper removed per case</span></div></div>
+      <details><summary>The three cases</summary><div class="body">
+        <ul>
+          <li><b>Shoulder join:</b> a trimming device on the overlock removes the trimming helper on all 13 lines.</li>
+          <li><b>Back tape piping:</b> operator cuts the piping, removing one helper per line on 9 lines.</li>
+          <li><b>Sleeve join:</b> operator folds the body, removing one helper per line on 13 lines.</li>
+        </ul>
+        <h5>Deliverable</h5><ul><li>Formula-driven workbook for MD, Chairman and Director: executive summary, inputs, one sheet per case, piece-rate sensitivity, risk and manpower view.</li><li>Operator incentive range modelled through a piece-rate increase to manage contractor resistance.</li></ul>
+      </div></details>
+      <div class="tools"><span>Excel modelling</span><span>Sensitivity analysis</span><span>Line study</span></div>
+    </article>
+
+    <article class="case">
+      <div class="tag">Analytics · Power BI</div>
+      <h4>Machine Health Analytics</h4>
+      <p class="sum">A machine-health dashboard for a multi-plant group, built from AMS-R101 fleet data, so maintenance can see which machines and plants need attention first.</p>
+      <div class="nums"><div><b>5</b><span>plants</span></div><div><b>Fleet</b><span>machine-level data</span></div><div><b>Power BI</b><span>with DAX measures</span></div></div>
+      <details><summary>What it does</summary><div class="body">
+        <ul><li>Cleans and models fleet data across five plants into one model.</li><li>DAX measures for machine health and status, conditional formatting to flag problem machines.</li><li>Custom navy theme for management reporting.</li></ul>
+      </div></details>
+      <div class="tools"><span>Power BI</span><span>DAX</span><span>Data modelling</span></div>
+    </article>
+
+    <article class="case">
+      <div class="tag">Strategy · Business case</div>
+      <h4>IE Department Proposal</h4>
+      <p class="sum">A proposal to build a dedicated IE team for 1,300 sewing machines across 48 lines, with cutting and finishing in scope, where no time study, line balancing or layout work was being done.</p>
+      <div class="nums"><div><b>55.5% → 65%</b><span>efficiency target</span></div><div><b>$1.8M+</b><span>yearly value of the gap</span></div><div><b>3</b><span>hiring phases</span></div></div>
+      <details><summary>The case</summary><div class="body">
+        <ul><li>Mapped the current workload: daily SMV for 20–25 styles, input-ensure data chasing 3–4 hours a day, manual line checks.</li><li>Valued the efficiency gap using ERP capacity and CM figures.</li><li>Phased recruitment: one experienced IE per floor, the rest trained freshers.</li><li>Delivered as a PowerPoint deck and a Word proposal for the MD.</li></ul>
+      </div></details>
+      <div class="tools"><span>Capacity analysis</span><span>Business case</span><span>Org planning</span></div>
+    </article>
+
+  </section>
+
+  <div class="sec"><h3>More work</h3><span>Reports and tools built for daily operations</span></div>
+  <div class="more">
+    <span>Sewing NPT reporting system</span><span>Learning curve tool for sewing lines</span><span>ERP data scraper (Python, Playwright)</span><span>Monthly PPM &amp; manpower report</span><span>COO financial loss dashboard</span><span>Line loading &amp; plan hit-rate tracker</span><span>Cutting productivity study</span><span>Contract vs payroll operator cost model</span><span>Input-ensure meeting toolkit</span>
+  </div>
+
+  <footer>© 2026 Tahmidur Rahman · <a href="/cv/" style="color:inherit">CV</a></footer>
+</div></main>
+</body>
+</html>

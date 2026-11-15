@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tahmidur Rahman — Executive Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f2744;--navy2:#1a3a5c;--navy3:#1d4a7a;
+  --blue:#3a7bc8;--blue-lt:#e8f0f8;--blue-mid:#d0e4f5;
+  --text:#1e2a3a;--text2:#334155;--text3:#4a6080;--text4:#6b8caa;
+  --bg:#f5f7fa;--bg2:#f0f4f8;--bg3:#f4f7fb;
+  --border:#dde5ef;--border2:#c8d6e5;
+  --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── TOP BAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topbar-brand{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--navy2);letter-spacing:0.01em}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.mode-toggle{display:flex;background:var(--bg2);border-radius:999px;padding:3px;gap:2px}
+.mt-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:5px 16px;border-radius:999px;border:none;background:transparent;color:var(--text3);cursor:pointer;transition:all .2s}
+.mt-btn.active{background:var(--navy2);color:#fff;box-shadow:0 2px 8px rgba(26,58,92,0.25)}
+.dl-btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 16px;border-radius:999px;border:1px solid var(--border2);background:var(--white);color:var(--navy2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;text-decoration:none}
+.dl-btn:hover{background:var(--blue-lt);border-color:var(--blue)}
+
+/* ── LAYOUT ── */
+.page{padding:80px 20px 60px;max-width:900px;margin:0 auto}
+
+/* ── PREMIUM ── */
+#view-premium{display:block}
+#view-ats{display:none}
+
+.card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:0 4px 40px rgba(15,39,68,0.10)}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 55%,var(--navy3) 100%);padding:40px 40px 32px;display:flex;gap:24px;align-items:flex-start;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.04)}
+.hero::after{content:'';position:absolute;bottom:-40px;left:180px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.03)}
+.avatar{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#e8f4fd;flex-shrink:0;border:2px solid rgba(255,255,255,0.2);position:relative;z-index:1}
+.hero-info{flex:1;position:relative;z-index:1}
+.hname{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:-0.02em;line-height:1.1}
+.htag{font-size:13px;color:#8ab8e0;margin-top:6px;font-weight:400;letter-spacing:0.04em;text-transform:uppercase}
+.hcontacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.hchip{display:flex;align-items:center;gap:5px;font-size:12px;color:#c5ddf0;background:rgba(255,255,255,0.09);border:0.5px solid rgba(255,255,255,0.18);border-radius:999px;padding:4px 12px}
+.hchip svg{width:13px;height:13px;stroke:#8ab8e0;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* Body */
+.body{display:grid;grid-template-columns:230px 1fr}
+
+/* Sidebar */
+.sidebar{background:var(--bg3);padding:28px 20px;border-right:1px solid var(--border)}
+.sb-section{margin-bottom:26px}
+.sb-label{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--navy2);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--navy2)}
+
+.skill-row{margin-bottom:9px}
+.skill-name{font-size:11.5px;color:var(--text2);margin-bottom:3px}
+.skill-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--navy2),var(--blue));border-radius:2px}
+
+.lang-item{margin-bottom:10px}
+.lang-name{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:3px}
+.lang-dots{display:flex;gap:4px;margin-bottom:2px}
+.ldot{width:10px;height:10px;border-radius:50%;background:var(--border);border:1.5px solid var(--border2)}
+.ldot.on{background:var(--navy2);border-color:var(--navy2)}
+.lang-sub{font-size:10px;color:var(--text4)}
+
+.cert-card{display:flex;align-items:flex-start;gap:8px;background:var(--blue-lt);border-radius:8px;padding:8px 10px;margin-bottom:7px}
+.cert-icon{width:28px;height:28px;border-radius:6px;background:var(--blue-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cert-icon svg{width:14px;height:14px;stroke:var(--navy2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cert-name{font-size:11.5px;color:var(--navy2);font-weight:500;line-height:1.4}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat-box{background:var(--blue-lt);border-radius:10px;padding:10px 8px;text-align:center}
+.stat-num{font-size:22px;font-weight:700;color:var(--navy2);font-family:'Playfair Display',serif}
+.stat-label{font-size:10px;color:var(--text3);line-height:1.3;margin-top:2px}
+
+.edu-sb-item{margin-bottom:10px}
+.edu-sb-deg{font-size:11.5px;font-weight:600;color:var(--navy);line-height:1.3}
+.edu-sb-inst{font-size:11px;color:var(--text4);margin-top:2px}
+
+/* Main */
+.main{padding:28px 32px}
+
+/* Tabs */
+.tabs{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap}
+.tab{font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;padding:6px 16px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .2s}
+.tab:hover{background:var(--bg2);border-color:var(--blue)}
+.tab.on{background:var(--navy2);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(26,58,92,0.2)}
+
+.panel{display:none}
+.panel.vis{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section */
+.sec-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--navy);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sec-title svg{width:17px;height:17px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Summary */
+.summary-box{font-size:13px;color:var(--text2);line-height:1.8;background:linear-gradient(135deg,#f0f6ff,#f8fbff);border-left:3px solid var(--navy2);padding:14px 16px;border-radius:0 10px 10px 0}
+
+/* Competencies */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.comp-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2);background:var(--bg3);padding:7px 10px;border-radius:8px;border:1px solid var(--border)}
+.comp-item svg{width:14px;height:14px;stroke:var(--navy2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* Achievements */
+.ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ach-card{background:linear-gradient(135deg,#f0f6ff,#f8fbff);border-radius:12px;padding:14px 16px;border:1px solid var(--blue-mid);transition:transform .2s,box-shadow .2s}
+.ach-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,58,92,0.1)}
+.ach-ic{margin-bottom:8px}
+.ach-ic svg{width:22px;height:22px;stroke:var(--navy2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ach-t{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.ach-d{font-size:11.5px;color:var(--text3);line-height:1.55}
+
+/* Experience */
+.exp-item{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--bg2)}
+.exp-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.exp-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:4px}
+.exp-role{font-size:14px;font-weight:600;color:var(--navy)}
+.exp-badge{font-size:11px;color:#fff;background:var(--navy2);padding:3px 10px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.exp-co{font-size:12.5px;color:var(--blue);margin-bottom:8px;font-weight:500;display:flex;align-items:center;gap:5px}
+.exp-co svg{width:13px;height:13px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.exp-ul{list-style:none;padding:0}
+.exp-ul li{font-size:12.5px;color:var(--text2);padding:3px 0 3px 16px;position:relative;line-height:1.6}
+.exp-ul li::before{content:'▸';position:absolute;left:0;color:var(--blue);font-size:10px;top:5px}
+
+/* Education in main */
+.edu-item{display:flex;gap:14px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bg2)}
+.edu-item:last-child{border-bottom:none}
+.edu-yr{background:var(--navy2);color:#e8f0f8;font-size:11px;font-weight:600;padding:4px 9px;border-radius:7px;height:fit-content;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.edu-deg{font-size:13.5px;font-weight:600;color:var(--navy)}
+.edu-inst{font-size:12px;color:var(--text3);margin-top:3px}
+
+/* ── ATS ── */
+.ats-wrap{background:var(--white);border-radius:16px;padding:40px 48px;border:1px solid var(--border);max-width:820px;margin:0 auto}
+.ats-name{font-size:28px;font-weight:700;color:var(--text);letter-spacing:-0.02em;font-family:'DM Sans',sans-serif}
+.ats-role{font-size:14.5px;color:var(--text2);margin-top:4px;font-weight:400}
+.ats-meta{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;padding-bottom:14px;border-bottom:2px solid var(--text)}
+.ats-mc{font-size:12.5px;color:var(--text3)}
+.ats-sec-h{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);margin:18px 0 9px;padding-bottom:5px;border-bottom:2px solid var(--text)}
+.ats-para{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px}
+.ats-kws{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.ats-kw{font-size:11.5px;background:var(--bg2);border:1px solid var(--border);padding:3px 10px;border-radius:4px;color:var(--text2);font-weight:400}
+.ats-role-h{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.ats-exp-meta{font-size:12.5px;color:var(--text3);margin-bottom:6px}
+.ats-exp-blk{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.ats-exp-blk:last-child{border-bottom:none}
+.ats-ul{list-style:none;padding:0}
+.ats-ul li{font-size:12.5px;color:var(--text2);padding:2px 0 2px 15px;position:relative;line-height:1.65}
+.ats-ul li::before{content:'•';position:absolute;left:2px;color:var(--text)}
+.ats-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-bottom:14px}
+.ats-edu-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.ats-edu-d{font-size:13.5px;font-weight:600;color:var(--text)}
+.ats-edu-y{font-size:12px;color:var(--text3)}
+.ats-edu-i{font-size:12px;color:var(--text3);margin-bottom:10px}
+
+/* Print */
+@media print{
+  .topbar{display:none}
+  .page{padding:20px}
+  .tab{display:none}
+  .panel{display:block!important}
+  .card{box-shadow:none}
+}
+
+/* Responsive */
+@media(max-width:640px){
+  .body{grid-template-columns:1fr}
+  .sidebar{border-right:none;border-bottom:1px solid var(--border)}
+  .hname{font-size:24px}
+  .comp-grid,.ach-grid,.ats-2col{grid-template-columns:1fr}
+  .ats-wrap{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand"><a href="/" style="color:inherit;text-decoration:none" title="Home">← Home</a> &nbsp;·&nbsp; Tahmidur Rahman — Executive Resume</div>
+  <div class="topbar-right">
+    <div class="mode-toggle">
+      <button class="mt-btn active" id="btn-premium" onclick="setMode('premium')">✦ Premium</button>
+      <button class="mt-btn" id="btn-ats" onclick="setMode('ats')">⊞ ATS-Optimized</button>
+    </div>
+    <a class="dl-btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Print / Save PDF
+    </a>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══════ PREMIUM ══════ -->
+<div id="view-premium">
+<div class="card">
+
+  <div class="hero">
+    <div class="avatar">TR</div>
+    <div class="hero-info">
+      <div class="hname">Tahmidur Rahman</div>
+      <div class="htag">Manager — Industrial Engineering &amp; Planning &nbsp;·&nbsp; Lean Six Sigma Green Belt</div>
+      <div class="hcontacts">
+        <span class="hchip">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Tongi, Gazipur, Dhaka 1711, Bangladesh
+        </span>
+        <span class="hchip">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          +880 1748 826999
+        </span>
+        <span class="hchip">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Tahmidurrahman52@gmail.com
+        </span>
+        <span class="hchip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Open to relocation — BD 
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="sidebar">
+
+      <div class="sb-section">
+        <div class="sb-label">Technical Skills</div>
+        <div class="skill-row"><div class="skill-name">IE &amp; Work Study</div><div class="skill-track"><div class="skill-fill" style="width:95%"></div></div></div>
+        <div class="skill-row"><div class="skill-name">Lean / 5S / Kaizen</div><div class="skill-track"><div class="skill-fill" style="width:92%"></div></div></div>
+        <div class="skill-row"><div class="skill-name">Production Planning</div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div class="skill-row"><div class="skill-name">KPI &amp; Data Analysis</div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
+        <div class="skill-row"><div class="skill-name">MS Excel &amp; Power BI</div><div class="skill-track"><div class="skill-fill" style="width:86%"></div></div></div>
+        <div class="skill-row"><div class="skill-name">Cost Control</div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
+        <div class="skill-row"><div class="skill-name">Team Leadership</div><div class="skill-track"><div class="skill-fill" style="width:87%"></div></div></div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-label">Languages</div>
+        <div class="lang-item">
+          <div class="lang-name">Bengali</div>
+          <div class="lang-dots"><div class="ldot on"></div><div class="ldot on"></div><div class="ldot on"></div><div class="ldot on"></div><div class="ldot on"></div></div>
+          <div class="lang-sub">Native · First Language</div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-name">English</div>
+          <div class="lang-dots"><div class="ldot on"></div><div class="ldot on"></div><div class="ldot on"></div><div class="ldot on"></div><div class="ldot"></div></div>
+          <div class="lang-sub">B2 — Upper Intermediate</div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-name">Hindi</div>
+          <div class="lang-dots"><div class="ldot on"></div><div class="ldot on"></div><div class="ldot on"></div><div class="ldot"></div><div class="ldot"></div></div>
+          <div class="lang-sub">B1 — Intermediate</div>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-label">Certifications</div>
+        <div class="cert-card">
+          <div class="cert-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+          <div class="cert-name">Lean Six Sigma Green Belt</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+          <div class="cert-name">Business Excellence</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+          <div class="cert-name">Microsoft Excel &amp; Power BI</div>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-label">Education</div>
+        <div class="edu-sb-item">
+          <div class="edu-sb-deg">PGD — Knitwear Industry Management</div>
+          <div class="edu-sb-inst">BRAC University · 2021</div>
+        </div>
+        <div class="edu-sb-item">
+          <div class="edu-sb-deg">BSc Textile Engineering</div>
+          <div class="edu-sb-inst">Southeast University · 2016 · GPA 3.15</div>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-label">Career Stats</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Years Experience</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Companies</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Certifications</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Languages</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="main">
+      <div class="tabs">
+        <button class="tab on" onclick="switchTab(this,'tab-summary')">Summary</button>
+        <button class="tab" onclick="switchTab(this,'tab-achievements')">Achievements</button>
+        <button class="tab" onclick="switchTab(this,'tab-experience')">Experience</button>
+        <button class="tab" onclick="switchTab(this,'tab-competencies')">Competencies</button>
+        <button class="tab" onclick="switchTab(this,'tab-education')">Education</button>
+      </div>
+
+      <!-- Summary -->
+      <div class="panel vis" id="tab-summary">
+        <div class="sec-title">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Professional Summary
+        </div>
+        <div class="summary-box">
+          Results-driven Industrial Engineering &amp; Planning Manager with 8+ years of progressive leadership experience in knitwear and garment manufacturing. Proven track record of delivering measurable operational improvements through advanced Lean methodologies, rigorous work measurement, and data-driven performance management. Certified Lean Six Sigma Green Belt with deep expertise in production planning, cost optimisation, and cross-functional team leadership across high-volume manufacturing environments. Adept at translating complex operational data into strategic decisions that consistently elevate efficiency, reduce waste, and maximise profitability. Seeking an international leadership role where analytical rigour and hands-on manufacturing expertise drive sustainable competitive advantage.
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="panel" id="tab-achievements">
+        <div class="sec-title">
+          <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
+          Key Achievements &amp; Impact
+        </div>
+        <div class="ach-grid">
+          <div class="ach-card">
+            <div class="ach-ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="ach-t">5S Workplace Transformation</div>
+            <div class="ach-d">Led full-scale 5S implementation at Marma Composite Ltd., improving floor organisation, reducing search time, and establishing a sustained culture of workplace discipline across all production areas.</div>
+          </div>
+          <div class="ach-card">
+            <div class="ach-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div class="ach-t">Operator Training Programme</div>
+            <div class="ach-d">Designed and delivered a structured operator skills assessment and training programme as lead assessor, directly improving line efficiency, reducing defects, and building a skilled workforce pipeline.</div>
+          </div>
+          <div class="ach-card">
+            <div class="ach-ic"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <div class="ach-t">Executive KPI Framework</div>
+            <div class="ach-d">Architected comprehensive monthly KPI reporting systems covering efficiency, DHU, NPT, SMV, FOB, and CM metrics — enabling data-led decision-making at director and board level across multiple production units.</div>
+          </div>
+          <div class="ach-card">
+            <div class="ach-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41"/><path d="M4.93 4.93l1.41 1.41"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M19.07 19.07l-1.41-1.41"/><path d="M4.93 19.07l1.41-1.41"/><path d="M2 12h2"/><path d="M20 12h2"/></svg></div>
+            <div class="ach-t">Workforce Optimisation</div>
+            <div class="ach-d">Engineered man-machine ratio models and conducted root-cause analyses of operator absenteeism, reducing idle time and improving alignment between planned and actual output across multiple sewing floors.</div>
+          </div>
+          <div class="ach-card">
+            <div class="ach-ic"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div class="ach-t">Cost Reduction Strategy</div>
+            <div class="ach-d">Identified and executed systematic cost-reduction strategies through SMV optimisation, layout redesign, and resource reallocation — delivering measurable improvements in CM (cost of making) per garment.</div>
+          </div>
+          <div class="ach-card">
+            <div class="ach-ic"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div class="ach-t">OEE &amp; Lean Implementation</div>
+            <div class="ach-d">Implemented preventive maintenance and Lean manufacturing programmes that improved Overall Equipment Effectiveness (OEE) and reduced unplanned downtime, sustaining production continuity targets.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div class="panel" id="tab-experience">
+        <div class="sec-title">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          Professional Experience
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-hdr">
+            <div class="exp-role">Manager — Industrial Engineering &amp; Planning</div>
+            <span class="exp-badge">Oct 2025 – Present</span>
+          </div>
+          <div class="exp-co">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Eurotex Knitwear Ltd., Nayamati, Fotullah, Narayanganj
+          </div>
+          <ul class="exp-ul">
+            <li>Lead end-to-end work measurement, time &amp; motion studies, and SMV standardisation across multi-unit production operations serving international buyers.</li>
+            <li>Spearhead advanced Lean manufacturing implementation including 5S, Kaizen, and value stream mapping, delivering measurable reductions in waste and non-productive time (NPT).</li>
+            <li>Architect and present monthly KPI performance reports covering efficiency, DHU, SMV, FOB, and CM metrics to senior leadership for strategic decision-making.</li>
+            <li>Develop strategic manpower planning models aligned with production targets, seasonal demand, and buyer capacity constraints.</li>
+            <li>Provide technical leadership and mentorship to the IE team, elevating analytical capability and driving standardisation compliance.</li>
+            <li>Conduct pre-production technical feasibility assessments and manage cross-functional synchronisation between planning, cutting, and sewing departments.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-hdr">
+            <div class="exp-role">Assistant Manager — Industrial Engineering &amp; Planning</div>
+            <span class="exp-badge">May 2022 – Oct 2025</span>
+          </div>
+          <div class="exp-co">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Dip Knitwear Ltd., National University, Gazipur
+          </div>
+          <ul class="exp-ul">
+            <li>Formulated operational business plans to maximise output growth and systematically reduce per-unit manufacturing costs.</li>
+            <li>Monitored and sustained service time and quality KPIs through structured floor management and data-driven real-time interventions.</li>
+            <li>Developed industry benchmarking frameworks to identify improvement opportunities and align processes with international best practices.</li>
+            <li>Prepared and presented comprehensive operational performance reports and KPI dashboards for senior management review.</li>
+            <li>Optimised team training programmes, delivering measurable improvements in operator skill levels and sustained production throughput.</li>
+            <li>Implemented process improvement initiatives that reduced wasted resources and increased production line efficiency across all units.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-hdr">
+            <div class="exp-role">Senior Executive — Industrial Engineering &amp; Planning</div>
+            <span class="exp-badge">Mar 2021 – May 2022</span>
+          </div>
+          <div class="exp-co">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            MM Knitwear Ltd., Konabari, Gazipur
+          </div>
+          <ul class="exp-ul">
+            <li>Designed production facility layouts to optimise material flow, maintain operational orderliness, and accurately determine personnel requirements.</li>
+            <li>Managed dynamic production scheduling systems, adjusting equipment allocation and workflow to meet fluctuating buyer demand requirements.</li>
+            <li>Evaluated production capacity and planning to define accurate timelines and ensure technical functionality targets were met.</li>
+            <li>Compiled and submitted structured KPI production reports to operational leadership to inform strategic decision-making.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-hdr">
+            <div class="exp-role">Executive — Industrial Engineering</div>
+            <span class="exp-badge">Oct 2018 – Mar 2021</span>
+          </div>
+          <div class="exp-co">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Marma Composite Ltd., Bangladesh
+          </div>
+          <ul class="exp-ul">
+            <li>Executed line balancing, production layout design, and operation bulletin preparation to maximise sewing floor throughput and minimise bottleneck idle time.</li>
+            <li>Conducted time &amp; motion studies to identify and resolve bottleneck processes, directly improving line efficiency and output quality.</li>
+            <li>Led 5S workplace organisation and preventive maintenance implementation, significantly improving Overall Equipment Effectiveness (OEE).</li>
+            <li>Designed and managed monthly operator incentive programmes, driving motivation, reducing absenteeism, and sustaining high performance output.</li>
+            <li>Performed man-machine ratio analysis and floor efficiency monitoring to optimise workforce deployment and resource utilisation.</li>
+            <li>Prepared daily supply chain management reports to maintain uninterrupted production flow and proactively address material shortfalls.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Competencies -->
+      <div class="panel" id="tab-competencies">
+        <div class="sec-title">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Core Competencies
+        </div>
+        <div class="comp-grid">
+          <div class="comp-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Work Study &amp; Time Measurement</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>KPI Reporting &amp; Analytics</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>Lean / 5S / Kaizen</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>People &amp; Team Leadership</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Cost Control &amp; Reduction</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Production &amp; Capacity Planning</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Facility Layout Design</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Efficiency Optimisation</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Operation Bulletin Preparation</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Hiring &amp; Manpower Planning</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Safety &amp; Compliance</div>
+          <div class="comp-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>MS Excel &amp; Power BI</div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="panel" id="tab-education">
+        <div class="sec-title">
+          <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          Education &amp; Qualifications
+        </div>
+        <div class="edu-item">
+          <span class="edu-yr">2021</span>
+          <div>
+            <div class="edu-deg">Post Graduate Diploma — Knitwear Industry Management</div>
+            <div class="edu-inst">BRAC University, Dhaka, Bangladesh</div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <span class="edu-yr">2016</span>
+          <div>
+            <div class="edu-deg">Bachelor of Science — Textile Engineering</div>
+            <div class="edu-inst">Southeast University, Dhaka, Bangladesh &nbsp;·&nbsp; GPA: 3.15 / 4.00</div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <span class="edu-yr">2012</span>
+          <div>
+            <div class="edu-deg">Higher Secondary Certificate (Science)</div>
+            <div class="edu-inst">Milestone College, Dhaka, Bangladesh</div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <span class="edu-yr">2010</span>
+          <div>
+            <div class="edu-deg">Secondary School Certificate (Science)</div>
+            <div class="edu-inst">Shaheed Jahangir High School, Tangail, Bangladesh</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════ ATS ══════ -->
+<div id="view-ats" style="display:none">
+<div class="ats-wrap">
+
+  <div class="ats-name">Tahmidur Rahman</div>
+  <div class="ats-role">Manager — Industrial Engineering &amp; Planning | Lean Six Sigma Green Belt</div>
+  <div class="ats-meta">
+    <span class="ats-mc">Tongi, Gazipur, Dhaka 1711, Bangladesh</span>
+    <span class="ats-mc">+880 1748 826999</span>
+    <span class="ats-mc">Tahmidurrahman52@gmail.com</span>
+  </div>
+
+  <div class="ats-sec-h">Professional Summary</div>
+  <div class="ats-para">Results-driven Industrial Engineering and Planning Manager with 8+ years of progressive leadership experience in knitwear and garment manufacturing. Certified Lean Six Sigma Green Belt with demonstrated expertise in work measurement, SMV standardisation, production planning, KPI reporting, cost optimisation, and cross-functional team leadership. Proven ability to implement Lean methodologies, drive efficiency improvements, and deliver measurable operational results in high-volume manufacturing environments. Seeking senior IE or operations management roles with international employers across the UK, Europe, Canada, Australia, or the USA.</div>
+
+  <div class="ats-sec-h">Core Competencies &amp; ATS Keywords</div>
+  <div class="ats-kws">
+    <span class="ats-kw">Industrial Engineering</span><span class="ats-kw">Lean Manufacturing</span><span class="ats-kw">Six Sigma Green Belt</span><span class="ats-kw">Work Measurement</span><span class="ats-kw">SMV</span><span class="ats-kw">Time &amp; Motion Study</span><span class="ats-kw">Production Planning</span><span class="ats-kw">Capacity Planning</span><span class="ats-kw">KPI Reporting</span><span class="ats-kw">5S Implementation</span><span class="ats-kw">Kaizen</span><span class="ats-kw">OEE</span><span class="ats-kw">NPT Reduction</span><span class="ats-kw">Cost Optimisation</span><span class="ats-kw">Manpower Planning</span><span class="ats-kw">Line Balancing</span><span class="ats-kw">Layout Design</span><span class="ats-kw">Operation Bulletin</span><span class="ats-kw">Process Improvement</span><span class="ats-kw">Team Leadership</span><span class="ats-kw">Data Analysis</span><span class="ats-kw">Power BI</span><span class="ats-kw">MS Excel</span><span class="ats-kw">Garment Manufacturing</span><span class="ats-kw">Knitwear</span><span class="ats-kw">Preventive Maintenance</span><span class="ats-kw">Waste Reduction</span><span class="ats-kw">Workforce Optimisation</span><span class="ats-kw">DHU</span><span class="ats-kw">FOB Costing</span>
+  </div>
+
+  <div class="ats-sec-h">Professional Experience</div>
+
+  <div class="ats-exp-blk">
+    <div class="ats-role-h">Manager — Industrial Engineering &amp; Planning</div>
+    <div class="ats-exp-meta">Eurotex Knitwear Ltd., Narayanganj, Bangladesh | Oct 2025 – Present</div>
+    <ul class="ats-ul">
+      <li>Lead end-to-end work measurement, time &amp; motion studies, and SMV standardisation across multi-unit production operations serving international buyers.</li>
+      <li>Spearhead advanced Lean manufacturing implementation including 5S, Kaizen, and value stream mapping, delivering measurable reductions in waste and non-productive time (NPT).</li>
+      <li>Architect and present monthly KPI performance reports covering efficiency, DHU, SMV, FOB, and CM metrics to senior leadership for strategic decision-making.</li>
+      <li>Develop strategic manpower planning models aligned with production targets, seasonal demand, and buyer capacity constraints.</li>
+      <li>Provide technical leadership and mentorship to the IE team, elevating analytical capability and driving standardisation compliance.</li>
+      <li>Conduct pre-production technical feasibility assessments and manage cross-functional synchronisation across planning, cutting, and sewing departments.</li>
+    </ul>
+  </div>
+
+  <div class="ats-exp-blk">
+    <div class="ats-role-h">Assistant Manager — Industrial Engineering &amp; Planning</div>
+    <div class="ats-exp-meta">Dip Knitwear Ltd., Gazipur, Bangladesh | May 2022 – Oct 2025</div>
+    <ul class="ats-ul">
+      <li>Formulated operational business plans to maximise output growth and systematically reduce per-unit manufacturing costs.</li>
+      <li>Monitored and sustained service time and quality KPIs through structured floor management and data-driven real-time interventions.</li>
+      <li>Prepared and presented comprehensive operational performance reports and KPI dashboards for senior management review.</li>
+      <li>Optimised team training frameworks, delivering measurable improvements in operator skill levels and sustained production throughput.</li>
+      <li>Implemented process improvement initiatives that reduced wasted resources and increased production line efficiency across units.</li>
+    </ul>
+  </div>
+
+  <div class="ats-exp-blk">
+    <div class="ats-role-h">Senior Executive — Industrial Engineering &amp; Planning</div>
+    <div class="ats-exp-meta">MM Knitwear Ltd., Konabari, Gazipur, Bangladesh | Mar 2021 – May 2022</div>
+    <ul class="ats-ul">
+      <li>Designed production facility layouts to optimise material flow, maintain operational orderliness, and determine accurate personnel requirements.</li>
+      <li>Managed production scheduling, equipment allocation, and workflow adjustments to meet dynamic buyer demand requirements.</li>
+      <li>Evaluated production capacity and planning to define accurate timelines and ensure technical functionality targets were achieved.</li>
+      <li>Compiled and submitted structured KPI production reports to operational leadership for informed decision-making.</li>
+    </ul>
+  </div>
+
+  <div class="ats-exp-blk">
+    <div class="ats-role-h">Executive — Industrial Engineering</div>
+    <div class="ats-exp-meta">Marma Composite Ltd., Bangladesh | Oct 2018 – Mar 2021</div>
+    <ul class="ats-ul">
+      <li>Executed line balancing, production layout design, and operation bulletin preparation to maximise sewing floor throughput and minimise bottleneck idle time.</li>
+      <li>Conducted time &amp; motion studies to identify and resolve bottleneck processes, directly improving line efficiency and output quality.</li>
+      <li>Led 5S workplace organisation and preventive maintenance implementation, significantly improving Overall Equipment Effectiveness (OEE).</li>
+      <li>Designed and managed monthly operator incentive programmes, reducing absenteeism and sustaining high performance output.</li>
+      <li>Performed man-machine ratio analysis and daily supply chain reporting to maintain continuous production flow.</li>
+    </ul>
+  </div>
+
+  <div class="ats-sec-h">Education</div>
+  <div class="ats-2col">
+    <div>
+      <div class="ats-edu-row"><span class="ats-edu-d">Post Graduate Diploma — Knitwear Industry Management</span><span class="ats-edu-y">2021</span></div>
+      <div class="ats-edu-i">BRAC University, Dhaka, Bangladesh</div>
+      <div class="ats-edu-row"><span class="ats-edu-d">Bachelor of Science — Textile Engineering</span><span class="ats-edu-y">2016</span></div>
+      <div class="ats-edu-i">Southeast University, Dhaka, Bangladesh · GPA: 3.15/4.00</div>
+    </div>
+    <div>
+      <div class="ats-edu-row"><span class="ats-edu-d">Higher Secondary Certificate (Science)</span><span class="ats-edu-y">2012</span></div>
+      <div class="ats-edu-i">Milestone College, Dhaka</div>
+      <div class="ats-edu-row"><span class="ats-edu-d">Secondary School Certificate (Science)</span><span class="ats-edu-y">2010</span></div>
+      <div class="ats-edu-i">Shaheed Jahangir High School, Tangail</div>
+    </div>
+  </div>
+
+  <div class="ats-sec-h">Certifications</div>
+  <div class="ats-para" style="margin-bottom:0">Lean Six Sigma Green Belt (Course Completion) &nbsp;·&nbsp; Business Excellence &nbsp;·&nbsp; Microsoft Excel &amp; Power BI</div>
+
+  <div class="ats-sec-h">Languages</div>
+  <div class="ats-para" style="margin-bottom:0">Bengali (Native) &nbsp;·&nbsp; English (B2 — Upper Intermediate) &nbsp;·&nbsp; Hindi (B1 — Intermediate)</div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+function setMode(mode){
+  document.getElementById('view-premium').style.display = mode==='premium'?'block':'none';
+  document.getElementById('view-ats').style.display = mode==='ats'?'block':'none';
+  document.getElementById('btn-premium').classList.toggle('active', mode==='premium');
+  document.getElementById('btn-ats').classList.toggle('active', mode==='ats');
+}
+function switchTab(btn, panelId){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('vis'));
+  btn.classList.add('on');
+  document.getElementById(panelId).classList.add('vis');
+}
+</script>
+</body>
+</html>

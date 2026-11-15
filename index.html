@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tahmidur Rahman</title>
+<meta name="description" content="Tahmidur Rahman — Manager, Industrial Engineering & Planning. CV and analysis portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one navy stage, name block, two large doorways (CV / Analysis). Palette matches the CV. */
+:root{--navy:#0f2744;--navy2:#1a3a5c;--navy3:#1d4a7a;--blue:#3a7bc8;--sky:#8ab8e0;--ice:#e8f0f8;--line:rgba(255,255,255,.16);--white:#fff;
+  --display:'Playfair Display',Georgia,serif;--body:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--body);color:var(--white);background:var(--navy);
+  background-image:radial-gradient(1200px 600px at 85% -10%,var(--navy3),transparent 60%),radial-gradient(900px 500px at -10% 110%,var(--navy2),transparent 60%);
+  min-height:100%;display:flex;align-items:center;justify-content:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:48px}
+.wrap{width:100%;max-width:920px}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--sky);font-weight:600}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,6.5vw,64px);line-height:1.05;letter-spacing:-.02em;margin-top:10px;text-wrap:balance}
+.role{margin-top:12px;font-size:clamp(15px,1.8vw,18px);color:#c5ddf0;max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-size:12.5px;color:#c5ddf0;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;padding:5px 12px}
+.doors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:40px}
+@media(max-width:640px){.doors{grid-template-columns:minmax(0,1fr)}}
+.door{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--navy);background:var(--white);border-radius:20px;padding:26px 26px 22px;
+  box-shadow:0 10px 40px rgba(0,0,0,.25);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.door::after{content:"";position:absolute;right:-50px;top:-50px;width:160px;height:160px;border-radius:50%;background:var(--ice)}
+.door:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.32)}
+.door:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.ic{width:46px;height:46px;border-radius:12px;background:var(--navy2);display:grid;place-items:center;position:relative;z-index:1}
+.ic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.door h2{font-family:var(--display);font-size:28px;font-weight:700;position:relative;z-index:1}
+.door p{font-size:14px;color:#4a6080;line-height:1.6;position:relative;z-index:1}
+.go{margin-top:6px;font-size:13.5px;font-weight:600;color:var(--blue);display:flex;align-items:center;gap:6px}
+.go span{transition:transform .2s}.door:hover .go span{transform:translateX(4px)}
+footer{margin-top:36px;font-size:12px;color:var(--sky);opacity:.8}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="eyebrow">Industrial Engineering &amp; Planning · Knitwear</div>
+  <h1>Tahmidur Rahman</h1>
+  <p class="role">Manager, Industrial Engineering &amp; Planning at Eurotex Knitwear Ltd. Lean Six Sigma Green Belt with 8+ years in capacity planning, line balancing, SMV and performance analytics.</p>
+  <div class="chips"><span class="chip">Tongi, Gazipur, Bangladesh</span><span class="chip">Tahmidurrahman52@gmail.com</span><span class="chip">+880 1748 826999</span></div>
+
+  <nav class="doors" aria-label="Sections">
+    <a class="door" href="/cv/">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div>
+      <h2>My CV</h2>
+      <p>Experience, achievements, competencies and education. Premium and ATS-optimised views, printable to PDF.</p>
+      <div class="go">Open CV <span>→</span></div>
+    </a>
+    <a class="door" href="/analysis/">
+      <div class="ic"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <h2>My Analysis</h2>
+      <p>Live production dashboards and IE case studies: Kaizen results, helper reduction, machine health analytics and IE team planning.</p>
+      <div class="go">See my work <span>→</span></div>
+    </a>
+  </nav>
+  <footer>© 2026 Tahmidur Rahman</footer>
+</main>
+</body>
+</html>

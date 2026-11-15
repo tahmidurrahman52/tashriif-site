@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eurotex Sewing Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<script>
+/* ================== SETTINGS — change only these ================== */
+window.SEWING_CONFIG = {
+  sheetId: "1Eajr_T9xzLP8n7hQN8tdPh_hH2j2QxWMEpe_8ICH33o", // Google Sheet ID (from its URL)
+  gid: 0,                                                   // tab id (the number after #gid= in the URL)
+  feedGid: 777,                                             // hidden "Feed" tab (mirror of Sheet1 as text)
+  publishId: "2PACX-1vTUMZFWxXYjUi7NprXgwo6VmmKNRlTs6XHK8M2gzjd8HKHqmdwVhGx15nmi34gF2l1ZKNCnjHAkbdFh", // from File → Share → Publish to web link (…/d/e/<this>/pubhtml)
+  excludeUnits: ["EKLB"],                                   // units to leave out of the dashboard
+  refreshMinutes: 5                                          // auto-refresh interval
+};
+/* ================================================================== */
+</script>
+<style>
+:root{
+  --bg:#F3F5F8; --panel:#FFFFFF; --panel2:#EEF1F6; --ink:#141C2E; --muted:#5C6780; --line:#DCE1EA;
+  --accent:#D98E2B; --accent2:#2F6FB5; --accent2-soft:#BFD3EC;
+  --good:#1E8E5A; --good-bg:#DDF3E8; --warn:#B7791F; --warn-bg:#FCEFD6; --bad:#C2413A; --bad-bg:#F9E0DE;
+  --display:"Archivo",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --shadow:0 1px 2px rgba(20,28,46,.06),0 4px 16px rgba(20,28,46,.05); color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1320; --panel:#151D2E; --panel2:#1C263A; --ink:#E8ECF4; --muted:#93A0B8; --line:#26324A;
+  --accent:#F0A84A; --accent2:#6FA6E6; --accent2-soft:#2D4466;
+  --good:#4CC38A; --good-bg:#143326; --warn:#E8B04E; --warn-bg:#3A2C12; --bad:#F07870; --bad-bg:#3D1C1C;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1320; --panel:#151D2E; --panel2:#1C263A; --ink:#E8ECF4; --muted:#93A0B8; --line:#26324A;
+  --accent:#F0A84A; --accent2:#6FA6E6; --accent2-soft:#2D4466;
+  --good:#4CC38A; --good-bg:#143326; --warn:#E8B04E; --warn-bg:#3A2C12; --bad:#F07870; --bad-bg:#3D1C1C;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:16px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(24px,3.4vw,34px);margin:2px 0 0;letter-spacing:-.01em;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tag{font-family:var(--mono);font-size:11.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--panel)}
+.live{display:inline-flex;align-items:center;gap:6px}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px var(--good-bg)}
+.live.err i{background:var(--bad);box-shadow:0 0 0 3px var(--bad-bg)}
+.btn{font:600 12.5px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.btn:hover{border-color:var(--accent2)}
+.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);padding:10px 0;margin-bottom:14px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--panel2);padding:4px;border-radius:10px}
+.seg button{font:600 12.5px var(--body);border:0;background:transparent;color:var(--muted);padding:6px 12px;border-radius:7px;cursor:pointer}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+.seg button:focus-visible,select:focus-visible,th button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.statuschip{margin-left:auto;display:flex;align-items:center;gap:8px}
+.pill{display:inline-block;font:600 11.5px var(--body);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
+select{font:500 13px var(--body);color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;max-width:100%}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:16px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:680px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.kpi .k{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.kpi .v{font-family:var(--mono);font-weight:600;font-size:clamp(18px,2vw,23px);margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .s{font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi .s b.up{color:var(--good)} .kpi .s b.dn{color:var(--bad)}
+.kpi.hero{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.kpi.hero .k,.kpi.hero .s{color:color-mix(in srgb,var(--bg) 70%,var(--ink))}
+.meter{height:5px;border-radius:3px;background:var(--panel2);margin-top:8px;overflow:hidden}
+.kpi.hero .meter{background:color-mix(in srgb,var(--bg) 20%,var(--ink))}
+.meter i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .5s}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.card h2{font-family:var(--display);font-weight:700;font-size:15.5px;margin:0}
+.card .sub{color:var(--muted);font-size:12.5px;margin:2px 0 10px}
+.card .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px}
+.chartbox{position:relative;height:300px}
+.chartbox.tall{height:420px}
+.span2{grid-column:1/-1}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:980px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+thead th{position:sticky;top:0;background:var(--panel2);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+th button{all:unset;cursor:pointer}
+th button:hover{color:var(--ink)}
+th[aria-sort] button::after{content:" ▾";color:var(--accent)}
+th[aria-sort="ascending"] button::after{content:" ▴"}
+tbody tr:hover{background:var(--panel2)}
+tr.unit td{font-weight:600;background:color-mix(in srgb,var(--accent2-soft) 35%,transparent)}
+td.mono{font-family:var(--mono);font-size:12.5px}
+table.heat{min-width:760px}
+table.heat td.hc{font-family:var(--mono);font-size:12px;text-align:center;color:var(--ink)}
+table.heat th{text-align:center}
+table.heat tr.unit td{background:none}
+.cellbar{position:relative;display:inline-block;min-width:64px}
+.cellbar span{position:relative;z-index:1}
+.cellbar i{position:absolute;right:0;top:50%;height:16px;transform:translateY(-50%);border-radius:3px;opacity:.22}
+.neg{color:var(--bad)} .pos{color:var(--good)}
+.ins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.ins{grid-template-columns:minmax(0,1fr)}}
+.ins ul{margin:8px 0 0;padding-left:18px}
+.ins li{margin-bottom:8px;max-width:65ch}
+.ins .card h2{display:flex;gap:8px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.note{color:var(--muted);font-size:12.5px;padding:24px 0;text-align:center}
+.banner{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+.banner code{font-family:var(--mono)}
+footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:110ch}
+#loading{padding:80px 0;text-align:center;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow"><a href="/analysis/" style="color:inherit;text-decoration:none">← My Analysis</a> &nbsp;·&nbsp; Eurotex Group · IE &amp; Planning</div>
+      <h1 id="title">Sewing Performance</h1>
+    </div>
+    <div class="meta">
+      <span class="tag live" id="liveTag"><i></i><span id="liveTxt">Connecting…</span></span>
+      <span class="tag" id="daysTag"></span>
+      <span class="tag" id="scopeTag"></span>
+      <button class="btn" id="refreshBtn" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <div class="bar" role="toolbar" aria-label="Filters">
+    <label class="lbl" for="periodSel">Period</label>
+    <select id="periodSel"></select>
+    <span class="lbl">Unit</span>
+    <div class="seg" id="unitSeg"></div>
+    <div class="statuschip"><span class="lbl">Status</span><span id="statusPill" class="pill"></span></div>
+  </div>
+
+  <div id="loading">Loading data from Google Sheet…</div>
+  <main id="app" hidden>
+  <section class="kpis" id="kpis" aria-label="Key indicators"></section>
+
+  <section class="grid">
+    <div class="card" id="trendCard">
+      <div class="head"><div><h2>Monthly trend</h2><p class="sub" id="trendSub">Pcs achievement % and efficiency % by month</p></div></div>
+      <div class="chartbox"><canvas id="cTrend"></canvas></div>
+    </div>
+    <div class="card" id="cmTrendCard">
+      <div class="head"><div><h2>CM trend</h2><p class="sub" id="cmTrendSub">Earned CM and CM per manpower per day by month</p></div></div>
+      <div class="chartbox"><canvas id="cCmTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h2>Target vs achievement</h2><p class="sub" id="tvaSub">Pieces by unit</p></div></div>
+      <div class="chartbox"><canvas id="cTva"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h2>Efficiency: target vs achieved</h2><p class="sub">By floor · gap shown on hover</p></div></div>
+      <div class="chartbox"><canvas id="cEff"></canvas></div>
+    </div>
+    <div class="card span2">
+      <div class="head">
+        <div><h2>Floor ranking</h2><p class="sub">Pick any metric · dashed line = group value · also drives the heatmap</p></div>
+        <label class="lbl" for="metricSel" style="display:flex;gap:8px;align-items:center">Metric <select id="metricSel"></select></label>
+      </div>
+      <div class="chartbox tall"><canvas id="cRank"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h2>CM productivity map</h2><p class="sub">Achieved efficiency vs CM per manpower per day · bubble = manpower</p></div></div>
+      <div class="chartbox"><canvas id="cMap"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h2>CM shortfall vs target</h2><p class="sub">Lost pieces × CM/pc ($)</p></div></div>
+      <div class="chartbox"><canvas id="cShort"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h2>Hourly output</h2><p class="sub">Target vs achieved pcs/hour by floor</p></div></div>
+      <div class="chartbox"><canvas id="cHour"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h2>1st hour achievement</h2><p class="sub">Line start-up discipline · 80% reference</p></div></div>
+      <div class="chartbox"><canvas id="cFirst"></canvas></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-bottom:14px">
+    <div class="head"><div><h2>Floor &amp; unit detail</h2><p class="sub">Click a column to sort · unit totals shaded</p></div>
+      <div class="seg" id="lvlSeg"><button aria-pressed="true" data-l="all" type="button">Floors + units</button><button aria-pressed="false" data-l="Floor" type="button">Floors only</button><button aria-pressed="false" data-l="Unit" type="button">Units only</button></div>
+    </div>
+    <div class="tbl"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="card" id="heatCard" style="margin-bottom:14px">
+    <div class="head"><div><h2>Floor × month heatmap</h2><p class="sub" id="heatSub">Same metric as Floor ranking · green = better, red = worse</p></div></div>
+    <div class="tbl"><table id="heat" class="heat"><thead></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="ins" id="insights"></section>
+  </main>
+
+  <footer>Data: Google Sheet "Sewing Summary Report" (ERP export pasted as-is); unit and group totals are calculated here from floor columns. Pcs Achv % = Achievement ÷ Target · Efficiency % = ERP floor values, weighted by Available Min for units · CM shortfall = lost pcs × CM/pc. Not tracked (no valid ERP data): Style change, absenteeism, late, helper trainee, NPT, DHU, MMR.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(function(){
+const CFG=window.SEWING_CONFIG;
+const $=id=>document.getElementById(id);
+const HEAD={date:"Date",unit:"Unit",floor:"Floor",wd:"Working Days",tgt:"Target Pcs",ach:"Achievement Pcs",teff:"Target Eff %",avail:"Available Min",earn:"Earned Min",
+  line:"Running Line",mc:"Running MC",hlp:"Helper",mp:"Total Manpower",cm:"Earned CM ($)",fob:"Earned FOB ($)",thr:"Target Hourly Pcs",ahr:"Achieved Hourly Pcs",wh:"Working Hour",first:"1st Hr Achv %"};
+const fmt={int:v=>Math.round(v).toLocaleString("en-US"),k:v=>Math.abs(v)>=1e6?(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?(v/1e3).toFixed(1)+"K":Math.round(v)+"",
+  pct:v=>v.toFixed(1)+"%",usd:v=>"$"+Math.round(v).toLocaleString("en-US"),usdk:v=>Math.abs(v)>=1e6?"$"+(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?"$"+(v/1e3).toFixed(1)+"K":"$"+Math.round(v),
+  d2:v=>"$"+v.toFixed(2),d3:v=>"$"+v.toFixed(3),d4:v=>"$"+v.toFixed(4),n1:v=>v.toFixed(1),n2:v=>v.toFixed(2),pp:v=>(v>0?"+":"")+v.toFixed(1)+" pp"};
+const METRICS=[["pa","Pcs Achv %","pct",1],["aeff","Achieved Eff %","pct",1],["gap","Eff gap (pp)","pp",1],["ach","Achievement pcs","int",1],["loss","Target loss pcs","int",1],
+ ["cm","Earned CM ($)","usd",1],["fob","Earned FOB ($)","usd",1],["cmpc","CM / pc ($)","d3",1],["fobpc","FOB / pc ($)","d2",1],["cmmin","CM / earned min ($)","d4",1],["cmfob","CM % of FOB","pct",1],
+ ["cmmp","CM / MP / day ($)","d2",1],["cmmc","CM / MC / day ($)","d2",1],["pmc","Pcs / MC / day","n1",1],["smv","SMV","n2",1],["ahr","Achieved hourly pcs","int",1],["first","1st hour achv %","pct",1],
+ ["hmc","Helper : MC","n2",-1],["wh","Working hour","n2",-1],["short","CM shortfall ($)","usd",-1],["mp","Avg manpower","int",1]];
+const MI=Object.fromEntries(METRICS.map(m=>[m[0],m]));
+const statusTxt={good:"On target",warn:"Watch",bad:"Critical"};
+let DATA=[],PERIODS=[],UNITS=[],period=null,unit="All",lvl="all",sortKey="pa",sortDir=-1,metric="pa",VIEW=null;
+try{const s=JSON.parse(localStorage.getItem("ekl-sew-live")||"{}");if(s.unit)unit=s.unit;if(MI[s.metric])metric=s.metric;}catch(e){}
+const save=()=>{try{localStorage.setItem("ekl-sew-live",JSON.stringify({unit,metric}))}catch(e){}};
+
+/* ---------- CSV ---------- */
+function parseCSV(t){const out=[];let row=[],f="",q=false;for(let i=0;i<t.length;i++){const c=t[i];
+  if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c=='"')q=true;else if(c==','){row.push(f);f=""}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;row.push(f);out.push(row);row=[];f=""}else f+=c}
+  if(f!==""||row.length){row.push(f);out.push(row)}return out}
+const num=v=>{if(v==null)return 0;const n=parseFloat(String(v).replace(/[,$%\s]/g,""));return isFinite(n)?n:0};
+const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+/* ERP row label -> field. Rows not listed (absent %, NPT, DHU, MMR …) are ignored. */
+const LABELS={targetpcs:"tgt",achievementpcs:"ach",performance:"perfR",targetefficiency:"teff",achievedefficiency:"aeffR",availablemin:"avail",earnmin:"earn",
+  runningline:"line",runningmc:"mc",helper:"hlp",totalmanpower:"mp",earnedcm:"cm",earnedfob:"fob",targethourlypcs:"thr",achievedhourlypcs:"ahr",workinghour:"wh",
+  "1sthrachievement":"first",workingday:"wd",smv:"smvR"};
+const PCTF=new Set(["first","teff","aeffR","perfR"]);
+const titleCase=s=>s.toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()).replace(/\b(\d+)(St|Nd|Rd|Th)\b/g,(m,a,b)=>a+b.toLowerCase());
+function floorName(h,u){const m=String(h).match(/^(.*?)SEW[\s-]*(.*)$/i);if(!m)return titleCase(h);let pre=m[1].replace(/[-\s]+$/,"").trim(),f=m[2].trim();
+  if(!f||/^floor$/i.test(f))return !pre||pre.toUpperCase()===String(u).toUpperCase()?"Sewing Floor":titleCase(pre);return titleCase(f)}
+/* Reads one or more pasted ERP "Sewing Summary Report" blocks. Each block starts at a "Particulars" row. */
+function parseReport(rows){
+  const out=[],periods=[];let label=null;
+  for(let i=0;i<rows.length;i++){
+    const a=String(rows[i][0]||"").trim();
+    const pm=a.match(/production\s*month\s*:?\s*(.+)$/i)||a.match(/(?:report\s*)?date\s*:?\s*(.+)$/i);
+    if(pm){label=pm[1].trim();continue}
+    if(norm(a)!=="particulars")continue;
+    const top=rows[i],sub=rows[i+1]||[];let u="";const cols=[];
+    for(let c=1;c<Math.max(top.length,sub.length);c++){
+      if(String(top[c]||"").trim())u=String(top[c]).trim();
+      const h=String(sub[c]||"").trim();
+      if(!h||/^total$/i.test(h)||/grand/i.test(u)||(CFG.excludeUnits||[]).map(x=>x.toUpperCase()).includes(u.toUpperCase()))continue;
+      cols.push({c,unit:u,floor:floorName(h,u),raw:h});
+    }
+    let per=label||("Report "+(periods.length+1));if(periods.includes(per))per+=" ("+(periods.length+1)+")";
+    const recs=cols.map(x=>({period:per,unit:x.unit,floor:x.floor}));
+    let j=i+2;
+    for(;j<rows.length;j++){const k=norm(rows[j][0]);if(k==="particulars"||/productionmonth/.test(k))break;
+      const f=LABELS[k]||(k.startsWith("1sthr")?"first":null);if(!f)continue;
+      if(f==="hlp"&&recs.length&&recs[0].hlp!==undefined)continue; // second "Helper" row is Helper %
+      cols.forEach((x,n)=>{const raw=String(rows[j][x.c]??"");let v=num(raw);
+        if(PCTF.has(f)&&!/%/.test(raw)&&v!==0&&Math.abs(v)<=3)v*=100; // sheet stored 82.17% as 0.8217
+        recs[n][f]=v})}
+    recs.forEach(r=>{for(const k of Object.values(LABELS))if(r[k]===undefined)r[k]=0;if(!r.wd)r.wd=1});
+    out.push(...recs.filter(r=>r.tgt||r.ach));periods.push(per);i=j-1;
+  }
+  return {rows:out,periods};
+}
+/* gviz JSONP: loads through a <script> tag, so it works from a local file and any website (no CORS).
+   Reads the hidden "Feed" tab, which mirrors Sheet1 as text so Google keeps every label and number. */
+function fetchJSONP(){return new Promise((res,rej)=>{
+  const cb="__sew"+Date.now(),s=document.createElement("script");let done=false;
+  const end=()=>{done=true;delete window[cb];s.remove()};
+  window[cb]=d=>{end();try{if(d.status==="error")return rej(new Error((d.errors||[])[0]?.detailed_message||"sheet error"));
+    res(d.table.rows.map(r=>(r.c||[]).map(c=>c&&c.v!=null?String(c.v).replace(/^~/,""):"")))}catch(e){rej(e)}};
+  s.src=`https://docs.google.com/spreadsheets/d/${CFG.sheetId}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=0&gid=${CFG.feedGid}&t=${Date.now()}`;
+  s.onerror=()=>{if(!done){end();rej(new Error("Feed not reachable"))}};
+  setTimeout(()=>{if(!done){end();rej(new Error("timeout"))}},15000);
+  document.head.appendChild(s)})}
+async function fetchSheet(){
+  if(CFG.feedGid!=null){try{const p=parseReport(await fetchJSONP());if(p.rows.length)return p}catch(e){console.warn("Feed:",e.message)}}
+  const id=CFG.sheetId,g=CFG.gid||0,t=Date.now();
+  const urls=[...(CFG.publishId?[`https://docs.google.com/spreadsheets/d/e/${CFG.publishId}/pub?gid=${g}&single=true&output=csv&t=${t}`]:[]),
+    `https://docs.google.com/spreadsheets/d/${id}/pub?gid=${g}&single=true&output=csv&t=${t}`,
+    `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${g}&t=${t}`,
+    `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&headers=0&gid=${g}&t=${t}`];
+  let last="no response";
+  for(const u of urls){try{const r=await fetch(u,{cache:"no-store"});if(!r.ok){last="HTTP "+r.status;continue}
+    const txt=await r.text();if(/^\s*</.test(txt)){last="sheet is not shared";continue}
+    const p=parseReport(parseCSV(txt));if(p.rows.length)return p;last="no 'Particulars' row found";}catch(e){last=e.message}}
+  throw new Error(last);
+}
+async function load(){
+  $("liveTxt").textContent="Refreshing…";
+  try{
+    const p=await fetchSheet();DATA=p.rows;PERIODS=p.periods;
+    $("banner").hidden=true;$("liveTag").classList.remove("err");
+    $("liveTxt").textContent="Live · updated "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+    buildPeriods();render();
+    $("loading").hidden=true;$("app").hidden=false;
+  }catch(e){
+    $("liveTag").classList.add("err");$("liveTxt").textContent="Not connected";
+    $("banner").hidden=false;
+    $("banner").innerHTML=`Could not read the Google Sheet (${e.message}). Check: Share → General access → <b>Anyone with the link · Viewer</b>, and paste the ERP report with its <code>Particulars</code> header row intact.`;
+    if(!DATA.length)$("loading").innerHTML="Google Sheet-এর data পাওয়া যায়নি।<br>Sheet-এ দুটো setting লাগবে: <b>Share → Anyone with the link → Viewer</b> এবং <b>File → Share → Publish to web → Sheet1 → CSV → Publish</b>।";
+  }
+}
+
+/* ---------- Aggregation ---------- */
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+const MON=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+function pkey(p){const m=String(p).match(/([A-Za-z]{3})[A-Za-z]*[\s\-'.]*(\d{2,4})/);if(!m)return 0;const mi=MON.indexOf(m[1].toLowerCase());let y=+m[2];if(y<100)y+=2000;return y*100+(mi+1)}
+const pyear=p=>Math.floor(pkey(p)/100);
+const inPer=(r,p)=>p.startsWith("Y:")?pyear(r.period)===+p.slice(2):r.period===p;
+function agg(rs,name,level,u){
+  const pd={};rs.forEach(r=>pd[r.period]=Math.max(pd[r.period]||0,r.wd));
+  const days=Math.max(1,sum(Object.values(pd),x=>x));
+  const o={name,level,unit:u,days};
+  ["tgt","ach","avail","earn","cm","fob"].forEach(k=>o[k]=sum(rs,r=>r[k]));
+  const mpd=sum(rs,r=>r.mp*r.wd),mcd=sum(rs,r=>r.mc*r.wd),hlpd=sum(rs,r=>r.hlp*r.wd),lined=sum(rs,r=>r.line*r.wd);
+  o.mp=mpd/days;o.mc=mcd/days;o.hlp=hlpd/days;o.line=lined/days;
+  const aw=f=>o.avail?sum(rs,r=>r.avail*f(r))/o.avail:0;
+  o.teff=aw(r=>r.teff);
+  o.aeff=rs.every(r=>r.aeffR)?aw(r=>r.aeffR):(o.avail?o.earn/o.avail*100:0);
+  o.smv=rs.every(r=>r.smvR)&&o.ach?sum(rs,r=>r.smvR*r.ach)/o.ach:(o.ach?o.earn/o.ach:0);
+  const lw=f=>lined?sum(rs,r=>f(r)*r.line*r.wd)/lined:0;
+  o.thr=lw(r=>r.thr);o.ahr=lw(r=>r.ahr);o.first=lw(r=>r.first);o.wh=mpd?sum(rs,r=>r.wh*r.mp*r.wd)/mpd:0;
+  o.loss=o.ach-o.tgt;o.pa=o.tgt?o.ach/o.tgt*100:0;o.gap=o.aeff-o.teff;
+  o.cmpc=o.ach?o.cm/o.ach:0;o.fobpc=o.ach?o.fob/o.ach:0;o.cmmin=o.earn?o.cm/o.earn:0;o.cmfob=o.fob?o.cm/o.fob*100:0;
+  o.cmmp=mpd?o.cm/mpd:0;o.cmmc=mcd?o.cm/mcd:0;o.pmc=mcd?o.ach/mcd:0;o.hmc=mcd?hlpd/mcd:0;
+  o.short=Math.max(0,-o.loss)*o.cmpc;o.status=o.pa>=100?"good":o.pa>=90?"warn":"bad";
+  o.lab=level==="Floor"?`${u} - ${name.split(" - ").slice(1).join(" - ").replace(/ Floor$/,"")}`:name;
+  return o}
+function buildPeriods(){
+  const sel=$("periodSel"),prev=period;sel.innerHTML="";
+  PERIODS.sort((a,b)=>pkey(a)-pkey(b));
+  const years=[...new Set(PERIODS.map(pyear))].filter(Boolean).sort((a,b)=>b-a);
+  const g1=document.createElement("optgroup");g1.label="Month";
+  [...PERIODS].reverse().forEach(p=>{const o=document.createElement("option");o.value=p;o.textContent=p;g1.appendChild(o)});
+  const g2=document.createElement("optgroup");g2.label="Year to date";
+  years.forEach(y=>{const o=document.createElement("option");o.value="Y:"+y;o.textContent="YTD "+y;g2.appendChild(o)});
+  sel.append(g1,g2);
+  const vals=[...sel.options].map(o=>o.value);
+  period=vals.includes(prev)?prev:PERIODS[PERIODS.length-1];sel.value=period;
+  UNITS=[...new Set(DATA.map(r=>r.unit))];
+  if(unit!=="All"&&!UNITS.includes(unit))unit="All";
+  const seg=$("unitSeg");seg.innerHTML="";
+  ["All",...UNITS].forEach(u=>{const b=document.createElement("button");b.type="button";b.textContent=u==="All"?"All units":u;b.dataset.u=u;b.onclick=()=>{unit=u;save();render()};seg.appendChild(b)});
+}
+function prevView(){if(period.startsWith("Y:"))return null;const i=PERIODS.indexOf(period);if(i<1)return null;
+  const keep=period;period=PERIODS[i-1];const v=buildView();period=keep;v.label=PERIODS[i-1];return v}
+function buildView(){
+  const rs=DATA.filter(r=>inPer(r,period));
+  const floorsKey=[...new Set(rs.map(r=>r.unit+"|"+r.floor))];
+  const floors=floorsKey.map(k=>{const [u,f]=k.split("|");return agg(rs.filter(r=>r.unit===u&&r.floor===f),`${u} - ${f}`,"Floor",u)});
+  const units=UNITS.filter(u=>rs.some(r=>r.unit===u)).map(u=>agg(rs.filter(r=>r.unit===u),`${u} Total`,"Unit",u));
+  const G=agg(rs,"Group Total","Group","Group");
+  const ordered=[];units.forEach(U=>{floors.filter(f=>f.unit===U.unit).forEach(f=>ordered.push(f));ordered.push(U)});ordered.push(G);
+  return {rows:ordered,G,rs};
+}
+
+/* ---------- UI ---------- */
+const ms=$("metricSel");METRICS.forEach(m=>{const o=document.createElement("option");o.value=m[0];o.textContent=m[1];ms.appendChild(o)});
+ms.value=metric;ms.onchange=()=>{metric=ms.value;save();drawRank();drawHeat()};
+$("periodSel").onchange=e=>{period=e.target.value;render()};
+$("refreshBtn").onclick=load;
+document.querySelectorAll("#lvlSeg button").forEach(b=>b.onclick=()=>{lvl=b.dataset.l;document.querySelectorAll("#lvlSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));drawTable()});
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const sel=()=>unit==="All"?VIEW.G:(VIEW.rows.find(r=>r.level==="Unit"&&r.unit===unit)||VIEW.G);
+const floors=()=>VIEW.rows.filter(r=>r.level==="Floor"&&(unit==="All"||r.unit===unit));
+
+function kpis(){
+  const r=sel(),G=VIEW.G,PV=prevView(),pr=PV?(unit==="All"?PV.G:PV.rows.find(x=>x.level==="Unit"&&x.unit===unit)):null,
+    dm=(k,f)=>pr?` · <b class="${r[k]-pr[k]>=0?"up":"dn"}">${r[k]-pr[k]>=0?"▲":"▼"} ${f(Math.abs(r[k]-pr[k]))}</b> vs ${PV.label}`:"",vs=(v,g,f)=>{if(r===G)return"";const d=v-g;return ` · <b class="${d>0?"up":"dn"}">${d>0?"▲":"▼"} ${f(Math.abs(d))}</b> vs group`};
+  const K=[["Pcs achievement",fmt.pct(r.pa),`${fmt.k(r.ach)} of ${fmt.k(r.tgt)} pcs${dm("pa",v=>v.toFixed(1)+" pp")}`,r.pa],
+   ["Target loss",fmt.k(r.loss)+" pcs",`${fmt.int(r.loss/r.days)} pcs / day`],
+   ["Achieved efficiency",fmt.pct(r.aeff),`Target ${fmt.pct(r.teff)} · <b class="${r.gap>=0?"up":"dn"}">${fmt.pp(r.gap)}</b>${dm("aeff",v=>v.toFixed(1)+" pp")}`,r.aeff],
+   ["Earned CM",fmt.usdk(r.cm),`FOB ${fmt.usdk(r.fob)} · CM ${fmt.pct(r.cmfob)}`],
+   ["CM shortfall",fmt.usdk(r.short),"Lost pcs × CM/pc"],
+   ["CM / MP / day",fmt.d2(r.cmmp),(vs(r.cmmp,G.cmmp,fmt.d2)||`${fmt.int(r.mp)} manpower`)+dm("cmmp",fmt.d2)],
+   ["CM / pc",fmt.d3(r.cmpc),`FOB/pc ${fmt.d2(r.fobpc)}`],
+   ["CM / earned min",fmt.d4(r.cmmin),vs(r.cmmin,G.cmmin,fmt.d4)||`SMV ${fmt.n2(r.smv)}`],
+   ["Pcs / MC / day",fmt.n1(r.pmc),`${fmt.int(r.mc)} running MC · ${fmt.n1(r.line)} lines`],
+   ["Hourly output",Math.round(r.ahr)+" pcs",`Target ${Math.round(r.thr)} · <b class="${r.ahr>=r.thr?"up":"dn"}">${Math.round(r.ahr-r.thr)}</b>`],
+   ["1st hour achv",fmt.pct(r.first),"Line start-up",r.first],
+   ["Helper : MC",fmt.n2(r.hmc),`${fmt.int(r.hlp)} helpers · ${fmt.n2(r.wh)} h/day`]];
+  $("kpis").innerHTML=K.map((k,i)=>`<div class="kpi${i===0?" hero":""}"><div class="k">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div>${k[3]!==undefined?`<div class="meter"><i style="width:${Math.max(0,Math.min(100,k[3]))}%"></i></div>`:""}</div>`).join("");
+  const p=$("statusPill");p.className="pill "+r.status;p.textContent=`${r.name} · ${statusTxt[r.status]}`;
+  $("unitSeg").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.u===unit));
+  const isY=period.startsWith("Y:");
+  $("title").textContent="Sewing Performance — "+(isY?"YTD "+period.slice(2):period);
+  $("daysTag").textContent=(isY?`YTD · ${PERIODS.filter(p=>pyear(p)===+period.slice(2)).length} months · `:"MTD · ")+G.days+" working days";
+  $("scopeTag").textContent=`${UNITS.length} units · ${VIEW.rows.filter(r=>r.level==="Floor").length} floors`;
+}
+
+Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';Chart.defaults.font.size=11.5;
+const C={};
+function base(extra){const ink=css("--muted"),grid=css("--line");return Object.assign({responsive:true,maintainAspectRatio:false,animation:{duration:400},
+  plugins:{legend:{labels:{color:ink,boxWidth:10,boxHeight:10,usePointStyle:true}},tooltip:{backgroundColor:css("--ink"),titleColor:css("--bg"),bodyColor:css("--bg"),padding:10}},
+  scales:{x:{ticks:{color:ink},grid:{display:false},border:{color:grid}},y:{ticks:{color:ink},grid:{color:grid},border:{display:false}}}},extra||{})}
+function mk(id,cfg){if(C[id])C[id].destroy();C[id]=new Chart($(id),cfg)}
+const rot={maxRotation:60,minRotation:45};
+function drawAll(){
+  if(!VIEW)return;
+  const A=css("--accent"),B=css("--accent2"),BS=css("--accent2-soft"),good=css("--good"),bad=css("--bad"),ink=css("--muted"),b0=base();
+  const fl=floors();
+  // trend
+  const yr=period.startsWith("Y:")?+period.slice(2):pyear(period);
+  const ds=PERIODS.filter(p=>pyear(p)===yr);
+  const tr=ds.map(p=>agg(DATA.filter(r=>r.period===p&&(unit==="All"||r.unit===unit)),p,"Unit",unit));
+  const who=unit==="All"?"Group":unit;
+  $("trendSub").textContent=`${who} · ${yr} · pcs achievement % and efficiency % by month`;
+  $("cmTrendSub").textContent=`${who} · ${yr} · earned CM and CM per manpower per day`;
+  $("trendCard").hidden=$("cmTrendCard").hidden=ds.length<=1;
+  const hl=ds.map(p=>p===period?css("--ink"):B);
+  mk("cTrend",{type:"bar",data:{labels:ds,datasets:[
+    {label:"Achievement pcs",data:tr.map(r=>r.ach),backgroundColor:ds.map(p=>p===period?A:BS),borderRadius:3,yAxisID:"y1",order:3},
+    {type:"line",label:"Pcs achv %",data:tr.map(r=>r.pa),borderColor:B,backgroundColor:B,tension:.3,pointRadius:4,yAxisID:"y",order:1},
+    {type:"line",label:"Achieved eff %",data:tr.map(r=>r.aeff),borderColor:css("--good"),backgroundColor:css("--good"),tension:.3,pointRadius:4,yAxisID:"y",order:2}]},
+    options:base({plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${c.raw.toFixed(1)}%`:`${c.dataset.label}: ${fmt.int(c.raw)}`}}},
+      scales:{x:b0.scales.x,y:{...b0.scales.y,position:"left",ticks:{color:ink,callback:v=>v+"%"}},y1:{position:"right",grid:{display:false},ticks:{color:ink,callback:v=>fmt.k(v)},border:{display:false}}}})});
+  mk("cCmTrend",{type:"bar",data:{labels:ds,datasets:[
+    {label:"Earned CM ($)",data:tr.map(r=>r.cm),backgroundColor:ds.map(p=>p===period?A:BS),borderRadius:3,yAxisID:"y1",order:2},
+    {type:"line",label:"CM / MP / day ($)",data:tr.map(r=>r.cmmp),borderColor:B,backgroundColor:B,tension:.3,pointRadius:4,yAxisID:"y",order:1}]},
+    options:base({plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${fmt.d2(c.raw)}`:`${c.dataset.label}: ${fmt.usd(c.raw)}`}}},
+      scales:{x:b0.scales.x,y:{...b0.scales.y,position:"left",ticks:{color:ink,callback:v=>"$"+v}},y1:{position:"right",grid:{display:false},ticks:{color:ink,callback:v=>fmt.usdk(v)},border:{display:false}}}})});
+  // target vs achievement
+  const tvaRows=unit==="All"?VIEW.rows.filter(r=>r.level==="Unit"):fl;
+  $("tvaSub").textContent=unit==="All"?"Pieces by unit":`Pieces by floor in ${unit}`;
+  mk("cTva",{type:"bar",data:{labels:tvaRows.map(r=>unit==="All"?r.unit:r.lab.replace(unit+" - ","")),datasets:[
+    {label:"Target",data:tvaRows.map(r=>r.tgt),backgroundColor:BS,borderRadius:4},
+    {label:"Achieved",data:tvaRows.map(r=>r.ach),backgroundColor:tvaRows.map(r=>r.pa>=100?good:B),borderRadius:4}]},
+    options:base({plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{afterBody:it=>{const r=tvaRows[it[0].dataIndex];return `Achv ${fmt.pct(r.pa)} · loss ${fmt.int(r.loss)}`}}}},
+      scales:{x:b0.scales.x,y:{...b0.scales.y,ticks:{color:ink,callback:v=>fmt.k(v)}}}})});
+  // efficiency
+  mk("cEff",{type:"bar",data:{labels:fl.map(r=>r.lab),datasets:[
+    {label:"Target eff %",data:fl.map(r=>r.teff),backgroundColor:BS,borderRadius:3},
+    {label:"Achieved eff %",data:fl.map(r=>r.aeff),backgroundColor:fl.map(r=>r.gap>=0?good:r.gap>-8?A:bad),borderRadius:3}]},
+    options:base({plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${c.dataset.label}: ${c.raw.toFixed(1)}%`,afterBody:it=>"Gap "+fmt.pp(fl[it[0].dataIndex].gap)}}},
+      scales:{x:{...b0.scales.x,ticks:{color:ink,...rot}},y:{...b0.scales.y,suggestedMin:40,ticks:{color:ink,callback:v=>v+"%"}}}})});
+  // map
+  const sc=r=>r.status==="good"?good:r.status==="warn"?A:bad;
+  mk("cMap",{type:"bubble",data:{datasets:[{label:"Floors",data:fl.map(r=>({x:r.aeff,y:r.cmmp,r:Math.max(5,Math.sqrt(r.mp)*0.9),n:r.lab})),backgroundColor:fl.map(r=>sc(r)+"99"),borderColor:fl.map(sc)}]},
+    options:base({plugins:{legend:{display:false},tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${c.raw.n}: eff ${c.raw.x.toFixed(1)}%, $${c.raw.y.toFixed(2)} CM/MP/day`}}},
+      scales:{x:{...b0.scales.x,grid:{color:css("--line")},title:{display:true,text:"Achieved efficiency %",color:ink}},y:{...b0.scales.y,title:{display:true,text:"CM / MP / day ($)",color:ink}}}})});
+  // shortfall
+  const sf=[...fl].sort((a,b)=>b.short-a.short);
+  mk("cShort",{type:"bar",data:{labels:sf.map(r=>r.lab),datasets:[{label:"CM shortfall ($)",data:sf.map(r=>Math.round(r.short)),backgroundColor:sf.map(r=>r.short>20000?bad:r.short>0?A:good),borderRadius:4}]},
+    options:base({indexAxis:"y",plugins:{legend:{display:false},tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>fmt.usd(c.raw)}}},
+      scales:{x:{...b0.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>fmt.usdk(v)}},y:{...b0.scales.y,grid:{display:false}}}})});
+  // hourly
+  mk("cHour",{type:"bar",data:{labels:fl.map(r=>r.lab),datasets:[
+    {type:"line",label:"Target pcs/hr",data:fl.map(r=>r.thr),borderColor:A,backgroundColor:A,pointRadius:3,tension:.25},
+    {label:"Achieved pcs/hr",data:fl.map(r=>r.ahr),backgroundColor:B,borderRadius:3}]},
+    options:base({scales:{x:{...b0.scales.x,ticks:{color:ink,...rot}},y:{...b0.scales.y}}})});
+  // first hour
+  mk("cFirst",{type:"bar",data:{labels:fl.map(r=>r.lab),datasets:[{label:"1st hour %",data:fl.map(r=>r.first),backgroundColor:fl.map(r=>r.first>=80?good:r.first>=60?A:bad),borderRadius:3},
+    {type:"line",label:"80% reference",data:fl.map(()=>80),borderColor:ink,borderDash:[5,4],pointRadius:0,borderWidth:1.5}]},
+    options:base({scales:{x:{...b0.scales.x,ticks:{color:ink,...rot}},y:{...b0.scales.y,min:0,max:100,ticks:{color:ink,callback:v=>v+"%"}}}})});
+  drawRank();
+}
+function drawRank(){
+  if(!VIEW)return;
+  const m=MI[metric],f=fmt[m[2]],ink=css("--muted"),b0=base();
+  const fl=[...floors()].sort((a,b)=>(b[metric]-a[metric])*m[3]);const gv=VIEW.G[metric];
+  mk("cRank",{type:"bar",data:{labels:fl.map(r=>r.lab),datasets:[{label:m[1],data:fl.map(r=>r[metric]),backgroundColor:fl.map(r=>(r[metric]-gv)*m[3]>=0?css("--good"):css("--bad")),borderRadius:4,barPercentage:.75},
+    {type:"line",label:"Group",data:fl.map(()=>gv),borderColor:css("--ink"),borderDash:[6,4],pointRadius:0,borderWidth:1.5}]},
+    options:base({indexAxis:"y",plugins:{legend:{display:false},tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${c.dataset.label}: ${f(c.raw)}`}}},
+      scales:{x:{...b0.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>f(v)}},y:{...b0.scales.y,grid:{display:false}}}})});
+}
+const COLS=[["name","Unit / floor"],["status","Status"],["tgt","Target","int"],["ach","Achieved","int"],["loss","Loss","int"],["pa","Pcs achv","pct"],["teff","Tgt eff","pct"],["aeff","Achv eff","pct"],["gap","Gap","pp"],
+ ["smv","SMV","n2"],["ahr","Hr pcs","int"],["first","1st hr","pct"],["mc","MC","int"],["hlp","Helper","int"],["hmc","H:MC","n2"],["mp","MP","int"],["cm","CM $","usd"],["cmpc","CM/pc","d3"],["cmmp","CM/MP/day","d2"],["pmc","Pcs/MC/day","n1"],["short","CM shortfall","usd"]];
+const BARS={pa:"--accent2",aeff:"--accent2",cmmp:"--good",short:"--bad"};
+function drawTable(){
+  if(!VIEW)return;const t=$("tbl");
+  t.tHead.innerHTML="<tr>"+COLS.map(c=>`<th ${c[0]===sortKey?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}><button type="button" data-k="${c[0]}">${c[1]}</button></th>`).join("")+"</tr>";
+  t.tHead.querySelectorAll("button").forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k===sortKey)sortDir*=-1;else{sortKey=k;sortDir=-1}drawTable()});
+  const ord={good:2,warn:1,bad:0};
+  let rs=VIEW.rows.filter(r=>(unit==="All"||r.unit===unit||r.level==="Group")&&(lvl==="all"||r.level===lvl||r.level==="Group"));
+  rs.sort((a,b)=>{if(a.level==="Group")return 1;if(b.level==="Group")return -1;const av=sortKey==="status"?ord[a.status]:a[sortKey],bv=sortKey==="status"?ord[b.status]:b[sortKey];return typeof av==="string"?av.localeCompare(bv)*sortDir:(av-bv)*sortDir});
+  const F=VIEW.rows.filter(r=>r.level==="Floor"),mx={};Object.keys(BARS).forEach(k=>mx[k]=Math.max(1e-9,...F.map(r=>Math.abs(r[k]))));
+  t.tBodies[0].innerHTML=rs.map(r=>`<tr class="${r.level!=="Floor"?"unit":""}">`+COLS.map(c=>{
+    if(c[0]==="name")return `<td>${r.name}</td>`;
+    if(c[0]==="status")return `<td><span class="pill ${r.status}">${statusTxt[r.status]}</span></td>`;
+    const v=r[c[0]],s=fmt[c[2]](v),cls=(c[0]==="loss"||c[0]==="gap")?(v<0?"neg":"pos"):"";
+    if(BARS[c[0]]&&r.level==="Floor")return `<td class="mono ${cls}"><span class="cellbar"><i style="width:${Math.min(100,Math.abs(v)/mx[c[0]]*100)}%;background:var(${BARS[c[0]]})"></i><span>${s}</span></span></td>`;
+    return `<td class="mono ${cls}">${s}</td>`}).join("")+"</tr>").join("");
+}
+function insights(){
+  const G=VIEW.G,F=VIEW.rows.filter(r=>r.level==="Floor"),U=VIEW.rows.filter(r=>r.level==="Unit");
+  if(!F.length){$("insights").innerHTML="";return}
+  const by=(a,k,d=-1)=>[...a].sort((x,y)=>(x[k]-y[k])*-d);
+  const topF=by(F,"pa")[0],botF=by(F,"pa",1)[0],topU=by(U,"pa")[0],botU=by(U,"pa",1)[0],cmBest=by(F,"cmmp")[0],cmWorst=by(F,"cmmp",1)[0];
+  const onT=U.filter(u=>u.pa>=100).map(u=>u.unit);
+  const sh=by(F,"short").filter(r=>r.short>0).slice(0,3);const shTot=sum(F,r=>r.short)||1;
+  const slow=F.filter(r=>r.first<55).sort((a,b)=>a.first-b.first).slice(0,3);
+  const hm=by(U,"hmc")[0];
+  const good=[`<li><b>${onT.length?onT.join(", ")+" on target":"No unit on target"}</b>${onT.length?"":`; best unit is ${topU.unit} at ${fmt.pct(topU.pa)}`}.</li>`,
+    `<li><b>Best floor: ${topF.name}</b> at ${fmt.pct(topF.pa)} achievement, ${fmt.pct(topF.aeff)} efficiency.</li>`,
+    `<li><b>Highest CM per head: ${cmBest.name}</b> at ${fmt.d2(cmBest.cmmp)} per MP per day (group ${fmt.d2(G.cmmp)}).</li>`];
+  const bad=[`<li><b>Group at ${fmt.pct(G.pa)}</b>, ${fmt.k(Math.abs(Math.min(0,G.loss)))} pcs short, about <b>${fmt.usdk(G.short)} CM</b> not earned. Efficiency ${fmt.pct(G.aeff)} vs ${fmt.pct(G.teff)} target.</li>`,
+    `<li><b>Weakest floor: ${botF.name}</b> at ${fmt.pct(botF.pa)}, efficiency gap ${fmt.pp(botF.gap)}.</li>`,
+    sh.length?`<li><b>Largest CM shortfall:</b> ${sh.map(r=>`${r.lab} ${fmt.usdk(r.short)}`).join(", ")} (${fmt.pct(sum(sh,r=>r.short)/shTot*100)} of floor total).</li>`:"",
+    `<li><b>Lowest CM per head: ${cmWorst.name}</b> at ${fmt.d2(cmWorst.cmmp)} per MP per day.</li>`];
+  const act=[`<li><b>${botF.lab}:</b> hourly line tracking, bottleneck study and line re-balancing to close the ${fmt.pp(botF.gap)} efficiency gap.</li>`,
+    slow.length?`<li><b>Start-up loss:</b> 1st hour below 55% at ${slow.map(r=>`${r.lab} (${fmt.pct(r.first)})`).join(", ")}. Feeding and trims ready before shift.</li>`:"",
+    hm&&hm.hmc>G.hmc*1.25?`<li><b>${hm.unit} helpers:</b> Helper:MC ${fmt.n2(hm.hmc)} vs group ${fmt.n2(G.hmc)}. Review helper allocation per line.</li>`:"",
+    `<li><b>Replicate ${topF.lab}:</b> document its line set-up and supervision model for ${botU.unit}.</li>`];
+  $("insights").innerHTML=`<div class="card"><h2><span class="dot" style="background:var(--good)"></span>What's working</h2><ul>${good.join("")}</ul></div>
+   <div class="card"><h2><span class="dot" style="background:var(--bad)"></span>Where it's leaking</h2><ul>${bad.join("")}</ul></div>
+   <div class="card"><h2><span class="dot" style="background:var(--accent)"></span>Actions</h2><ul>${act.join("")}</ul></div>`;
+}
+function drawHeat(){
+  const yr=period.startsWith("Y:")?+period.slice(2):pyear(period);const ms=PERIODS.filter(p=>pyear(p)===yr);
+  $("heatCard").hidden=ms.length<=1;if(ms.length<=1)return;
+  const m=MI[metric],f=fmt[m[2]];
+  $("heatSub").textContent=`${m[1]} · ${yr} · green = better, red = worse · bold = selected month`;
+  const keys=[...new Set(DATA.filter(r=>pyear(r.period)===yr&&(unit==="All"||r.unit===unit)).map(r=>r.unit+"|"+r.floor))];
+  const cell={};const all=[];
+  keys.forEach(k=>{const [u,fl]=k.split("|");ms.forEach(p=>{const rs=DATA.filter(r=>r.period===p&&r.unit===u&&r.floor===fl);if(rs.length){const v=agg(rs,u+" - "+fl,"Floor",u)[metric];cell[k+"|"+p]=v;all.push(v)}})});
+  const sorted=[...all].sort((a,b)=>a-b),rank=v=>sorted.length>1?sorted.indexOf(v)/(sorted.length-1):.5;
+  const col=v=>{let t=rank(v);if(m[3]<0)t=1-t;const c=t>=.5?"--good":"--bad",w=Math.round(Math.abs(t-.5)*2*55);return `background:color-mix(in srgb,var(${c}) ${w}%,transparent)`};
+  const t=$("heat");
+  t.tHead.innerHTML="<tr><th>Unit / floor</th>"+ms.map(p=>`<th>${p===period?"<u>"+p+"</u>":p}</th>`).join("")+"</tr>";
+  t.tBodies[0].innerHTML=keys.map(k=>{const [u,fl]=k.split("|");return `<tr><td>${u} - ${fl}</td>`+ms.map(p=>{const v=cell[k+"|"+p];return v==null?`<td class="hc">–</td>`:`<td class="hc" style="${col(v)};${p===period?"font-weight:700":""}">${f(v)}</td>`}).join("")+"</tr>"}).join("");
+}
+function render(){VIEW=buildView();kpis();drawAll();drawTable();drawHeat();insights()}
+load();
+setInterval(load,Math.max(1,CFG.refreshMinutes)*60000);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",drawAll);
+})();
+</script>
+</body>
+</html>
