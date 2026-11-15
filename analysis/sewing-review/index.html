@@ -368,7 +368,9 @@ const unitRows=(u,mis)=>rows(mis,k=>FLOOR[k].u===u);
 const effCls=e=>e>=70?'g':e>=60?'a':'r';
 function pill(v,good,txt){return `<span class="pill ${good===null?'n':good?'g':'r'}">${txt}</span>`}
 function corr(x,y){const n=x.length,mx=sum(x,v=>v)/n,my=sum(y,v=>v)/n;let a=0,b=0,c=0;for(let i=0;i<n;i++){a+=(x[i]-mx)*(y[i]-my);b+=(x[i]-mx)**2;c+=(y[i]-my)**2}return a/Math.sqrt(b*c)}
+let NOANIM=false;
 function mk(id,cfg){if(charts[id])charts[id].destroy();const el=document.getElementById(id);if(!el)return;
+  if(NOANIM){cfg.options=cfg.options||{};cfg.options.animation=false}
   // one month selected: a line with a single point is invisible, so show every series as side-by-side bars
   const L=cfg.data&&cfg.data.labels;
   if(L&&L.length===1&&!['doughnut','scatter'].includes(cfg.type)){
@@ -419,10 +421,16 @@ function buildFilters(){
   document.getElementById('fFloor').value=S.floor;
   document.getElementById('fFloor').onchange=e=>{S.floor=e.target.value;render()};
 }
+/* Some viewers (embedded previews, background tabs) pause animation frames; Chart.js then never paints.
+   If no frame arrives quickly, switch animations off and draw every chart immediately. */
+function ensureDrawn(){if(NOANIM)return;let ok=false;requestAnimationFrame(()=>ok=true);
+  setTimeout(()=>{if(ok)return;NOANIM=true;Chart.defaults.animation=false;
+    Object.values(charts).forEach(c=>{try{c.stop();c.options.animation=false;c.update()}catch(e){}})},300)}
 function render(){
   const p=S.page;document.getElementById('pgSub').textContent=`Period: ${periodLabel()} · 6 units · 15 floors`;
   ({summary:rSummary,target:rTarget,trend:rTrend,units:rUnits,floors:rFloors,fin:rFin,gap:rGap,actions:rActions})[p]();
   animateNumbers(document.getElementById('p-'+p));
+  ensureDrawn();
   document.getElementById('srcStamp').textContent=DATA.synced?`Live from Google Sheet · synced ${DATA.synced}`:`Data snapshot ${SNAP_DATE}`;
 }
 
@@ -508,7 +516,7 @@ function rTarget(){
     <text x="66" y="66" text-anchor="middle" class="gv">${fmt(x.eff,1)}%</text><text x="66" y="86" text-anchor="middle" class="gs">TARGET ${fmt(x.mt,x.mt%1?1:0)}%</text></svg>
     <div>${pill(0,x.g>=0,(x.g>=0?'+':'')+fmt(x.g,1)+' pts')}</div>
     <div class="meta">${pct(x.ach,0)} of target · hit ${x.hit}/${nM} months</div></div>`}).join('');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('#gauges .arc').forEach(a=>a.style.strokeDashoffset=a.dataset.off)));
+  setTimeout(()=>document.querySelectorAll('#gauges .arc').forEach(a=>a.style.strokeDashoffset=a.dataset.off),40);
   const mark=(label,data,color,w)=>({type:'line',label,data,showLine:false,pointStyle:'line',pointRadius:w,pointHoverRadius:w,pointBorderWidth:3,borderColor:color,backgroundColor:color});
   mk('cTva',{type:'bar',data:{labels:us.map(x=>x.u),datasets:[
     {label:'Achieved',data:us.map(x=>+x.eff.toFixed(2)),backgroundColor:us.map(x=>x.c),borderRadius:7,barPercentage:.6},
