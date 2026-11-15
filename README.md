@@ -1,6 +1,6 @@
 # tashriif.com
 
-Static site for Tahmidur Rahman — CV and analysis portfolio, deployed on Netlify.
+Static site for Tahmidur Rahman — CV and analysis portfolio, hosted on GitHub Pages (custom domain in `CNAME`).
 
 | Path | Page |
 |---|---|
@@ -10,7 +10,7 @@ Static site for Tahmidur Rahman — CV and analysis portfolio, deployed on Netli
 | `/analysis/sewing/` | Eurotex Sewing Pulse — live dashboard from Google Sheets |
 | `/analysis/sewing-review/` | Eurotex Group Sewing Performance Review 2026 — target vs achievement (management review) |
 
-No build step: Netlify publishes the repository root (see `netlify.toml`). Push to `main` to deploy.
+No build step: GitHub Pages publishes the repository root from `main`. Push to `main` to deploy (live in about a minute).
 
 ## Sewing Review — monthly update
 The review page reads the "Sewing Summary Report" Google Sheet when it opens on tashriif.com.

@@ -1,9 +1,0 @@
-[build]
-  publish = "."
-  command = ""
-
-# Keep the internal review page out of search engines
-[[headers]]
-  for = "/analysis/sewing-review/*"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
