@@ -283,7 +283,7 @@ nav a .n{transition:.2s}
       <div class="card"><h3>CM share by unit</h3><p class="cap">Selected period</p><div class="chart t"><canvas id="cShare"></canvas></div></div>
     </div>
     <div class="grid g3" style="margin-top:16px">
-      <div class="card"><h3>CM per earned minute</h3><p class="cap">US¢ per standard minute produced — reflects order pricing</p><div class="chart s"><canvas id="cCPM"></canvas></div></div>
+      <div class="card"><h3>CM per earned minute</h3><p class="cap">US$ per standard minute produced — reflects order pricing</p><div class="chart s"><canvas id="cCPM"></canvas></div></div>
       <div class="card"><h3>CM per machine per day</h3><p class="cap">US$ — asset productivity</p><div class="chart s"><canvas id="cCMMC"></canvas></div></div>
       <div class="card"><h3>FOB per piece</h3><p class="cap">US$ — product mix value</p><div class="chart s"><canvas id="cFOBpc"></canvas></div></div>
     </div>
@@ -478,7 +478,7 @@ function rSummary(){
     ['Efficiency',pct(G.eff),`Mgmt ${pct(mtW(rows(mis)),0)} · Plan ${pct(G.tEff)} · ${pill(0,gap>=0,(gap>=0?'+':'')+fmt(gap,1)+' pts')}`],
     ['Earned CM',usd(G.cm),`${usd(G.cm/G.months,2)} / month`],
     ['Earned FOB',usd(G.fob),`FOB/pc $${fmt(G.fobpc,2)}`],
-    ['CM / earned min',fmt(G.cpm*100,2)+'¢',`CM/pc $${fmt(G.cmpc,3)}`],
+    ['CM / earned min','$'+fmt(G.cpm,4),`CM/pc $${fmt(G.cmpc,3)}`],
     ['Avg working hours',fmt(G.wh,1)+' h',`${fmt(G.mc,0)} machines · ${fmt(G.ln,0)} lines`]];
   document.getElementById('kpis').innerHTML=k.map(x=>`<div class="card kpi"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="d">${x[2]}</div></div>`).join('');
   // trend chart
@@ -499,7 +499,7 @@ function rSummary(){
     ['r','$',`<b>${worst.u} is the biggest lever.</b> <span>${pct(worst.eff)} efficiency vs ${pct(worst.tEff)} target — ${usd(worst.gapUSD)} of CM lost, ${fmt(worst.gapUSD/G.gapUSD*100,0)}% of the group gap.</span>`],
     ['g','★',`<b>${best.u} is the internal benchmark.</b> <span>${pct(best.eff)} efficiency, ${pct(best.perf)} plan achievement and ${pct(best.fh,0)} 1st-hour achievement.</span>`],
     ['a','↕',ms.length>1?`<b>Best month ${bm[0].m} (${pct(bm[0].e)}), weakest ${bm[bm.length-1].m} (${pct(bm[bm.length-1].e)}).</b> <span>A ${fmt(bm[0].e-bm[bm.length-1].e,1)}-pt swing shows the loss is controllable, not structural.</span>`:`<b>Single month selected.</b> <span>Widen the period to see the trend.</span>`],
-    ['b','¢',`<b>${lowCpm.u} earns the least per minute.</b> <span>${fmt(lowCpm.cpm*100,2)}¢ CM per earned minute vs group ${fmt(G.cpm*100,2)}¢ — a pricing/order-mix issue, not only efficiency.</span>`],
+    ['b','$',`<b>${lowCpm.u} earns the least per minute.</b> <span>$${fmt(lowCpm.cpm,4)} CM per earned minute vs group $${fmt(G.cpm,4)} — a pricing/order-mix issue, not only efficiency.</span>`],
     ['a','⏱',`<b>Every +1 pt of group efficiency ≈ ${usd(0.01*G.am*G.cpm/G.months,0)} CM a month.</b> <span>Same machines, same people — only better utilisation of available minutes.</span>`]];
   document.getElementById('sumIns').innerHTML=ins.map(x=>`<li><div class="ic ${x[0]}">${x[1]}</div><div>${x[2]}</div></li>`).join('');
   // November / latest partial
@@ -649,7 +649,7 @@ function rMMR(){
 
 /* ---------- 2. TREND ---------- */
 const TM={eff:['Efficiency %',s=>s.eff,v=>fmt(v,1)+'%','Earned ÷ available minutes'],perf:['Plan achievement %',s=>s.perf,v=>fmt(v,1)+'%','Achieved ÷ target pieces'],
- a:['Output (pcs)',s=>s.a,v=>big(v,2),'Pieces produced'],cm:['Earned CM ($)',s=>s.cm,v=>usd(v),'US$'],cpm:['CM per earned min (¢)',s=>s.cpm*100,v=>fmt(v,2)+'¢','US cents'],
+ a:['Output (pcs)',s=>s.a,v=>big(v,2),'Pieces produced'],cm:['Earned CM ($)',s=>s.cm,v=>usd(v),'US$'],cpm:['CM per earned min ($)',s=>s.cpm,v=>'$'+fmt(v,4),'US$ per earned minute'],
  smv:['Average SMV',s=>s.smv,v=>fmt(v,2),'Earned minutes ÷ pieces — style complexity'],wh:['Working hours / day',s=>s.wh,v=>fmt(v,2)+' h','Includes overtime'],fh:['1st-hour achievement %',s=>s.fh,v=>fmt(v,1)+'%','Start-of-day readiness']};
 function rTrend(){
   document.getElementById('trendSeg').innerHTML=Object.entries(TM).map(([k,v])=>`<button data-k="${k}" class="${S.trend===k?'on':''}">${v[0].replace(' (pcs)','').replace(' ($)','')}</button>`).join('');
@@ -660,10 +660,10 @@ function rTrend(){
   if(!['a','cm'].includes(S.trend))ds.push({label:'Group',data:ms.map(i=>+m[1](agg(rows([i]))).toFixed(4)),borderColor:'#0f172a',borderDash:[6,4],borderWidth:2.5,pointRadius:0,tension:.3});
   mk('cTrend',{type:'line',data:{labels:lab,datasets:ds},options:{interaction:{mode:'index',intersect:false},scales:{y:{grid:gridC,ticks:{callback:v=>m[2](v)}},x:{grid:{display:false}}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+m[2](c.raw)}}}}});
   const data=ms.map(i=>({i,m:mLabel(DATA.months[i]),...agg(rows([i])),days:DATA.months[i].f['EKL-2F'][IX.d]}));
-  const H=[{h:'Month',v:r=>r.i},{h:'Target pcs',v:r=>r.t},{h:'Achieved pcs',v:r=>r.a},{h:'Plan %',v:r=>r.perf},{h:'Target eff',v:r=>r.tEff},{h:'Achieved eff',v:r=>r.eff},{h:'Gap pts',v:r=>r.eff-r.tEff},{h:'SMV',v:r=>r.smv},{h:'Work hrs',v:r=>r.wh},{h:'1st hr %',v:r=>r.fh},{h:'Earned CM',v:r=>r.cm},{h:'Earned FOB',v:r=>r.fob},{h:'CM ¢/min',v:r=>r.cpm},{h:'CM lost vs tgt',v:r=>r.gapUSD}];
+  const H=[{h:'Month',v:r=>r.i},{h:'Target pcs',v:r=>r.t},{h:'Achieved pcs',v:r=>r.a},{h:'Plan %',v:r=>r.perf},{h:'Target eff',v:r=>r.tEff},{h:'Achieved eff',v:r=>r.eff},{h:'Gap pts',v:r=>r.eff-r.tEff},{h:'SMV',v:r=>r.smv},{h:'Work hrs',v:r=>r.wh},{h:'1st hr %',v:r=>r.fh},{h:'Earned CM',v:r=>r.cm},{h:'Earned FOB',v:r=>r.fob},{h:'CM $/min',v:r=>r.cpm},{h:'CM lost vs tgt',v:r=>r.gapUSD}];
   const T=agg(rows(ms));
-  const rh=r=>`<tr><td><b>${r.m}</b></td><td>${fmt(r.t)}</td><td>${fmt(r.a)}</td><td>${pill(0,r.perf>=95,pct(r.perf))}</td><td>${pct(r.tEff)}</td><td><b>${pct(r.eff)}</b></td><td style="color:${r.eff-r.tEff<0?'var(--bad)':'var(--good)'}">${fmt(r.eff-r.tEff,1)}</td><td>${fmt(r.smv,2)}</td><td>${fmt(r.wh,2)}</td><td>${pct(r.fh)}</td><td>${usd(r.cm)}</td><td>${usd(r.fob)}</td><td>${fmt(r.cpm*100,2)}</td><td style="color:var(--bad)">${usd(r.gapUSD)}</td></tr>`;
-  const tot=`<tr class="tot"><td>Period total</td><td>${fmt(T.t)}</td><td>${fmt(T.a)}</td><td>${pct(T.perf)}</td><td>${pct(T.tEff)}</td><td>${pct(T.eff)}</td><td>${fmt(T.eff-T.tEff,1)}</td><td>${fmt(T.smv,2)}</td><td>${fmt(T.wh,2)}</td><td>${pct(T.fh)}</td><td>${usd(T.cm)}</td><td>${usd(T.fob)}</td><td>${fmt(T.cpm*100,2)}</td><td>${usd(T.gapUSD)}</td></tr>`;
+  const rh=r=>`<tr><td><b>${r.m}</b></td><td>${fmt(r.t)}</td><td>${fmt(r.a)}</td><td>${pill(0,r.perf>=95,pct(r.perf))}</td><td>${pct(r.tEff)}</td><td><b>${pct(r.eff)}</b></td><td style="color:${r.eff-r.tEff<0?'var(--bad)':'var(--good)'}">${fmt(r.eff-r.tEff,1)}</td><td>${fmt(r.smv,2)}</td><td>${fmt(r.wh,2)}</td><td>${pct(r.fh)}</td><td>${usd(r.cm)}</td><td>${usd(r.fob)}</td><td>$${fmt(r.cpm,4)}</td><td style="color:var(--bad)">${usd(r.gapUSD)}</td></tr>`;
+  const tot=`<tr class="tot"><td>Period total</td><td>${fmt(T.t)}</td><td>${fmt(T.a)}</td><td>${pct(T.perf)}</td><td>${pct(T.tEff)}</td><td>${pct(T.eff)}</td><td>${fmt(T.eff-T.tEff,1)}</td><td>${fmt(T.smv,2)}</td><td>${fmt(T.wh,2)}</td><td>${pct(T.fh)}</td><td>${usd(T.cm)}</td><td>${usd(T.fob)}</td><td>$${fmt(T.cpm,4)}</td><td>${usd(T.gapUSD)}</td></tr>`;
   sortable('tMonth',H,data,rh,tot);
 }
 
@@ -688,9 +688,9 @@ function rUnits(){
   document.getElementById('heat').innerHTML=`<table class="heat"><thead><tr><th>Unit</th>${ms.map(i=>`<th>${DATA.months[i].m.slice(0,3)}${DATA.months[i].partial?'*':''}</th>`).join('')}<th>Period</th></tr></thead><tbody>`+
     us.map(x=>`<tr><td><span class="dot" style="background:${x.c}"></span>${x.u}</td>${ms.map(i=>{const e=agg(unitRows(x.u,[i])).eff,c=col(e);return `<td style="background:${c[0]};color:${c[1]}">${fmt(e,1)}</td>`}).join('')}<td style="background:${col(x.eff)[0]};color:${col(x.eff)[1]};font-weight:800">${fmt(x.eff,1)}</td></tr>`).join('')+
     `<tr><td><b>Group</b></td>${ms.map(i=>{const e=agg(rows([i])).eff,c=col(e);return `<td style="background:${c[0]};color:${c[1]}">${fmt(e,1)}</td>`}).join('')}<td style="font-weight:800">${fmt(G.eff,1)}</td></tr></tbody></table>`;
-  const H=[{h:'Unit',v:r=>r.u},{h:'Achieved pcs',v:r=>r.a},{h:'Plan %',v:r=>r.perf},{h:'Target eff',v:r=>r.tEff},{h:'Achieved eff',v:r=>r.eff},{h:'Gap pts',v:r=>r.eff-r.tEff},{h:'SMV',v:r=>r.smv},{h:'1st hr %',v:r=>r.fh},{h:'Work hrs',v:r=>r.wh},{h:'Helper %',v:r=>r.help},{h:'Earned CM',v:r=>r.cm},{h:'CM ¢/min',v:r=>r.cpm},{h:'CM/MC/day',v:r=>r.cmmc},{h:'CM lost',v:r=>r.gapUSD}];
-  const rh=r=>`<tr><td><span class="dot" style="background:${r.c}"></span><b>${r.u}</b></td><td>${fmt(r.a)}</td><td>${pct(r.perf)}</td><td>${pct(r.tEff)}</td><td><b>${pct(r.eff)}</b></td><td style="color:${r.eff<r.tEff?'var(--bad)':'var(--good)'}">${fmt(r.eff-r.tEff,1)}</td><td>${fmt(r.smv,2)}</td><td>${pct(r.fh)}</td><td>${fmt(r.wh,2)}</td><td>${pct(r.help)}</td><td>${usd(r.cm)}</td><td>${fmt(r.cpm*100,2)}</td><td>$${fmt(r.cmmc,2)}</td><td style="color:var(--bad)">${usd(r.gapUSD)}</td></tr>`;
-  const tot=`<tr class="tot"><td>Group</td><td>${fmt(G.a)}</td><td>${pct(G.perf)}</td><td>${pct(G.tEff)}</td><td>${pct(G.eff)}</td><td>${fmt(G.eff-G.tEff,1)}</td><td>${fmt(G.smv,2)}</td><td>${pct(G.fh)}</td><td>${fmt(G.wh,2)}</td><td>${pct(G.help)}</td><td>${usd(G.cm)}</td><td>${fmt(G.cpm*100,2)}</td><td>$${fmt(G.cmmc,2)}</td><td>${usd(G.gapUSD)}</td></tr>`;
+  const H=[{h:'Unit',v:r=>r.u},{h:'Achieved pcs',v:r=>r.a},{h:'Plan %',v:r=>r.perf},{h:'Target eff',v:r=>r.tEff},{h:'Achieved eff',v:r=>r.eff},{h:'Gap pts',v:r=>r.eff-r.tEff},{h:'SMV',v:r=>r.smv},{h:'1st hr %',v:r=>r.fh},{h:'Work hrs',v:r=>r.wh},{h:'Helper %',v:r=>r.help},{h:'Earned CM',v:r=>r.cm},{h:'CM $/min',v:r=>r.cpm},{h:'CM/MC/day',v:r=>r.cmmc},{h:'CM lost',v:r=>r.gapUSD}];
+  const rh=r=>`<tr><td><span class="dot" style="background:${r.c}"></span><b>${r.u}</b></td><td>${fmt(r.a)}</td><td>${pct(r.perf)}</td><td>${pct(r.tEff)}</td><td><b>${pct(r.eff)}</b></td><td style="color:${r.eff<r.tEff?'var(--bad)':'var(--good)'}">${fmt(r.eff-r.tEff,1)}</td><td>${fmt(r.smv,2)}</td><td>${pct(r.fh)}</td><td>${fmt(r.wh,2)}</td><td>${pct(r.help)}</td><td>${usd(r.cm)}</td><td>$${fmt(r.cpm,4)}</td><td>$${fmt(r.cmmc,2)}</td><td style="color:var(--bad)">${usd(r.gapUSD)}</td></tr>`;
+  const tot=`<tr class="tot"><td>Group</td><td>${fmt(G.a)}</td><td>${pct(G.perf)}</td><td>${pct(G.tEff)}</td><td>${pct(G.eff)}</td><td>${fmt(G.eff-G.tEff,1)}</td><td>${fmt(G.smv,2)}</td><td>${pct(G.fh)}</td><td>${fmt(G.wh,2)}</td><td>${pct(G.help)}</td><td>${usd(G.cm)}</td><td>$${fmt(G.cpm,4)}</td><td>$${fmt(G.cmmc,2)}</td><td>${usd(G.gapUSD)}</td></tr>`;
   sortable('tUnit',H,us,rh,tot);
 }
 
@@ -701,7 +701,7 @@ function rFloors(){
   document.getElementById('floorKpis').innerHTML=[
     ['Achieved efficiency',pct(X.eff),`Target ${pct(X.tEff)} · ${pill(0,g>=0,(g>=0?'+':'')+fmt(g,1)+' pts')}`],
     ['Plan achievement',pct(X.perf),`${big(X.a)} of ${big(X.t)} pcs`],
-    ['Earned CM',usd(X.cm),`${fmt(X.cpm*100,2)}¢ per min · CM lost ${usd(X.gapUSD)}`],
+    ['Earned CM',usd(X.cm),`$${fmt(X.cpm,4)} per min · CM lost ${usd(X.gapUSD)}`],
     ['Resources',`${fmt(X.mc,0)} MC`,`${fmt(X.ln,1)} lines · SMV ${fmt(X.smv,2)} · 1st hr ${pct(X.fh,0)}`]]
     .map(x=>`<div class="card kpi"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="d">${x[2]}</div></div>`).join('');
   document.getElementById('flTitle').textContent=fl.n+' — monthly';
@@ -717,8 +717,8 @@ function rFloors(){
     {type:'line',label:'Target eff %',data:all.map(x=>+x.tEff.toFixed(2)),showLine:false,pointStyle:'line',pointRadius:9,pointBorderWidth:3,borderColor:'#0f172a'}]},
     options:{indexAxis:'y',scales:{x:{min:40,grid:gridC,ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:11}}}},
     onClick:(e,el)=>{if(el.length){S.floor=all[el[0].index].k;document.getElementById('fFloor').value=S.floor;rFloors()}},plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw,1)+'%'}}}}});
-  const H=[{h:'Floor',v:r=>r.n},{h:'Unit',v:r=>r.u},{h:'Lines',v:r=>r.ln},{h:'MC',v:r=>r.mc},{h:'Achieved pcs',v:r=>r.a},{h:'Plan %',v:r=>r.perf},{h:'Target eff',v:r=>r.tEff},{h:'Achieved eff',v:r=>r.eff},{h:'Gap pts',v:r=>r.eff-r.tEff},{h:'SMV',v:r=>r.smv},{h:'1st hr %',v:r=>r.fh},{h:'Work hrs',v:r=>r.wh},{h:'Earned CM',v:r=>r.cm},{h:'CM ¢/min',v:r=>r.cpm},{h:'CM lost',v:r=>r.gapUSD}];
-  const rh=r=>`<tr data-k="${r.k}" style="cursor:pointer;${r.k===S.floor?'background:#eff6ff':''}"><td><span class="dot" style="background:${UC[r.u]}"></span><b>${esc(r.n)}</b></td><td>${r.u}</td><td>${fmt(r.ln,1)}</td><td>${fmt(r.mc,0)}</td><td>${fmt(r.a)}</td><td>${pct(r.perf)}</td><td>${pct(r.tEff)}</td><td><span class="pill ${effCls(r.eff)}">${pct(r.eff)}</span></td><td style="color:${r.eff<r.tEff?'var(--bad)':'var(--good)'}">${fmt(r.eff-r.tEff,1)}</td><td>${fmt(r.smv,2)}</td><td>${pct(r.fh)}</td><td>${fmt(r.wh,2)}</td><td>${usd(r.cm)}</td><td>${fmt(r.cpm*100,2)}</td><td style="color:var(--bad)">${usd(r.gapUSD)}</td></tr>`;
+  const H=[{h:'Floor',v:r=>r.n},{h:'Unit',v:r=>r.u},{h:'Lines',v:r=>r.ln},{h:'MC',v:r=>r.mc},{h:'Achieved pcs',v:r=>r.a},{h:'Plan %',v:r=>r.perf},{h:'Target eff',v:r=>r.tEff},{h:'Achieved eff',v:r=>r.eff},{h:'Gap pts',v:r=>r.eff-r.tEff},{h:'SMV',v:r=>r.smv},{h:'1st hr %',v:r=>r.fh},{h:'Work hrs',v:r=>r.wh},{h:'Earned CM',v:r=>r.cm},{h:'CM $/min',v:r=>r.cpm},{h:'CM lost',v:r=>r.gapUSD}];
+  const rh=r=>`<tr data-k="${r.k}" style="cursor:pointer;${r.k===S.floor?'background:#eff6ff':''}"><td><span class="dot" style="background:${UC[r.u]}"></span><b>${esc(r.n)}</b></td><td>${r.u}</td><td>${fmt(r.ln,1)}</td><td>${fmt(r.mc,0)}</td><td>${fmt(r.a)}</td><td>${pct(r.perf)}</td><td>${pct(r.tEff)}</td><td><span class="pill ${effCls(r.eff)}">${pct(r.eff)}</span></td><td style="color:${r.eff<r.tEff?'var(--bad)':'var(--good)'}">${fmt(r.eff-r.tEff,1)}</td><td>${fmt(r.smv,2)}</td><td>${pct(r.fh)}</td><td>${fmt(r.wh,2)}</td><td>${usd(r.cm)}</td><td>$${fmt(r.cpm,4)}</td><td style="color:var(--bad)">${usd(r.gapUSD)}</td></tr>`;
   sortable('tFloor',H,all,rh,'',k=>{S.floor=k;document.getElementById('fFloor').value=k;rFloors()});
 }
 
@@ -727,7 +727,7 @@ function rFin(){
   const ms=range(),G=agg(rows(ms)),us=UNITS.map(u=>({u:u.k,c:u.c,...agg(unitRows(u.k,ms))}));
   document.getElementById('finKpis').innerHTML=[
     ['Earned CM',usd(G.cm),`${usd(G.cm/G.months,2)} per month`],['Earned FOB',usd(G.fob),`${usd(G.fob/G.months,2)} per month`],
-    ['CM / FOB ratio',pct(G.cm/G.fob*100),`CM per piece $${fmt(G.cmpc,3)}`],['CM per machine-day','$'+fmt(G.cmmc,2),`${fmt(G.cpm*100,2)}¢ per earned minute`]]
+    ['CM / FOB ratio',pct(G.cm/G.fob*100),`CM per piece $${fmt(G.cmpc,3)}`],['CM per machine-day','$'+fmt(G.cmmc,2),`$${fmt(G.cpm,4)} per earned minute`]]
     .map(x=>`<div class="card kpi"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="d">${x[2]}</div></div>`).join('');
   const lab=ms.map(i=>mLabel(DATA.months[i]));
   mk('cCM',{type:'bar',data:{labels:lab,datasets:UNITS.map(u=>({label:u.k,data:ms.map(i=>agg(unitRows(u.k,[i])).cm),backgroundColor:u.c,borderRadius:3}))},
@@ -736,7 +736,7 @@ function rFin(){
     options:{cutout:'62%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.label}: ${usd(c.raw)} (${fmt(c.raw/G.cm*100,1)}%)`}}}}});
   const hb=(id,vals,f,ref)=>mk(id,{type:'bar',data:{labels:us.map(x=>x.u),datasets:[{data:vals,backgroundColor:us.map(x=>x.c),borderRadius:6}]},
     options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>f(c.raw)}}},scales:{y:{grid:gridC,beginAtZero:true,ticks:{callback:v=>f(v)}},x:{grid:{display:false}}}}});
-  hb('cCPM',us.map(x=>+(x.cpm*100).toFixed(3)),v=>fmt(v,2)+'¢');
+  hb('cCPM',us.map(x=>+x.cpm.toFixed(5)),v=>'$'+fmt(v,4));
   hb('cCMMC',us.map(x=>+x.cmmc.toFixed(2)),v=>'$'+fmt(v,1));
   hb('cFOBpc',us.map(x=>+x.fobpc.toFixed(2)),v=>'$'+fmt(v,2));
 }
@@ -747,7 +747,7 @@ function rGap(){
   const sl=document.getElementById('upl');
   const upd=()=>{const p=+sl.value,m=p/100*G.am*G.cpm/G.months;document.getElementById('uplLbl').textContent=`+${p} pts → ${fmt(G.eff+p,1)}%`;
     document.getElementById('uplM').textContent=usd(m,2);document.getElementById('uplY').textContent=usd(m*12,2);
-    document.getElementById('uplNote').innerHTML=`Based on ${periodLabel()}: avg ${big(G.am/G.months,1)} available minutes/month at ${fmt(G.cpm*100,2)}¢ CM per earned minute. Closing the full gap to the ${pct(G.tEff)} target is worth <b>${usd(G.gapUSD/G.months,0)}/month</b>.`};
+    document.getElementById('uplNote').innerHTML=`Based on ${periodLabel()}: avg ${big(G.am/G.months,1)} available minutes/month at $${fmt(G.cpm,4)} CM per earned minute. Closing the full gap to the ${pct(G.tEff)} target is worth <b>${usd(G.gapUSD/G.months,0)}/month</b>.`};
   sl.oninput=upd;upd();
   mk('cGap',{type:'bar',data:{labels:us.map(x=>x.u),datasets:[{label:'CM lost vs target',data:us.map(x=>Math.round(x.gapUSD)),backgroundColor:us.map(x=>x.c),borderRadius:6}]},
     options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${usd(c.raw)} · ${fmt(c.raw/G.gapUSD*100,1)}% of group gap · ${big(us[c.dataIndex].gapMin,2)} minutes`}}},
@@ -781,9 +781,9 @@ function rActions(){
      return [['a','⚙',`<b>MMR (${DATA.months[mi].m}): ${over.length} of ${UNITS.filter(x=>M[x.k]).length} units above target.</b> <span>${UNITS.filter(x=>M[x.k]).map(x=>`${x.k} ${fmt(M[x.k],2)} vs ${fmt(MMRT[x.k],2)}`).join(' · ')}. More people per machine than planned adds cost without adding output; see the MMR page for the estimated $ cost.</span>`]]})(),
    ['r','2',`<b>EKL is the single largest lever.</b> <span>31% of group CM but the lowest efficiency (${pct(u.EKL.eff)} vs ${pct(u.EKL.tEff)}). EKL 5th Floor is the weakest floor in the group at ${pct(fl['EKL-5F'].eff)}. EKL accounts for ${usd(u.EKL.gapUSD)} (${fmt(u.EKL.gapUSD/G.gapUSD*100,0)}%) of the gap.</span>`],
    ['a','3',`<b>BC has the second-biggest gap and the highest target.</b> <span>${pct(u.BC.eff)} achieved vs ${pct(u.BC.tEff)} target (${usd(u.BC.gapUSD)} lost). Efficiency fell to ${pct(agg(unitRows('BC',[5])).eff)} in June before recovering. BC also carries the highest helper ratio (${pct(u.BC.help,0)}).</span>`],
-   ['g','4',`<b>TEX1 proves the target is achievable.</b> <span>${pct(u.TEX1.eff)} efficiency, ${pct(u.TEX1.perf)} plan achievement, ${pct(u.TEX1.fh,0)} 1st-hour achievement and the best CM per minute (${fmt(u.TEX1.cpm*100,2)}¢). TEX2 (${pct(u.TEX2.fh,0)}) and CAL (${pct(u.CAL.fh,0)}) lose the first hour of every day.</span>`],
+   ['g','4',`<b>TEX1 proves the target is achievable.</b> <span>${pct(u.TEX1.eff)} efficiency, ${pct(u.TEX1.perf)} plan achievement, ${pct(u.TEX1.fh,0)} 1st-hour achievement and the best CM per minute ($${fmt(u.TEX1.cpm,4)}). TEX2 (${pct(u.TEX2.fh,0)}) and CAL (${pct(u.CAL.fh,0)}) lose the first hour of every day.</span>`],
    ['a','5',`<b>Mid-year dip was driven by heavier styles and longer days.</b> <span>May–Aug averaged ${pct(avg(mj,'eff'))} efficiency at SMV ${fmt(avg(mj,'smv'),2)} and ${fmt(avg(mj,'wh'),1)} h/day, vs ${pct(avg(q1,'eff'))} at SMV ${fmt(avg(q1,'smv'),2)} in Jan–Apr. SMV vs efficiency r = ${fmt(rS,2)}: complex styles need stronger line balancing and learning-curve planning.</span>`],
-   ['b','6',`<b>CAL's issue is price, not only productivity.</b> <span>CAL earns ${fmt(u.CAL.cpm*100,2)}¢ per minute and $${fmt(u.CAL.cmmc,2)} per machine-day — the lowest in the group (group $${fmt(G.cmmc,2)}). Better efficiency alone will not fix CAL's contribution; order allocation and CM negotiation matter.</span>`],
+   ['b','6',`<b>CAL's issue is price, not only productivity.</b> <span>CAL earns $${fmt(u.CAL.cpm,4)} per minute and $${fmt(u.CAL.cmmc,2)} per machine-day — the lowest in the group (group $${fmt(G.cmmc,2)}). Better efficiency alone will not fix CAL's contribution; order allocation and CM negotiation matter.</span>`],
    ['b','7',`<b>EKGL hits plan (${pct(u.EKGL.perf)}) but efficiency is only ${pct(u.EKGL.eff)}.</b> <span>Its target efficiency (${pct(u.EKGL.tEff)}) is the lowest in the group, so targets look comfortable while minutes are under-used. Targets should be set from SMV-based capacity, not history.</span>`]];
   document.getElementById('findings').innerHTML=F.map(x=>`<li><div class="ic ${x[0]}">${x[1]}</div><div>${x[2]}</div></li>`).join('');
   const one=0.01*G.am*G.cpm/full.length;
