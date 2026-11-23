@@ -41,7 +41,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 55%,var(--navy3) 100%);padding:40px 40px 32px;display:flex;gap:24px;align-items:flex-start;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.04)}
 .hero::after{content:'';position:absolute;bottom:-40px;left:180px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.03)}
-.avatar{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#e8f4fd;flex-shrink:0;border:2px solid rgba(255,255,255,0.2);position:relative;z-index:1}
+.avatar{width:104px;height:104px;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.3);border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#e8f4fd;flex-shrink:0;border:2px solid rgba(255,255,255,0.2);position:relative;z-index:1}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .hero-info{flex:1;position:relative;z-index:1}
 .hname{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:-0.02em;line-height:1.1}
 .htag{font-size:13px;color:#8ab8e0;margin-top:6px;font-weight:400;letter-spacing:0.04em;text-transform:uppercase}
@@ -173,10 +174,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .body{grid-template-columns:1fr}
   .sidebar{border-right:none;border-bottom:1px solid var(--border)}
   .hname{font-size:24px}
+  .avatar{width:76px;height:76px}
   .comp-grid,.ach-grid,.ats-2col{grid-template-columns:1fr}
   .ats-wrap{padding:24px 20px}
 }
 </style>
+<link rel="stylesheet" href="/assets/motion.css">
 </head>
 <body>
 
@@ -201,7 +204,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <div class="card">
 
   <div class="hero">
-    <div class="avatar">TR</div>
+    <div class="avatar"><img src="/assets/avatar.jpg" alt="Tahmidur Rahman" width="104" height="104" onerror="this.parentNode.textContent='TR'"></div>
     <div class="hero-info">
       <div class="hname">Tahmidur Rahman</div>
       <div class="htag">Manager — Industrial Engineering &amp; Planning &nbsp;·&nbsp; Lean Six Sigma Green Belt</div>
@@ -615,5 +618,6 @@ function switchTab(btn, panelId){
   document.getElementById(panelId).classList.add('vis');
 }
 </script>
+<script src="/assets/motion.js" data-reveal=".hero,.sb-section,.stat-box,.sec-title,.ach-card,.exp-item,.comp-item,.edu-item,.ats-wrap" data-grow=".skill-fill" data-count=".stat-num" defer></script>
 </body>
 </html>

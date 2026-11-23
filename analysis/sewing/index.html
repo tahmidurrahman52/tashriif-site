@@ -117,6 +117,7 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:110ch}
 #loading{padding:80px 0;text-align:center;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
+<link rel="stylesheet" href="/assets/motion.css">
 </head>
 <body>
 <div class="wrap">
@@ -535,5 +536,6 @@ setInterval(load,Math.max(1,CFG.refreshMinutes)*60000);
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change",drawAll);
 })();
 </script>
+<script src="/assets/motion.js" data-reveal="header.top,section.kpis,section.ins,section.grid>.card" defer></script>
 </body>
 </html>

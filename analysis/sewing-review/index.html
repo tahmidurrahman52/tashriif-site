@@ -165,6 +165,7 @@ nav a .n{transition:.2s}
 @media (max-width:560px){.g6,.g4,.unitcards{grid-template-columns:1fr 1fr}.kpi .v{font-size:21px}}
 @media print{aside,header.top .filters{display:none}.app{grid-template-columns:1fr}.page{display:none!important}.page.on{display:block!important}.card{box-shadow:none;break-inside:avoid}body{background:#fff}}
 </style>
+<link rel="stylesheet" href="/assets/motion.css">
 </head>
 <body>
 <div class="app">
@@ -847,5 +848,6 @@ document.addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.
   if(e.key==='ArrowRight'&&i<PAGES.length-1)go(PAGES[i+1][0]);if(e.key==='ArrowLeft'&&i>0)go(PAGES[i-1][0])});
 go(PAGES.some(p=>p[0]===location.hash.slice(1))?location.hash.slice(1):'summary');
 </script>
+<script src="/assets/motion.js" data-reveal="section.page .ph,section.page .grid>.card,section.page .gauges,section.page .note" defer></script>
 </body>
 </html>
