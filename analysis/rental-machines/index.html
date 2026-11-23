@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Rental machine audit for EKL and Bally Cotton — by Tahmidur Rahman, Manager IE & Planning.">
+<title>Rental Machine Analysis — EKL & Bally Cotton</title>
+<style>
+  :root{--ink:#1b2430;--muted:#5b6675;--line:#e3e6ea;--bg:#f6f8fb;--card:#fff;--soft:#eef3f9;
+    --navy:#14365d;--blue:#2f6db3;--teal:#1f8a7a;--red:#c2412d;--amber:#c9821a;--grey:#9aa6b5;--violet:#6b5bb5}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;overflow-x:hidden}
+  b.r{color:var(--red)} b.t{color:var(--teal)} b.n{color:var(--navy)}
+  #prog{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--teal),var(--blue),var(--red));z-index:60}
+  nav{position:fixed;top:4px;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:.7rem 4vw;transition:all .3s;color:#fff}
+  nav.solid{background:rgba(255,255,255,.93);backdrop-filter:blur(8px);box-shadow:0 2px 14px rgba(20,54,93,.08);color:var(--navy)}
+  nav .brand{font-weight:700;font-size:.95rem}
+  nav ul{list-style:none;display:flex;gap:1.3rem;font-size:.85rem}
+  nav a{color:inherit;text-decoration:none;opacity:.75}
+  nav a:hover,nav a.on{opacity:1;font-weight:600}
+  @media(max-width:900px){nav ul{display:none}}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8vw;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(130deg,#3a1410,#7a2a1c 30%,#14365d 75%,#1d4f86);background-size:220% 220%;animation:grad 16s ease infinite}
+  @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.35;animation:float 13s ease-in-out infinite}
+  .orb.a{width:440px;height:440px;background:#ff8a6b;right:-90px;top:8%}
+  .orb.b{width:380px;height:380px;background:#2f6db3;left:-110px;bottom:-70px;animation-delay:-6s}
+  @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+  .hero .kicker{color:#ffc9b8;letter-spacing:.18em;text-transform:uppercase;font-size:.85rem;font-weight:700;opacity:0;animation:up .8s .2s forwards}
+  .hero h1{font-size:clamp(2.4rem,6vw,5rem);line-height:1.05;margin:.4em 0 .3em;font-weight:800;opacity:0;animation:up .9s .4s forwards}
+  .hero h1 span{background:linear-gradient(90deg,#ffb4a6,#ffd9a0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:clamp(1rem,1.6vw,1.35rem);color:#f1dcd6;max-width:48ch;opacity:0;animation:up .9s .65s forwards}
+  .hstats{display:flex;gap:2.6rem;flex-wrap:wrap;margin-top:2.4rem;opacity:0;animation:up .9s .9s forwards}
+  .hstats div{border-left:3px solid rgba(255,255,255,.45);padding-left:.9rem}
+  .hstats .n{font-size:2.2rem;font-weight:800;line-height:1}
+  .hstats .l{font-size:.85rem;color:#f1dcd6}
+  .hero .meta{margin-top:2.4rem;font-size:.9rem;color:#e6cfc8;opacity:0;animation:up .9s 1.1s forwards}
+  .scroll{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);color:#f1dcd6;font-size:.8rem;text-align:center;opacity:0;animation:up 1s 1.4s forwards}
+  .scroll i{display:block;width:22px;height:36px;border:2px solid #f1dcd6;border-radius:12px;margin:.5rem auto 0;position:relative}
+  .scroll i::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:8px;margin-left:-2px;background:#f1dcd6;border-radius:2px;animation:wheel 1.6s infinite}
+  @keyframes wheel{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+  @keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+  section.sec{padding:7rem 8vw 4rem;max-width:1400px;margin:0 auto}
+  .kick{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red);font-weight:700}
+  h2{font-size:clamp(1.7rem,3.2vw,2.7rem);color:var(--navy);line-height:1.15;margin:.35em 0 .5em;font-weight:750;max-width:26ch}
+  .lead{font-size:clamp(1rem,1.25vw,1.15rem);color:var(--muted);max-width:72ch}
+  .card{background:var(--card);border-radius:16px;box-shadow:0 6px 30px rgba(20,54,93,.07);padding:1.8rem 2rem}
+  .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .rv.l{transform:translateX(-50px)}.rv.rt{transform:translateX(50px)}.rv.l.in,.rv.rt.in{transform:none}
+  .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:2rem}
+  .grid2.w{grid-template-columns:1.45fr 1fr}
+  @media(max-width:1000px){.grid2,.grid2.w{grid-template-columns:1fr}}
+  .ct{font-weight:700;color:var(--navy);margin-bottom:1rem}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2.2rem}
+  @media(max-width:1000px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:#fff;border-radius:16px;padding:1.4rem 1.5rem;box-shadow:0 6px 24px rgba(20,54,93,.06);border-top:5px solid var(--blue);transition:transform .25s,box-shadow .25s}
+  .kpi:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(20,54,93,.13)}
+  .kpi .n{font-size:clamp(2rem,3.4vw,3rem);font-weight:800;color:var(--navy);line-height:1;font-variant-numeric:tabular-nums}
+  .kpi .l{color:var(--muted);margin-top:.45rem;font-size:.92rem}
+  .kpi.red{border-top-color:var(--red)}.kpi.red .n{color:var(--red)}
+  .kpi.amber{border-top-color:var(--amber)}.kpi.amber .n{color:var(--amber)}
+  .kpi.teal{border-top-color:var(--teal)}.kpi.teal .n{color:var(--teal)}
+
+  .hb{display:grid;grid-template-columns:150px 1fr 70px;gap:.7rem;align-items:center;margin:.55rem 0;font-size:.93rem}
+  .hb .tr{height:26px;background:#e8edf3;border-radius:7px;overflow:hidden}
+  .hb .fl{height:100%;width:0;border-radius:7px;transition:width 1.4s cubic-bezier(.2,.8,.2,1);cursor:pointer;display:flex;align-items:center;padding-left:.5rem;color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap}
+  .hb .fl:hover{filter:brightness(1.1)}
+  .hb b{text-align:right;font-variant-numeric:tabular-nums}
+  .sub{color:var(--muted);font-size:.8rem}
+
+  .heat{width:100%;border-collapse:separate;border-spacing:4px;font-size:.9rem}
+  .heat th{font-weight:600;color:var(--muted);font-size:.78rem;padding:.3rem;text-align:center}
+  .heat th:first-child{text-align:left}
+  .heat td{text-align:center;border-radius:8px;padding:.65rem .3rem;font-weight:700;font-variant-numeric:tabular-nums;opacity:0;transform:scale(.6);transition:opacity .5s,transform .5s cubic-bezier(.2,1.4,.4,1)}
+  .heat td:first-child{text-align:left;background:none!important;font-weight:600;color:var(--ink)}
+  .in .heat td{opacity:1;transform:none}
+
+  #tl svg,#age svg{width:100%;height:auto}
+  .bar-r{transform-origin:bottom;transform-box:fill-box;transform:scaleY(0);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+  .in .bar-r{transform:scaleY(1)}
+  .cline{stroke-dasharray:1500;stroke-dashoffset:1500;transition:stroke-dashoffset 2.4s ease .6s}
+  .in .cline{stroke-dashoffset:0}
+  .dot,.lbl{opacity:0;transition:opacity .6s 1.6s}
+  .in .dot,.in .lbl{opacity:1}
+  .legend{display:flex;gap:1.3rem;flex-wrap:wrap;margin-top:1rem;color:var(--muted);font-size:.85rem}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.35rem;vertical-align:-1px}
+
+  .donut-wrap{display:flex;align-items:center;gap:1.6rem;flex-wrap:wrap}
+  .donut{width:220px;height:220px;position:relative}
+  .donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .donut .arc{fill:none;stroke-width:34;transition:stroke-dasharray 1.4s cubic-bezier(.2,.8,.2,1)}
+  .donut .mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .donut .mid .n{font-size:2.2rem;font-weight:800;color:var(--red);line-height:1}
+  .donut .mid .l{font-size:.8rem;color:var(--muted);text-align:center}
+
+  .obs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;margin-top:2rem}
+  .ob{background:#fff;border-radius:14px;padding:1.4rem 1.5rem;box-shadow:0 6px 24px rgba(20,54,93,.06);border-left:5px solid var(--red)}
+  .ob .big{font-size:2rem;font-weight:800;color:var(--red);line-height:1.1}
+  .ob p{color:var(--ink);font-size:.98rem;margin-top:.4rem}
+
+  .filters{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin:1.4rem 0 1rem}
+  .filters select,.filters input{border:1px solid #c9d3df;border-radius:8px;padding:.5em .8em;font-size:.9rem;background:#fff;font-family:inherit}
+  .filters input{min-width:200px}
+  .chipset{display:flex;gap:.4rem;flex-wrap:wrap}
+  .chip{border:1px solid #c9d3df;background:#fff;border-radius:999px;padding:.35em .9em;font-size:.82rem;cursor:pointer;transition:all .2s}
+  .chip.on,.chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .count{margin-left:auto;color:var(--muted);font-size:.88rem}
+  .tw{max-height:560px;overflow:auto;border-radius:12px;box-shadow:0 4px 16px rgba(20,54,93,.05);background:#fff}
+  table.reg{width:100%;border-collapse:collapse;font-size:.9rem}
+  .reg th{position:sticky;top:0;background:var(--navy);color:#fff;font-weight:600;padding:.65em .8em;text-align:left;cursor:pointer;user-select:none;white-space:nowrap}
+  .reg th:hover{background:#1d4f86}
+  .reg th .ar{opacity:.6;font-size:.75em;margin-left:.3em}
+  .reg td{white-space:nowrap;padding:.55em .8em;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  .reg tbody tr{transition:background .2s}
+  .reg tbody tr:hover td{background:#f5f8fc}
+  .agebar{display:flex;align-items:center;gap:.5rem}
+  .agebar span{display:inline-block;height:8px;border-radius:4px}
+  .tag{display:inline-block;padding:.12em .6em;border-radius:999px;font-size:.75rem;font-weight:600;color:#fff}
+  .note{font-size:.82rem;color:var(--muted);margin-top:.8rem}
+  
+  .stbar{display:flex;height:64px;border-radius:12px;overflow:hidden;background:#e8edf3;margin-top:1rem}
+  .stbar .seg{width:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;transition:width 1.6s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+  .stleg{display:flex;gap:1.4rem;flex-wrap:wrap;margin-top:1rem;font-size:.92rem}
+  .stleg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.4rem;vertical-align:-1px}
+  .rmk{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-top:2rem}
+  .rm{background:#fff;border-radius:16px;padding:1.5rem 1.6rem;box-shadow:0 6px 24px rgba(20,54,93,.07);border:2px solid #f2cfc6;position:relative;overflow:hidden}
+  .rm::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--red)}
+  .rm.good{border-color:#bfe0d8}.rm.good::before{background:var(--teal)}
+  .rm .q{font-size:1.28rem;font-weight:800;color:var(--red);line-height:1.25;letter-spacing:.005em}
+  .rm.good .q{color:var(--teal)}
+  .rm .q::before{content:"\201C"}.rm .q::after{content:"\201D"}
+  .rm .n{font-size:3rem;font-weight:800;color:var(--ink);line-height:1;margin-top:.8rem;font-variant-numeric:tabular-nums}
+  .rm .n small{font-size:1rem;color:var(--muted);font-weight:600;margin-left:.4rem}
+  .rm p{color:var(--muted);font-size:.92rem;margin-top:.5rem}
+  .rm.pulse{animation:glow 2.6s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 6px 24px rgba(20,54,93,.07)}50%{box-shadow:0 0 0 5px rgba(194,65,45,.18),0 6px 24px rgba(20,54,93,.07)}}
+  .warn{margin-top:1.4rem;border-radius:14px;padding:1.1rem 1.4rem;background:#fff8e6;border:1px solid #f1d58f;font-size:1rem}
+  .warn b{color:#8a5a00}
+  .rmtag{white-space:normal;display:inline-block;font-weight:800;color:#fff;background:var(--red);border-radius:6px;padding:.2em .55em;font-size:.8rem;line-height:1.3}
+  .rmtag.good{background:var(--teal)}
+  .reg tr.flag td{background:#fff6f4}
+  .reg tr.flag:hover td{background:#ffece8}
+  .st{display:inline-block;padding:.12em .6em;border-radius:999px;font-size:.75rem;font-weight:700;color:#fff;white-space:nowrap}
+  .fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2rem}
+  @media(max-width:1000px){.fgrid{grid-template-columns:1fr 1fr}}
+  .fc{background:#fff;border-radius:14px;padding:1.3rem 1.4rem;box-shadow:0 6px 24px rgba(20,54,93,.06)}
+  .fc h4{color:var(--navy);font-size:1.05rem}
+  .fc .big{font-size:2.6rem;font-weight:800;color:var(--navy);line-height:1;margin:.4rem 0}
+  .fc .mb{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#e8edf3;margin:.6rem 0}
+  .fc .mb span{width:0;transition:width 1.3s cubic-bezier(.2,.8,.2,1)}
+  .fc .rows{font-size:.85rem;color:var(--muted);line-height:1.7}
+  footer{background:var(--navy);color:#b9cde6;padding:2.5rem 8vw;font-size:.85rem;margin-top:4rem}
+  footer b{color:#fff}
+  #tip{position:fixed;pointer-events:none;background:#1b2430;color:#fff;font-size:13px;padding:.5em .75em;border-radius:6px;opacity:0;transition:opacity .12s;z-index:99;max-width:300px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="prog"></div><div id="tip"></div>
+<nav id="nav">
+  <a class="brand" href="/analysis/" style="color:inherit;text-decoration:none">← My Analysis</a>
+  <ul><li><a href="#audit">Audit</a></li><li><a href="#overview">Overview</a></li><li><a href="#floors">Floors</a></li><li><a href="#types">Types</a></li><li><a href="#vendors">Vendors</a></li>
+  <li><a href="#buildup">Build-up</a></li><li><a href="#age">Age</a></li><li><a href="#findings">Findings</a></li><li><a href="#register">Register</a></li></ul>
+</nav>
+
+<header class="hero">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div class="kicker">Eurotex Knitwear Ltd. · IE &amp; Planning Department</div>
+  <h1>Rental Machine<br><span>Analysis</span></h1>
+  <p>EKL &amp; Bally Cotton — physical audit of every rented machine: where it is, whether it runs, and what we are paying for.</p>
+  <div class="hstats">
+    <div><div class="n">112</div><div class="l">machines billed as rent</div></div>
+    <div><div class="n">82</div><div class="l">found running</div></div>
+    <div><div class="n" style="color:#ffb4a6">30</div><div class="l">billed but not running</div></div>
+    <div><div class="n">5</div><div class="l">vendors</div></div>
+  </div>
+  <div class="meta">Source: Rental Machine Audit (floor audit, updated 22-Nov-2026) · Prepared by Tahmidur Rahman, Manager — IE &amp; Planning</div>
+  <div class="scroll">Scroll to begin<i></i></div>
+</header>
+
+<section class="sec" id="audit">
+  <div class="kick rv">01 · Floor audit result</div>
+  <h2 class="rv d1">30 of 112 billed machines are not running — 19 cannot even be found</h2>
+  <div class="card rv d2" id="auditCard">
+    <div class="ct">All 112 machines billed as rent, by audit status</div>
+    <div class="stbar" id="stbar"></div>
+    <div class="stleg" id="stleg"></div>
+  </div>
+  <div class="rmk">
+    <div class="rm pulse rv d1"><div class="q">Can't Find In Floor But Count in Rent</div><div class="n" data-count="19">0</div><p>machines billed but not found on any floor — <b>3,251 machine-days</b> of rent (22% of all rental time). Includes 2 of Mohammadi Tread Link's 3 Flatlocks (376 days each) and 4 Firoz SNLS (236–507 days).</p></div>
+    <div class="rm rv d2"><div class="q">Machine IDLE But Count In Rent</div><div class="n" data-count="10">0</div><p>machines found on the floor but idle and still billed — 3 marked by remark (JS Enterprise Bartacks) + 7 marked IDLE in status. BC 5 · EKL-2nd 4 · EKL-5th 1.</p></div>
+    <div class="rm rv d3"><div class="q">Out But Still Count in Rent</div><div class="n" data-count="1">0</div><p>Overlock S/L 78 (New Rakib) — returned but still billed. Out date 27-Sep-2026 is <b>before</b> its in-house date 14-Nov-2026: the record needs checking.</p></div>
+    <div class="rm good rv d4"><div class="q">Rent Not Count</div><div class="n" data-count="2">0</div><p>machines on our floor that the vendor is <b>not</b> billing (Nabila: 1 FOA in BC, 1 Flatlock in EKL-2nd), both idle. Not included in the 112.</p></div>
+  </div>
+  <div class="warn rv"><b>Possible double count:</b> serial no. <b>8879851</b> (SNLS, New Rakib Enterprise) appears twice — S/L 22 (in-house 17-Aug-2025) and S/L 111 (12-Oct-2026), both on EKL-5th Line D.</div>
+  <div class="card rv d2" style="margin-top:1.6rem">
+    <div class="ct">Every machine with a remark</div>
+    <div class="tw" style="max-height:none;box-shadow:none"><table class="reg"><thead><tr><th>S/L</th><th>Type</th><th>Serial no.</th><th>Vendor</th><th>Floor / line</th><th>Days</th><th>Remark</th></tr></thead><tbody id="rmb"></tbody></table></div>
+  </div>
+</section>
+
+<section class="sec" id="floors">
+  <div class="kick rv">02 · Where the rented machines are</div>
+  <h2 class="rv d1">EKL-2nd 35 · EKL-5th 37 · BC 20 — and 20 not on any floor</h2>
+  <div class="fgrid" id="fgrid"></div>
+  <div class="card rv d2" style="margin-top:1.6rem" id="lineCard"><div class="ct">Running rented machines by line</div><div id="lineHeat"></div></div>
+</section>
+
+<section class="sec" id="overview">
+  <div class="kick rv">03 · Overview</div>
+  <h2 class="rv d1">112 billed machines, held for 131 days on average</h2>
+  <div class="kpis">
+    <div class="kpi red rv d1"><div class="n" data-count="112">0</div><div class="l">Machines billed as rent</div></div>
+    <div class="kpi rv d2"><div class="n" data-count="131">0</div><div class="l">Average days on rent</div></div>
+    <div class="kpi amber rv d3"><div class="n" data-count="544">0</div><div class="l">Oldest rental (days) — since 27-May-2025</div></div>
+    <div class="kpi rv d4"><div class="n" data-count="482">0</div><div class="l">Machine-months of rent so far</div></div>
+    <div class="kpi red rv d1"><div class="n" data-count="14">0</div><div class="l">On rent for over 1 year</div></div>
+    <div class="kpi amber rv d2"><div class="n" data-count="25">0</div><div class="l">On rent for over 6 months</div></div>
+    <div class="kpi rv d3"><div class="n" data-count="87">0</div><div class="l">Brought in since July 2026</div></div>
+    <div class="kpi red rv d4"><div class="n" data-count="4074">0</div><div class="l">Machine-days billed for machines not running (28%)</div></div>
+  </div>
+  <p class="note rv">Machine-days = sum of days each billed machine has been on rent (14,647 in total). Multiply by the daily rent rate to get rent paid to date.</p>
+</section>
+
+<section class="sec" id="types">
+  <div class="kick rv">04 · By machine type</div>
+  <h2 class="rv d1">SNLS is half of all rentals — and 70% of rental time</h2>
+  <div class="grid2">
+    <div class="card rv l d2" id="typeCard"><div class="ct">Number of machines</div><div id="typeBars"></div></div>
+    <div class="card rv rt d3" id="typeDays"><div class="ct">Share of machine-days on rent</div><div class="donut-wrap"><div class="donut" id="donut"></div><div id="donutLeg"></div></div></div>
+  </div>
+  <p class="note rv">Billed machines only. Flatlock = Big cylinder bed 13 · Flatbed 3 · Small cylinder bed 1 (+1 big cylinder bed not billed).</p>
+</section>
+
+<section class="sec" id="vendors">
+  <div class="kick rv">05 · By vendor</div>
+  <h2 class="rv d1">One vendor supplies 61% — two others have kept machines with us the longest</h2>
+  <div class="grid2 w">
+    <div class="card rv l d2" id="heatCard"><div class="ct">Vendor × machine type</div><div id="heat"></div></div>
+    <div class="card rv rt d3" id="vendCard"><div class="ct">Average days on rent, by vendor</div><div id="vendAge"></div></div>
+  </div>
+</section>
+
+<section class="sec" id="buildup">
+  <div class="kick rv">06 · How the rental built up</div>
+  <h2 class="rv d1">87 of 112 billed machines arrived from July 2026 onwards</h2>
+  <div class="card rv d2" id="tlCard"><div id="tl"></div>
+    <div class="legend"><span><i style="background:var(--blue)"></i>Machines brought in (month)</span><span><i style="background:var(--red);height:3px;vertical-align:4px"></i>Cumulative on rent</span></div></div>
+</section>
+
+<section class="sec" id="age">
+  <div class="kick rv">07 · How long they have been on rent</div>
+  <h2 class="rv d1">25 machines over 6 months account for 63% of all rental time</h2>
+  <div class="card rv d2" id="ageCard"><div id="ageChart"></div><div class="legend" id="ageLeg"></div></div>
+</section>
+
+<section class="sec" id="findings">
+  <div class="kick rv">08 · Key findings</div>
+  <h2 class="rv d1">What the rental register shows</h2>
+  <div class="obs">
+    <div class="ob rv d1"><div class="big">19</div><p>machines are <b>"Can't Find In Floor But Count in Rent"</b> — billed but not on any floor.</p></div>
+    <div class="ob rv d2"><div class="big">27%</div><p>of billed machines (30 of 112) are <b>not running</b>: not found 19, idle 10, returned but billed 1.</p></div>
+    <div class="ob rv d3"><div class="big">28%</div><p>of all rental machine-days (4,074 of 14,647) were billed for machines that are <b>not running today</b>.</p></div>
+    <div class="ob rv d1"><div class="big">2 of 3</div><p><b>Mohammadi Tread Link</b> Flatlocks — on rent 376 days — cannot be found on the floor.</p></div>
+    <div class="ob rv d2"><div class="big">5 of 20</div><p>rented machines in <b>Bally Cotton</b> are idle — the highest idle share of any floor.</p></div>
+    <div class="ob rv d3"><div class="big">18 of 20</div><p><b>Firoz Enterprise</b> machines on rent for over 6 months (average 327 days); 5 of them not found.</p></div>
+  </div>
+</section>
+
+<section class="sec" id="register">
+  <div class="kick rv">09 · Rental register</div>
+  <h2 class="rv d1">Every machine in the register — filter, search and sort</h2>
+  <div class="filters rv d2">
+    <div class="chipset" id="ageChips"></div>
+    <select id="fStat"><option value="">All statuses</option></select><select id="fFloor"><option value="">All floors</option></select><select id="fType"><option value="">All types</option></select>
+    <select id="fVend"><option value="">All vendors</option></select>
+    <input id="fSearch" placeholder="Search serial no…">
+    <span class="count" id="count"></span>
+  </div>
+  <div class="tw rv d2">
+    <table class="reg"><thead><tr>
+      <th data-k="sl">S/L<span class="ar"></span></th><th data-k="d">In-house date<span class="ar"></span></th><th data-k="g">Type<span class="ar"></span></th>
+      <th data-k="serial">Serial no.<span class="ar"></span></th><th data-k="vendor">Vendor<span class="ar"></span></th><th data-k="floor">Floor<span class="ar"></span></th><th data-k="line">Line<span class="ar"></span></th><th data-k="status">Status<span class="ar"></span></th><th data-k="days">Days<span class="ar">▼</span></th><th data-k="rm">Remarks<span class="ar"></span></th>
+    </tr></thead><tbody id="rb"></tbody></table>
+  </div>
+  <p class="note">Rows with a remark are highlighted. 114 machines in the register; 112 billed (2 marked "Rent Not Count").</p>
+</section>
+
+<footer><b>Source:</b> Rental Machine Audit — floor audit (114 machines, 112 billed) · ages as of 22-Nov-2026 · Prepared by IE &amp; Planning, Eurotex Knitwear Ltd.</footer>
+
+<script>
+const RAW=[{"sl": 1, "d": "2025-05-27", "type": "SNLS", "serial": "4814149", "vendor": "Firoz Enterprise", "days": 544, "floor": "EKL-2nd", "line": "C", "status": "Running", "out": "", "rm": ""}, {"sl": 2, "d": "2025-07-03", "type": "SNLS", "serial": "24449", "vendor": "Firoz Enterprise", "days": 507, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 3, "d": "2025-07-03", "type": "SNLS", "serial": "7831648", "vendor": "Firoz Enterprise", "days": 507, "floor": "EKL-2nd", "line": "B", "status": "Running", "out": "", "rm": ""}, {"sl": 4, "d": "2025-07-03", "type": "SNLS", "serial": "6908912", "vendor": "Firoz Enterprise", "days": 507, "floor": "EKL-2nd", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 5, "d": "2025-09-25", "type": "SNLS", "serial": "7831884", "vendor": "Firoz Enterprise", "days": 423, "floor": "EKL-2nd", "line": "B", "status": "Running", "out": "", "rm": ""}, {"sl": 6, "d": "2025-09-25", "type": "SNLS", "serial": "7827694", "vendor": "Firoz Enterprise", "days": 423, "floor": "EKL-2nd", "line": "I", "status": "Running", "out": "", "rm": ""}, {"sl": 7, "d": "2025-09-25", "type": "SNLS", "serial": "44524", "vendor": "Firoz Enterprise", "days": 423, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 8, "d": "2025-09-25", "type": "SNLS", "serial": "44491", "vendor": "Firoz Enterprise", "days": 423, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 9, "d": "2026-01-24", "type": "SNLS", "serial": "21114597499", "vendor": "Firoz Enterprise", "days": 302, "floor": "EKL-2nd", "line": "G", "status": "Running", "out": "", "rm": ""}, {"sl": 10, "d": "2026-01-24", "type": "SNLS", "serial": "71408", "vendor": "Firoz Enterprise", "days": 302, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 11, "d": "2026-01-21", "type": "SNLS", "serial": "81823", "vendor": "Firoz Enterprise", "days": 305, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 12, "d": "2026-01-21", "type": "SNLS", "serial": "21957", "vendor": "Firoz Enterprise", "days": 305, "floor": "EKL-2nd", "line": "B", "status": "Running", "out": "", "rm": ""}, {"sl": 13, "d": "2026-01-21", "type": "SNLS", "serial": "6908151", "vendor": "Firoz Enterprise", "days": 305, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 14, "d": "2026-03-31", "type": "SNLS", "serial": "6903270", "vendor": "Firoz Enterprise", "days": 236, "floor": "EKL-5th", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 15, "d": "2026-03-31", "type": "SNLS", "serial": "7828152", "vendor": "Firoz Enterprise", "days": 236, "floor": "EKL-2nd", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 16, "d": "2026-03-31", "type": "SNLS", "serial": "6902640", "vendor": "Firoz Enterprise", "days": 236, "floor": "EKL-5th", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 17, "d": "2026-03-31", "type": "SNLS", "serial": "44552", "vendor": "Firoz Enterprise", "days": 236, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 18, "d": "2026-10-12", "type": "4TOL", "serial": "04525", "vendor": "Firoz Enterprise", "days": 41, "floor": "EKL-5th", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 19, "d": "2026-10-12", "type": "4TOL", "serial": "806150", "vendor": "Firoz Enterprise", "days": 41, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 20, "d": "2025-08-17", "type": "SNLS", "serial": "8848650", "vendor": "New Rakib Enterprise", "days": 462, "floor": "EKL-5th", "line": "H", "status": "Running", "out": "", "rm": ""}, {"sl": 21, "d": "2025-08-17", "type": "SNLS", "serial": "8879540", "vendor": "New Rakib Enterprise", "days": 462, "floor": "EKL-5th", "line": "C", "status": "Running", "out": "", "rm": ""}, {"sl": 22, "d": "2025-08-17", "type": "SNLS", "serial": "8879851", "vendor": "New Rakib Enterprise", "days": 462, "floor": "EKL-5th", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 23, "d": "2026-07-11", "type": "SNLS", "serial": "97582", "vendor": "New Rakib Enterprise", "days": 134, "floor": "EKL-5th", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 24, "d": "2026-07-11", "type": "SNLS", "serial": "687713", "vendor": "New Rakib Enterprise", "days": 134, "floor": "EKL-2nd", "line": "J", "status": "Running", "out": "", "rm": ""}, {"sl": 25, "d": "2026-07-12", "type": "SNLS", "serial": "68318", "vendor": "New Rakib Enterprise", "days": 133, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 26, "d": "2026-07-12", "type": "SNLS", "serial": "68510", "vendor": "New Rakib Enterprise", "days": 133, "floor": "EKL-2nd", "line": "I", "status": "Running", "out": "", "rm": ""}, {"sl": 27, "d": "2026-07-12", "type": "SNLS", "serial": "6767322", "vendor": "New Rakib Enterprise", "days": 133, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 28, "d": "2026-07-12", "type": "SNLS", "serial": "68366", "vendor": "New Rakib Enterprise", "days": 133, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 29, "d": "2026-09-06", "type": "SNLS", "serial": "71343", "vendor": "New Rakib Enterprise", "days": 77, "floor": "EKL-5th", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 30, "d": "2026-09-06", "type": "SNLS", "serial": "E6879714", "vendor": "New Rakib Enterprise", "days": 77, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 31, "d": "2026-09-07", "type": "SNLS", "serial": "8843954", "vendor": "New Rakib Enterprise", "days": 76, "floor": "EKL-5th", "line": "G", "status": "Running", "out": "", "rm": ""}, {"sl": 32, "d": "2026-09-07", "type": "SNLS", "serial": "8843967", "vendor": "New Rakib Enterprise", "days": 76, "floor": "EKL-5th", "line": "B", "status": "Running", "out": "", "rm": ""}, {"sl": 33, "d": "2026-09-07", "type": "SNLS", "serial": "8879819", "vendor": "New Rakib Enterprise", "days": 76, "floor": "EKL-5th", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 34, "d": "2026-09-07", "type": "SNLS", "serial": "8848706", "vendor": "New Rakib Enterprise", "days": 76, "floor": "EKL-5th", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 35, "d": "2026-09-07", "type": "SNLS", "serial": "8848719", "vendor": "New Rakib Enterprise", "days": 76, "floor": "EKL-5th", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 36, "d": "2026-09-15", "type": "SNLS", "serial": "8848384", "vendor": "New Rakib Enterprise", "days": 68, "floor": "EKL-5th", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 37, "d": "2026-09-15", "type": "SNLS", "serial": "8879822", "vendor": "New Rakib Enterprise", "days": 68, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 38, "d": "2026-09-15", "type": "SNLS", "serial": "68350", "vendor": "New Rakib Enterprise", "days": 68, "floor": "EKL-2nd", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 39, "d": "2026-09-16", "type": "SNLS", "serial": "68704", "vendor": "New Rakib Enterprise", "days": 67, "floor": "EKL-2nd", "line": "I", "status": "Running", "out": "", "rm": ""}, {"sl": 40, "d": "2026-09-16", "type": "SNLS", "serial": "68437", "vendor": "New Rakib Enterprise", "days": 67, "floor": "EKL-2nd", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 41, "d": "2026-09-16", "type": "SNLS", "serial": "22019", "vendor": "New Rakib Enterprise", "days": 67, "floor": "EKL-2nd", "line": "K", "status": "Running", "out": "", "rm": ""}, {"sl": 42, "d": "2026-08-17", "type": "4TOL", "serial": "0675567", "vendor": "New Rakib Enterprise", "days": 97, "floor": "EKL-5th", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 43, "d": "2026-08-17", "type": "4TOL", "serial": "0675575", "vendor": "New Rakib Enterprise", "days": 97, "floor": "EKL-2nd", "line": "L", "status": "Running", "out": "", "rm": ""}, {"sl": 44, "d": "2026-08-17", "type": "4TOL", "serial": "0872411", "vendor": "New Rakib Enterprise", "days": 97, "floor": "EKL-5th", "line": "B", "status": "Running", "out": "", "rm": ""}, {"sl": 45, "d": "2026-08-17", "type": "4TOL", "serial": "0804764", "vendor": "New Rakib Enterprise", "days": 97, "floor": "EKL-2nd", "line": "L", "status": "Running", "out": "", "rm": ""}, {"sl": 46, "d": "2026-08-11", "type": "4TOL", "serial": "0959431", "vendor": "New Rakib Enterprise", "days": 103, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 47, "d": "2026-08-11", "type": "4TOL", "serial": "0675588", "vendor": "New Rakib Enterprise", "days": 103, "floor": "EKL-5th", "line": "G", "status": "Running", "out": "", "rm": ""}, {"sl": 48, "d": "2026-08-11", "type": "4TOL", "serial": "0872768", "vendor": "New Rakib Enterprise", "days": 103, "floor": "EKL-5th", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 49, "d": "2026-08-30", "type": "4TOL", "serial": "0872844", "vendor": "New Rakib Enterprise", "days": 84, "floor": "BC", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 50, "d": "2026-09-20", "type": "4TOL", "serial": "035672", "vendor": "New Rakib Enterprise", "days": 63, "floor": "BC", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 51, "d": "2026-09-20", "type": "4TOL", "serial": "029397", "vendor": "New Rakib Enterprise", "days": 63, "floor": "BC", "line": "C", "status": "Running", "out": "", "rm": ""}, {"sl": 52, "d": "2026-09-20", "type": "4TOL", "serial": "029370", "vendor": "New Rakib Enterprise", "days": 63, "floor": "BC", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 53, "d": "2026-09-20", "type": "4TOL", "serial": "029348", "vendor": "New Rakib Enterprise", "days": 63, "floor": "BC", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 54, "d": "2026-09-16", "type": "Flatlock Small Sylender Bed", "serial": "0009316", "vendor": "New Rakib Enterprise", "days": 67, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 55, "d": "2026-05-21", "type": "Bartack", "serial": "06168", "vendor": "New Rakib Enterprise", "days": 185, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 56, "d": "2026-09-06", "type": "Hole", "serial": "50414", "vendor": "New Rakib Enterprise", "days": 77, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 57, "d": "2026-10-01", "type": "Hole", "serial": "75629", "vendor": "New Rakib Enterprise", "days": 52, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 58, "d": "2026-10-07", "type": "Flatlock Flatbade", "serial": "0769044", "vendor": "New Rakib Enterprise", "days": 46, "floor": "EKL-5th", "line": "G", "status": "Running", "out": "", "rm": ""}, {"sl": 59, "d": "2026-10-07", "type": "Flatlock Flatbade", "serial": "0779637", "vendor": "New Rakib Enterprise", "days": 46, "floor": "EKL-2nd", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 60, "d": "2026-10-07", "type": "Flatlock Flatbade", "serial": "00220", "vendor": "New Rakib Enterprise", "days": 46, "floor": "EKL-5th", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 61, "d": "2026-10-12", "type": "SNLS", "serial": "6905261", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "H", "status": "Running", "out": "", "rm": ""}, {"sl": 62, "d": "2026-10-12", "type": "SNLS", "serial": "5864074", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 63, "d": "2026-10-12", "type": "SNLS", "serial": "5717055", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 64, "d": "2026-10-12", "type": "SNLS", "serial": "04819204", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 65, "d": "2026-10-12", "type": "SNLS", "serial": "21556", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 66, "d": "2026-10-12", "type": "SNLS", "serial": "5871267", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 67, "d": "2026-10-12", "type": "SNLS", "serial": "4818424", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "H", "status": "Running", "out": "", "rm": ""}, {"sl": 68, "d": "2026-10-12", "type": "SNLS", "serial": "5864884", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 69, "d": "2026-10-12", "type": "SNLS", "serial": "68316", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "H", "status": "Running", "out": "", "rm": ""}, {"sl": 70, "d": "2026-10-12", "type": "SNLS", "serial": "68354", "vendor": "New Rakib Enterprise", "days": 41, "floor": "BC", "line": "ALTER", "status": "Running", "out": "", "rm": ""}, {"sl": 71, "d": "2026-10-25", "type": "Flatlock Big Sylender Bed", "serial": "0242194", "vendor": "New Rakib Enterprise", "days": 28, "floor": "EKL-2nd", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 72, "d": "2026-10-25", "type": "Flatlock Big Sylender Bed", "serial": "0212112", "vendor": "New Rakib Enterprise", "days": 28, "floor": "EKL-5th", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 73, "d": "2026-10-25", "type": "Flatlock Big Sylender Bed", "serial": "0242237", "vendor": "New Rakib Enterprise", "days": 28, "floor": "EKL-2nd", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 74, "d": "2026-10-25", "type": "Flatlock Big Sylender Bed", "serial": "0009368", "vendor": "New Rakib Enterprise", "days": 28, "floor": "EKL-2nd", "line": "M", "status": "Running", "out": "", "rm": ""}, {"sl": 75, "d": "2026-10-25", "type": "Flatlock Big Sylender Bed", "serial": "0763358", "vendor": "New Rakib Enterprise", "days": 28, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 76, "d": "2026-10-25", "type": "Flatlock Big Sylender Bed", "serial": "0751490", "vendor": "New Rakib Enterprise", "days": 28, "floor": "EKL-2nd", "line": "C", "status": "Running", "out": "", "rm": ""}, {"sl": 77, "d": "2026-11-14", "type": "Hole", "serial": "833276", "vendor": "New Rakib Enterprise", "days": 8, "floor": "EKL-2nd", "line": "", "status": "Idle", "out": "", "rm": ""}, {"sl": 78, "d": "2026-11-14", "type": "4TOL", "serial": "0560763", "vendor": "New Rakib Enterprise", "days": 8, "floor": "", "line": "", "status": "Returned, still billed", "out": "2026-09-27", "rm": "Out But Still Count in Rent"}, {"sl": 79, "d": "2026-11-14", "type": "4TOL", "serial": "0530588", "vendor": "New Rakib Enterprise", "days": 8, "floor": "EKL-5th", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 80, "d": "2026-07-22", "type": "4TOL", "serial": "0656775", "vendor": "Nabila Sewing Treaders", "days": 123, "floor": "EKL-5th", "line": "K", "status": "Running", "out": "", "rm": ""}, {"sl": 81, "d": "2026-08-10", "type": "4TOL", "serial": "0656753", "vendor": "Nabila Sewing Treaders", "days": 104, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 82, "d": "2026-08-10", "type": "4TOL", "serial": "0656695", "vendor": "Nabila Sewing Treaders", "days": 104, "floor": "EKL-5th", "line": "H", "status": "Running", "out": "", "rm": ""}, {"sl": 83, "d": "2026-08-30", "type": "4TOL", "serial": "0872428", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "EKL-5th", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 84, "d": "2026-08-30", "type": "4TOL", "serial": "0872815", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "BC", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 85, "d": "2026-08-30", "type": "4TOL", "serial": "0896930", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "EKL-5th", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 86, "d": "2026-08-30", "type": "4TOL", "serial": "0872403", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "EKL-5th", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 87, "d": "2026-08-30", "type": "4TOL", "serial": "0903975", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "EKL-5th", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 88, "d": "2026-08-30", "type": "4TOL", "serial": "0872743", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "BC", "line": "I", "status": "Running", "out": "", "rm": ""}, {"sl": 89, "d": "2026-08-30", "type": "4TOL", "serial": "08Z3082", "vendor": "Nabila Sewing Treaders", "days": 84, "floor": "BC", "line": "ALTER", "status": "Running", "out": "", "rm": ""}, {"sl": 90, "d": "2026-09-01", "type": "FOA", "serial": "1314", "vendor": "Nabila Sewing Treaders", "days": 82, "floor": "EKL-2nd", "line": "M", "status": "Running", "out": "", "rm": ""}, {"sl": 91, "d": "2026-09-01", "type": "FOA", "serial": "8000036", "vendor": "Nabila Sewing Treaders", "days": 82, "floor": "BC", "line": "", "status": "Not billed", "out": "", "rm": "Rent Not Count"}, {"sl": 92, "d": "2026-09-16", "type": "Flatlock Big Sylender Bed", "serial": "0419293", "vendor": "Nabila Sewing Treaders", "days": 67, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 93, "d": "2026-09-16", "type": "Flatlock Big Sylender Bed", "serial": "0557554", "vendor": "Nabila Sewing Treaders", "days": 67, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}, {"sl": 94, "d": "2026-09-16", "type": "Flatlock Big Sylender Bed", "serial": "0582090", "vendor": "Nabila Sewing Treaders", "days": 67, "floor": "EKL-2nd", "line": "", "status": "Not billed", "out": "", "rm": "Rent Not Count"}, {"sl": 95, "d": "2026-09-16", "type": "Flatlock Big Sylender Bed", "serial": "0662783", "vendor": "Nabila Sewing Treaders", "days": 67, "floor": "EKL-2nd", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 96, "d": "2026-09-16", "type": "Flatlock Big Sylender Bed", "serial": "0782570", "vendor": "Nabila Sewing Treaders", "days": 67, "floor": "EKL-2nd", "line": "K", "status": "Running", "out": "", "rm": ""}, {"sl": 97, "d": "2026-09-16", "type": "SNLS", "serial": "10155", "vendor": "Nabila Sewing Treaders", "days": 67, "floor": "EKL-2nd", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 98, "d": "2026-09-30", "type": "Flatlock Big Sylender Bed", "serial": "0545426", "vendor": "Nabila Sewing Treaders", "days": 53, "floor": "EKL-5th", "line": "J", "status": "Running", "out": "", "rm": ""}, {"sl": 99, "d": "2026-11-10", "type": "Bartack", "serial": "35435", "vendor": "Nabila Sewing Treaders", "days": 12, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 100, "d": "2025-11-11", "type": "Flatlock Big Sylender Bed", "serial": "0384471", "vendor": "Mohammadi Tread Link", "days": 376, "floor": "EKL-5th", "line": "J", "status": "Running", "out": "", "rm": ""}, {"sl": 101, "d": "2025-11-11", "type": "Flatlock Big Sylender Bed", "serial": "0487736", "vendor": "Mohammadi Tread Link", "days": 376, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 102, "d": "2025-11-11", "type": "Flatlock Big Sylender Bed", "serial": "323243", "vendor": "Mohammadi Tread Link", "days": 376, "floor": "", "line": "", "status": "Not found", "out": "", "rm": "Can't Find In Floor But Count in Rent"}, {"sl": 103, "d": "2026-10-26", "type": "Bartack", "serial": "63579", "vendor": "JS Enterprise", "days": 27, "floor": "EKL-5th", "line": "", "status": "Idle", "out": "", "rm": "Machine IDLE But Count In Rent"}, {"sl": 104, "d": "2026-10-26", "type": "Bartack", "serial": "92663", "vendor": "JS Enterprise", "days": 27, "floor": "BC", "line": "", "status": "Idle", "out": "", "rm": "Machine IDLE But Count In Rent"}, {"sl": 105, "d": "2026-10-26", "type": "Bartack", "serial": "92566", "vendor": "JS Enterprise", "days": 27, "floor": "BC", "line": "", "status": "Idle", "out": "", "rm": "Machine IDLE But Count In Rent"}, {"sl": 106, "d": "2026-11-17", "type": "4TOL", "serial": "0659919", "vendor": "New Rakib Enterprise", "days": 5, "floor": "EKL-5th", "line": "F", "status": "Running", "out": "", "rm": ""}, {"sl": 107, "d": "2026-11-17", "type": "4TOL", "serial": "0660092", "vendor": "New Rakib Enterprise", "days": 5, "floor": "EKL-5th", "line": "G", "status": "Running", "out": "", "rm": ""}, {"sl": 108, "d": "2026-11-17", "type": "4TOL", "serial": "0660222", "vendor": "New Rakib Enterprise", "days": 5, "floor": "EKL-5th", "line": "G", "status": "Running", "out": "", "rm": ""}, {"sl": 109, "d": "2026-10-12", "type": "SNLS", "serial": "68877", "vendor": "New Rakib Enterprise", "days": 41, "floor": "EKL-5th", "line": "B", "status": "Running", "out": "", "rm": ""}, {"sl": 110, "d": "2026-10-12", "type": "SNLS", "serial": "80769", "vendor": "New Rakib Enterprise", "days": 41, "floor": "EKL-5th", "line": "H", "status": "Running", "out": "", "rm": ""}, {"sl": 111, "d": "2026-10-12", "type": "SNLS", "serial": "8879851", "vendor": "New Rakib Enterprise", "days": 41, "floor": "EKL-5th", "line": "D", "status": "Running", "out": "", "rm": ""}, {"sl": 112, "d": "2026-10-12", "type": "SNLS", "serial": "8350", "vendor": "New Rakib Enterprise", "days": 41, "floor": "EKL-2nd", "line": "E", "status": "Running", "out": "", "rm": ""}, {"sl": 113, "d": "2026-10-12", "type": "SNLS", "serial": "1676", "vendor": "New Rakib Enterprise", "days": 41, "floor": "EKL-2nd", "line": "J", "status": "Running", "out": "", "rm": ""}, {"sl": 114, "d": "2026-03-31", "type": "SNLS", "serial": "4451", "vendor": "Firoz Enterprise", "days": 236, "floor": "EKL-2nd", "line": "A", "status": "Running", "out": "", "rm": ""}];
+
+const COL={SNLS:'#2f6db3',Overlock:'#14365d',Flatlock:'#6b5bb5',Bartack:'#8a5a44',Hole:'#b0487a',FOA:'#5b6675'};
+const grp=t=>t==='SNLS'?'SNLS':t==='4TOL'?'Overlock':t.includes('Flatlock')?'Flatlock':t.includes('Button')?'Button':t;
+const detail=t=>t==='4TOL'?'4-thread overlock':t.replace('Sylender','Cylinder').replace('Flatbade','Flatbed');
+const ALL=RAW.map(o=>({...o,g:grp(o.type),det:detail(o.type)}));
+const D=ALL.filter(o=>o.status!=='Not billed');
+const SC={'Running':'#1f8a7a','Idle':'#c9821a','Not found':'#c2412d','Returned, still billed':'#7a1f12','Not billed':'#9aa6b5'};
+const STATS=['Running','Idle','Not found','Returned, still billed'];
+const fmt=n=>n.toLocaleString('en-US');
+const TYPES=['SNLS','Overlock','Flatlock','Bartack','Hole','FOA'];
+const by=(k,arr=D)=>arr.reduce((m,o)=>{(m[o[k]]=m[o[k]]||[]).push(o);return m},{});
+const sum=a=>a.reduce((s,o)=>s+o.days,0);
+const totDays=sum(D);
+
+/* type bars */
+(function(){const g=by('g');let h='';TYPES.forEach(t=>{const n=g[t].length;
+  h+=`<div class="hb"><span>${t}</span><div class="tr"><div class="fl" style="background:${COL[t]}" data-w="${n/56*100}" data-tip="${t}: ${n} machines · avg ${Math.round(sum(g[t])/n)} days on rent">${n>4?Math.round(n/D.length*100)+'%':''}</div></div><b>${n}</b></div>`;});
+  document.getElementById('typeBars').innerHTML=h;})();
+
+/* donut */
+(function(){const g=by('g'),R=80,C=2*Math.PI*R;let off=0,s=`<svg viewBox="0 0 220 220">`,leg='';
+  TYPES.forEach(t=>{const v=sum(g[t]),f=v/totDays,len=f*C;
+    s+=`<circle class="arc" cx="110" cy="110" r="${R}" stroke="${COL[t]}" stroke-dasharray="0 ${C}" data-da="${len} ${C-len}" stroke-dashoffset="${-off}" data-tip="${t}: ${fmt(v)} machine-days (${(f*100).toFixed(0)}%)"/>`;off+=len;
+    leg+=`<div style="margin:.3rem 0;font-size:.9rem"><i style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${COL[t]};margin-right:.4rem;vertical-align:-1px"></i>${t} <b>${(f*100).toFixed(0)}%</b> <span class="sub">${fmt(v)} days</span></div>`;});
+  s+=`</svg><div class="mid"><div class="n">${Math.round(sum(g.SNLS)/totDays*100)}%</div><div class="l">SNLS share of<br>rental time</div></div>`;
+  document.getElementById('donut').innerHTML=s;document.getElementById('donutLeg').innerHTML=leg;})();
+
+/* heat */
+(function(){const V=['New Rakib Enterprise','Firoz Enterprise','Nabila Sewing Treaders','Mohammadi Tread Link','JS Enterprise'];
+  let h='<table class="heat"><tr><th>Vendor</th>'+TYPES.map(t=>`<th>${t}</th>`).join('')+'<th>Total</th></tr>';let k=0;
+  V.forEach(v=>{const rows=D.filter(o=>o.vendor===v);h+=`<tr><td>${v}</td>`;
+    TYPES.forEach(t=>{const n=rows.filter(o=>o.g===t).length,a=n?Math.min(.95,.15+n/36*.8):0;
+      h+=`<td style="background:${n?`rgba(47,109,179,${a})`:'#f3f5f8'};color:${a>.5?'#fff':n?'#14365d':'#c0c8d2'};transition-delay:${(k++)*0.025}s" data-tip="${v} · ${t}: ${n}">${n||'·'}</td>`;});
+    h+=`<td style="background:#14365d;color:#fff;transition-delay:${(k++)*0.025}s">${rows.length}</td></tr>`;});
+  document.getElementById('heat').innerHTML=h+'</table>';})();
+
+/* vendor avg age */
+(function(){const g=by('vendor'),arr=Object.entries(g).map(([v,a])=>[v,Math.round(sum(a)/a.length),a.length,a.filter(o=>o.days>180).length,Math.max(...a.map(o=>o.days))]).sort((a,b)=>b[1]-a[1]);
+  let h='';arr.forEach(([v,avg,n,o6,mx])=>{const c=avg>180?'var(--red)':avg>90?'var(--amber)':'var(--teal)';
+    h+=`<div class="hb" style="grid-template-columns:170px 1fr 60px"><span>${v}<br><span class="sub">${n} machines · ${o6} over 6 m</span></span><div class="tr"><div class="fl" style="background:${c}" data-w="${avg/400*100}" data-tip="${v}: avg ${avg} days, oldest ${mx} days"></div></div><b>${avg} d</b></div>`;});
+  document.getElementById('vendAge').innerHTML=h+'<p class="note">Red = average over 6 months · amber = 3–6 months · green = under 3 months</p>';})();
+
+/* timeline */
+(function(){const m={};D.forEach(o=>{const k=o.d.slice(0,7);m[k]=(m[k]||0)+1;});
+  const months=[];let y=2025,mo=5;while(y<2026||(y===2026&&mo<=11)){months.push(`${y}-${String(mo).padStart(2,'0')}`);mo++;if(mo>12){mo=1;y++;}}
+  const lab=k=>['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+k.slice(5)-1]+'-'+k.slice(2,4);
+  const W=1000,H=360,pl=44,pr=48,pt=28,pb=44,n=months.length,cw=(W-pl-pr)/n,maxM=30,maxC=120;let cum=0,pts=[];
+  let s=`<svg viewBox="0 0 ${W} ${H}" font-family="Segoe UI,Roboto,Arial" font-size="12">`;
+  const j=months.indexOf('2026-07');s+=`<rect x="${pl+j*cw}" y="${pt}" width="${cw*5}" height="${H-pt-pb}" fill="#c2412d" opacity=".06"/>`;
+  for(let i=0;i<=3;i++){const yy=pt+(H-pt-pb)*i/3;s+=`<line x1="${pl}" x2="${W-pr}" y1="${yy}" y2="${yy}" stroke="#e3e6ea"/><text x="${pl-6}" y="${yy+4}" text-anchor="end" fill="#5b6675">${maxM-maxM*i/3}</text><text x="${W-pr+6}" y="${yy+4}" fill="#c2412d">${maxC-maxC*i/3}</text>`;}
+  months.forEach((k,i)=>{const v=m[k]||0;cum+=v;const x=pl+i*cw,bh=(H-pt-pb)*v/maxM,yy=H-pb-bh;
+    s+=`<rect class="bar-r" style="transition-delay:${i*.05}s" x="${x+cw*.2}" y="${yy}" width="${cw*.6}" height="${bh}" fill="#2f6db3" rx="2" data-tip="${lab(k)}: ${v} brought in · ${cum} on rent"/>`;
+    if(v)s+=`<text class="lbl" x="${x+cw/2}" y="${yy-5}" text-anchor="middle" font-weight="700" fill="#1b2430">${v}</text>`;
+    s+=`<text x="${x+cw/2}" y="${H-pb+17}" text-anchor="middle" fill="#5b6675" font-size="11">${lab(k)}</text>`;pts.push([x+cw/2,H-pb-(H-pt-pb)*cum/maxC,cum,lab(k)]);});
+  s+=`<polyline class="cline" points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="none" stroke="#c2412d" stroke-width="2.6"/>`;
+  pts.forEach(p=>s+=`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="4" fill="#c2412d" data-tip="${p[3]}: ${p[2]} on rent"/>`);
+  s+=`<text class="lbl" x="${pl+j*cw-8}" y="${pt+16}" text-anchor="end" fill="#c2412d" font-weight="700">Jul–Nov 2026: 87 added →</text></svg>`;
+  document.getElementById('tl').innerHTML=s;})();
+
+/* age histogram stacked */
+(function(){const bands=[[0,30,'0–1 m'],[31,60,'1–2 m'],[61,90,'2–3 m'],[91,120,'3–4 m'],[121,180,'4–6 m'],[181,270,'6–9 m'],[271,365,'9–12 m'],[366,450,'12–15 m'],[451,600,'15–18 m']];
+  const W=1000,H=330,pl=40,pr=10,pt=20,pb=44,cw=(W-pl-pr)/bands.length,max=40;
+  let s=`<svg viewBox="0 0 ${W} ${H}" font-family="Segoe UI,Roboto,Arial" font-size="12">`;
+  s+=`<rect x="${pl+5*cw}" y="${pt}" width="${cw*4}" height="${H-pt-pb}" fill="#c2412d" opacity=".06"/><text class="lbl" x="${pl+5*cw+8}" y="${pt+16}" fill="#c2412d" font-weight="700">Over 6 months: 25 machines · 63% of rental time</text>`;
+  for(let i=0;i<=4;i++){const y=pt+(H-pt-pb)*i/4;s+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="#e3e6ea"/><text x="${pl-6}" y="${y+4}" text-anchor="end" fill="#5b6675">${max-max*i/4}</text>`;}
+  bands.forEach(([a,b,l],i)=>{const x=pl+i*cw;let y0=H-pb,tot=0;const rows=D.filter(o=>o.days>=a&&o.days<=b);
+    TYPES.forEach(t=>{const n=rows.filter(o=>o.g===t).length;if(!n)return;tot+=n;const h=(H-pt-pb)*n/max;y0-=h;
+      s+=`<rect class="bar-r" style="transition-delay:${i*.08}s" x="${x+cw*.16}" y="${y0}" width="${cw*.68}" height="${h}" fill="${COL[t]}" data-tip="${l}: ${t} ${n}"/>`;});
+    if(tot)s+=`<text class="lbl" x="${x+cw/2}" y="${y0-6}" text-anchor="middle" font-weight="700">${tot}</text>`;
+    s+=`<text x="${x+cw/2}" y="${H-pb+18}" text-anchor="middle" fill="#5b6675">${l}</text>`;});
+  document.getElementById('ageChart').innerHTML=s+'</svg>';
+  document.getElementById('ageLeg').innerHTML=TYPES.map(t=>`<span><i style="background:${COL[t]}"></i>${t}</span>`).join('');})();
+
+
+/* audit status bar */
+(function(){const n=D.length;let h='',lg='';STATS.forEach(st=>{const c=D.filter(o=>o.status===st).length;
+  h+=`<div class="seg" style="background:${SC[st]}" data-w="${c/n*100}" data-tip="${st}: ${c} of ${n} billed machines">${c>=5?st+' '+c:c}</div>`;
+  lg+=`<span><i style="background:${SC[st]}"></i>${st} <b>${c}</b></span>`;});
+  document.getElementById('stbar').innerHTML=h;document.getElementById('stleg').innerHTML=lg+`<span><i style="background:${SC['Not billed']}"></i>Not billed (outside the 112) <b>${ALL.length-n}</b></span>`;})();
+
+/* remarks table */
+(function(){const r=ALL.filter(o=>o.rm).sort((a,b)=>a.rm.localeCompare(b.rm)||b.days-a.days);
+  document.getElementById('rmb').innerHTML=r.map(o=>`<tr class="flag"><td>${o.sl}</td><td><span class="tag" style="background:${COL[o.g]}">${o.g}</span></td><td>${o.serial}</td><td>${o.vendor}</td><td>${o.floor||'—'}${o.line?' / '+o.line:''}</td><td><b>${o.days}</b></td><td><span class="rmtag${o.rm.includes('Rent Not Count')?' good':''}">${o.rm}</span></td></tr>`).join('');})();
+
+/* floor cards */
+(function(){const F=[['EKL-2nd','EKL 2nd Floor'],['EKL-5th','EKL 5th Floor'],['BC','Bally Cotton'],['','Not on any floor']];
+  let h='';F.forEach(([k,l],i)=>{const r=D.filter(o=>o.floor===k),n=r.length;
+    const segs=STATS.map(st=>{const c=r.filter(o=>o.status===st).length;return c?`<span style="background:${SC[st]}" data-w="${c/n*100}" data-tip="${l} · ${st}: ${c}"></span>`:''}).join('');
+    const rows=STATS.map(st=>{const c=r.filter(o=>o.status===st).length;return c?`<span style="color:${SC[st]};font-weight:700">●</span> ${st} ${c}`:''}).filter(Boolean).join('<br>');
+    const nb=ALL.filter(o=>o.floor===k&&o.status==='Not billed').length;
+    h+=`<div class="fc rv d${i+1}" style="${k===''?'border:2px solid #f2cfc6':''}"><h4>${l}</h4><div class="big" ${k===''?'style="color:var(--red)"':''}>${n}</div><div class="sub">billed rented machines</div><div class="mb">${segs}</div><div class="rows">${rows}${nb?`<br><span style="color:#9aa6b5;font-weight:700">●</span> Not billed ${nb}`:''}</div></div>`;});
+  document.getElementById('fgrid').innerHTML=h;})();
+
+/* line heat (running only) */
+(function(){const F=['EKL-2nd','EKL-5th','BC'];const run=D.filter(o=>o.status==='Running');
+  const lines=[...new Set(run.map(o=>o.line))].sort((a,b)=>(a.length-b.length)||a.localeCompare(b));
+  let h='<table class="heat"><tr><th>Floor</th>'+lines.map(l=>`<th>${l==='ALTER'?'Alter':l}</th>`).join('')+'<th>Total</th></tr>';let k=0;
+  F.forEach(f=>{const r=run.filter(o=>o.floor===f);h+=`<tr><td>${f}</td>`;
+    lines.forEach(l=>{const x=r.filter(o=>o.line===l),n=x.length,a=n?Math.min(.95,.2+n/7*.75):0;
+      const det=[...new Set(x.map(o=>o.g))].map(t=>t+' '+x.filter(o=>o.g===t).length).join(', ');
+      h+=`<td style="background:${n?`rgba(31,138,122,${a})`:'#f3f5f8'};color:${a>.5?'#fff':n?'#14365d':'#c0c8d2'};transition-delay:${(k++)*0.012}s" data-tip="${f} line ${l}: ${n}${n?' — '+det:''}">${n||'·'}</td>`;});
+    h+=`<td style="background:#14365d;color:#fff">${r.length}</td></tr>`;});
+  document.getElementById('lineHeat').innerHTML=h+'</table><p class="note">Running rented machines only (82). Hover a cell for machine types.</p>';})();
+
+/* register */
+const ageBands=[['All',0,9999],['< 3 months',0,90],['3–6 months',91,180],['6–12 months',181,365],['> 1 year',366,9999]];
+let fAge=0,sortK='days',sortDir=-1;
+const fSt=document.getElementById('fStat'),fF=document.getElementById('fFloor'),fT=document.getElementById('fType'),fV=document.getElementById('fVend'),fS=document.getElementById('fSearch');
+TYPES.forEach(t=>fT.insertAdjacentHTML('beforeend',`<option>${t}</option>`));
+[...STATS,'Not billed'].forEach(t=>fSt.insertAdjacentHTML('beforeend',`<option>${t}</option>`));
+[['EKL-2nd','EKL-2nd'],['EKL-5th','EKL-5th'],['BC','BC'],['__none','Not on any floor']].forEach(([v,l])=>fF.insertAdjacentHTML('beforeend',`<option value="${v}">${l}</option>`));
+[...new Set(ALL.map(o=>o.vendor))].forEach(v=>fV.insertAdjacentHTML('beforeend',`<option>${v}</option>`));
+const ac=document.getElementById('ageChips');
+ageBands.forEach((b,i)=>{const c=document.createElement('span');c.className='chip'+(i===0?' on':'');c.textContent=b[0];
+  c.onclick=()=>{fAge=i;[...ac.children].forEach((x,k)=>x.classList.toggle('on',k===i));render();};ac.appendChild(c);});
+[fT,fV,fSt,fF].forEach(e=>e.onchange=render);fS.oninput=render;
+document.querySelectorAll('.reg th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=sortK===k?-sortDir:(k==='days'?-1:1);sortK=k;
+  document.querySelectorAll('.reg th .ar').forEach(a=>a.textContent='');th.querySelector('.ar').textContent=sortDir>0?'▲':'▼';render();});
+function render(){const [_,a,b]=ageBands[fAge],q=fS.value.trim().toLowerCase();
+  let r=ALL.filter(o=>o.days>=a&&o.days<=b&&(!fT.value||o.g===fT.value)&&(!fV.value||o.vendor===fV.value)&&(!fSt.value||o.status===fSt.value)&&(!fF.value||(fF.value==='__none'?o.floor==='':o.floor===fF.value))&&(!q||o.serial.toLowerCase().includes(q)));
+  r.sort((x,y)=>{const p=x[sortK],s=y[sortK];return (p>s?1:p<s?-1:0)*sortDir;});
+  document.getElementById('rb').innerHTML=r.map(o=>{const c=o.days>365?'#c2412d':o.days>180?'#c9821a':o.days>90?'#2f6db3':'#1f8a7a';
+    return `<tr class="${o.rm?'flag':''}"><td>${o.sl}</td><td>${o.d.split('-').reverse().join('-')}</td><td><span class="tag" style="background:${COL[o.g]}" title="${o.det}">${o.g}</span></td><td>${o.serial}</td><td>${o.vendor}</td><td>${o.floor||'—'}</td><td>${o.line||'—'}</td>
+    <td><span class="st" style="background:${SC[o.status]}">${o.status}</span></td>
+    <td><div class="agebar"><span style="width:${Math.max(4,o.days/544*80)}px;background:${c}"></span><b>${o.days}</b></div></td>
+    <td>${o.rm?`<span class="rmtag${o.rm.includes('Rent Not Count')?' good':''}">${o.rm}</span>`:''}</td></tr>`;}).join('');
+  document.getElementById('count').textContent=`${r.length} machine${r.length===1?'':'s'} · ${fmt(sum(r.filter(o=>o.status!=='Not billed')))} billed machine-days`;}
+render();
+
+/* count-up + reveal */
+function countUp(el){const end=+el.dataset.count,t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3);el.textContent=fmt(Math.round(end*e));if(p<1)requestAnimationFrame(f);})(t0);}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('in');
+  el.querySelectorAll('[data-count]').forEach(countUp);
+  el.querySelectorAll('[data-w]').forEach((s,k)=>setTimeout(()=>s.style.width=s.dataset.w+'%',200+k*120));
+  el.querySelectorAll('.arc').forEach((c,k)=>setTimeout(()=>c.setAttribute('stroke-dasharray',c.dataset.da),200+k*150));
+  io.unobserve(el);}),{threshold:.2});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* tooltip */
+const tip=document.getElementById('tip');
+document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');
+  if(t){tip.textContent=t.dataset.tip;tip.style.opacity=1;tip.style.left=Math.min(e.clientX+14,innerWidth-310)+'px';tip.style.top=(e.clientY+14)+'px';}else tip.style.opacity=0;});
+/* progress + nav */
+const nav=document.getElementById('nav'),prog=document.getElementById('prog'),links=[...document.querySelectorAll('nav ul a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+addEventListener('scroll',()=>{const h=document.documentElement;prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';nav.classList.toggle('solid',h.scrollTop>innerHeight*.6);
+  let cur=-1;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<innerHeight*.4)cur=i;});links.forEach((a,i)=>a.classList.toggle('on',i===cur));},{passive:true});
+</script>
+</body>
+</html>
