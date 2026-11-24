@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Rental machine discrepancy for EKL and Bally Cotton, updated with the floor audit — by Tahmidur Rahman, Manager IE & Planning.">
+<title>Rental Machine Discrepancy — EKL & Bally Cotton (Floor Audit)</title>
+<style>
+  :root{--ink:#1b2430;--muted:#5b6675;--line:#e3e6ea;--bg:#f6f8fb;--card:#fff;--soft:#eef3f9;
+    --navy:#14365d;--blue:#2f6db3;--teal:#1f8a7a;--red:#c2412d;--amber:#c9821a;--grey:#9aa6b5;--dred:#7a1f12}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;overflow-x:hidden}
+  b.r{color:var(--red)} b.t{color:var(--teal)} b.n{color:var(--navy)} b.a{color:var(--amber)}
+  #prog{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--teal),var(--blue),var(--red));z-index:60}
+  nav{position:fixed;top:4px;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:.7rem 4vw;transition:all .3s;color:#fff}
+  nav.solid{background:rgba(255,255,255,.93);backdrop-filter:blur(8px);box-shadow:0 2px 14px rgba(20,54,93,.08);color:var(--navy)}
+  nav .brand{font-weight:700;font-size:.95rem}
+  nav ul{list-style:none;display:flex;gap:1.2rem;font-size:.85rem}
+  nav a{color:inherit;text-decoration:none;opacity:.75} nav a:hover,nav a.on{opacity:1;font-weight:600}
+  @media(max-width:1000px){nav ul{display:none}}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8vw;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(130deg,#0e2746,#14365d 35%,#1d4f86 70%,#2f6db3);background-size:200% 200%;animation:grad 14s ease infinite}
+  @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;animation:float 12s ease-in-out infinite}
+  .orb.a{width:420px;height:420px;background:#c2412d;right:-80px;top:10%}.orb.b{width:360px;height:360px;background:#1f8a7a;left:-100px;bottom:-60px;animation-delay:-5s}
+  @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+  .hero .kicker{color:#9cc3ee;letter-spacing:.18em;text-transform:uppercase;font-size:.85rem;font-weight:700;opacity:0;animation:up .8s .2s forwards}
+  .hero h1{font-size:clamp(2.4rem,6vw,5rem);line-height:1.05;margin:.4em 0 .3em;font-weight:800;opacity:0;animation:up .9s .4s forwards}
+  .hero h1 span{background:linear-gradient(90deg,#ffb4a6,#ffd9a0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:clamp(1rem,1.6vw,1.35rem);color:#d6e4f5;max-width:50ch;opacity:0;animation:up .9s .65s forwards}
+  .hstats{display:flex;gap:2.6rem;flex-wrap:wrap;margin-top:2.2rem;opacity:0;animation:up .9s .85s forwards}
+  .hstats div{border-left:3px solid rgba(255,255,255,.4);padding-left:.9rem}
+  .hstats .n{font-size:2.2rem;font-weight:800;line-height:1}.hstats .l{font-size:.85rem;color:#cfe0f5}
+  .hero .pill{display:inline-block;margin-top:1.8rem;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);border-radius:999px;padding:.4em 1.1em;font-size:.85rem;opacity:0;animation:up .9s 1s forwards}
+  .hero .meta{margin-top:1.2rem;font-size:.92rem;color:#b9cde6;opacity:0;animation:up .9s 1.1s forwards}
+  .scroll{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);color:#cfe0f5;font-size:.8rem;text-align:center;opacity:0;animation:up 1s 1.4s forwards}
+  .scroll i{display:block;width:22px;height:36px;border:2px solid #cfe0f5;border-radius:12px;margin:.5rem auto 0;position:relative}
+  .scroll i::after{content:"";position:absolute;left:50%;top:6px;width:4px;height:8px;margin-left:-2px;background:#cfe0f5;border-radius:2px;animation:wheel 1.6s infinite}
+  @keyframes wheel{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+  @keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+  section.sec{padding:7rem 8vw 4rem;max-width:1400px;margin:0 auto}
+  .kick{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:700}
+  h2{font-size:clamp(1.7rem,3.2vw,2.7rem);color:var(--navy);line-height:1.15;margin:.35em 0 .5em;font-weight:750;max-width:26ch}
+  .lead{font-size:clamp(1rem,1.25vw,1.15rem);color:var(--muted);max-width:72ch}
+  .card{background:var(--card);border-radius:16px;box-shadow:0 6px 30px rgba(20,54,93,.07);padding:1.8rem 2rem}
+  .ct{font-weight:700;color:var(--navy);margin-bottom:1rem}
+  .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}.rv.l{transform:translateX(-50px)}.rv.rt{transform:translateX(50px)}.rv.l.in,.rv.rt.in{transform:none}
+  .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+  .note{font-size:.82rem;color:var(--muted);margin-top:.8rem}
+  .callout{margin-top:1.8rem;border-radius:14px;padding:1.2rem 1.5rem;font-size:1.1rem;background:#fff5f2;border:1px solid #f2cfc6}
+  .callout.info{background:#eef3f9;border-color:#c9d9ec}
+
+  .rule{display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;margin-top:2rem}
+  .rbox{border-radius:16px;padding:2rem;font-size:1.12rem}
+  .rbox h3{font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.8rem}
+  .rbox.exp{background:#eef6f4;border:1px solid #bfe0d8}.rbox.exp h3{color:var(--teal)}
+  .rbox.act{background:#fff5f2;border:1px solid #f2cfc6}.rbox.act h3{color:var(--red)}
+  .neq{display:flex;align-items:center;font-size:3.5rem;color:var(--grey);font-weight:300}
+  @media(max-width:900px){.rule{grid-template-columns:1fr}}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:2.2rem}
+  @media(max-width:1000px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:#fff;border-radius:16px;padding:1.4rem 1.5rem;box-shadow:0 6px 24px rgba(20,54,93,.06);border-top:5px solid var(--blue);transition:transform .25s,box-shadow .25s}
+  .kpi:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(20,54,93,.13)}
+  .kpi .n{font-size:clamp(2rem,3.4vw,3rem);font-weight:800;color:var(--navy);line-height:1;font-variant-numeric:tabular-nums}
+  .kpi .l{color:var(--muted);margin-top:.45rem;font-size:.92rem}
+  .kpi .s{font-size:.78rem;color:var(--grey);margin-top:.6rem;border-top:1px dashed var(--line);padding-top:.5rem}
+  .kpi.red{border-top-color:var(--red)}.kpi.red .n{color:var(--red)}
+  .kpi.amber{border-top-color:var(--amber)}.kpi.amber .n{color:var(--amber)}
+  .kpi.teal{border-top-color:var(--teal)}.kpi.teal .n{color:var(--teal)}
+
+  .floors{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2rem}
+  @media(max-width:1000px){.floors{grid-template-columns:1fr}}
+  .fl h3{color:var(--navy);font-size:1.3rem}
+  .fl .sub{color:var(--muted);font-size:.85rem}
+  .fl .big{display:flex;gap:1.4rem;margin:1rem 0 .4rem}
+  .fl .big div .n{font-size:2.4rem;font-weight:800;line-height:1}
+  .fl .big div .l{font-size:.78rem;color:var(--muted)}
+  .fl table{width:100%;font-size:.9rem;border-collapse:collapse;margin-top:.8rem}
+  .fl td{padding:.35em 0;border-bottom:1px solid var(--line)}
+  .fl td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .stk{display:flex;height:30px;border-radius:7px;overflow:hidden;background:#e8edf3;margin-top:1rem;position:relative}
+  .stk .seg{width:0;transition:width 1.5s cubic-bezier(.2,.8,.2,1);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:700;overflow:hidden;white-space:nowrap}
+  .opl{position:relative;height:18px;margin-top:4px}
+  .opl .mk{position:absolute;top:0;width:3px;height:16px;background:var(--ink);opacity:0;transition:opacity .6s 1.4s}
+  .opl .mk span{position:absolute;right:7px;top:-1px;font-size:.72rem;font-weight:700;white-space:nowrap}
+  .in .opl .mk{opacity:1}
+  .c-or{background:var(--blue)}.c-oi{background:var(--amber)}.c-rr{background:var(--red)}.c-ri{background:#e58b77}
+  .legend{display:flex;gap:1.3rem;flex-wrap:wrap;margin-top:1.2rem;color:var(--muted);font-size:.88rem}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:.4rem;vertical-align:-1px}
+
+  .ctrl{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;background:#fff;border-radius:14px;padding:1.1rem 1.5rem;box-shadow:0 6px 24px rgba(20,54,93,.06);margin-top:2rem}
+  .ctrl label{font-weight:600}.ctrl input{flex:1;min-width:200px;accent-color:var(--navy);cursor:pointer}
+  .ctrl .val{font-size:2rem;font-weight:800;color:var(--navy);min-width:3.2em;text-align:right}
+  .presets{display:flex;gap:.4rem}
+  .presets button{border:1px solid #c9d3df;background:#fff;border-radius:8px;padding:.35em .8em;cursor:pointer;font-size:.85rem}
+  .presets button:hover{background:var(--navy);color:#fff}
+  .sum{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.2rem}
+  @media(max-width:900px){.sum{grid-template-columns:1fr 1fr}}
+  .sum>div{background:#fff;border-radius:12px;padding:1rem 1.2rem;box-shadow:0 4px 16px rgba(20,54,93,.05)}
+  .sum .n{font-size:2rem;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+  .sum .l{font-size:.82rem;color:var(--muted)}
+  .sum .ok .n{color:var(--teal)}.sum .bad .n{color:var(--red)}
+  table.t{width:100%;border-collapse:collapse;font-size:.95rem;margin-top:1.2rem;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(20,54,93,.05)}
+  .t th{background:var(--navy);color:#fff;font-weight:600;padding:.7em .8em;text-align:right}
+  .t th:first-child,.t td:first-child{text-align:left}
+  .t td{padding:.6em .8em;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+  .t tr.total td{font-weight:700;background:var(--soft)}
+  .pos{color:var(--teal);font-weight:700}.neg{color:var(--red);font-weight:700}
+  td.flash{animation:flash .6s}@keyframes flash{0%{background:#fff3c4}100%{background:transparent}}
+  .verdict{margin-top:1.2rem;border-radius:12px;padding:1rem 1.3rem;background:#fff5f2;border:1px solid #f2cfc6;font-size:1.05rem}
+
+  .rmk{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-top:2rem}
+  .rm{background:#fff;border-radius:16px;padding:1.5rem 1.6rem;box-shadow:0 6px 24px rgba(20,54,93,.07);border:2px solid #f2cfc6;position:relative;overflow:hidden}
+  .rm::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--red)}
+  .rm.good{border-color:#bfe0d8}.rm.good::before{background:var(--teal)}
+  .rm .q{font-size:1.25rem;font-weight:800;color:var(--red);line-height:1.25}
+  .rm.good .q{color:var(--teal)}
+  .rm .q::before{content:"\201C"}.rm .q::after{content:"\201D"}
+  .rm .n{font-size:3rem;font-weight:800;line-height:1;margin-top:.8rem}
+  .rm p{color:var(--muted);font-size:.92rem;margin-top:.5rem}
+  .rm.pulse{animation:glow 2.6s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 6px 24px rgba(20,54,93,.07)}50%{box-shadow:0 0 0 5px rgba(194,65,45,.18),0 6px 24px rgba(20,54,93,.07)}}
+  .warn{margin-top:1.2rem;border-radius:14px;padding:1rem 1.4rem;background:#fff8e6;border:1px solid #f1d58f}
+  .warn b{color:#8a5a00}
+
+  .gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:2rem}
+  .gap{background:#fff;border-radius:14px;padding:1.4rem 1.5rem;box-shadow:0 6px 24px rgba(20,54,93,.06);border-left:5px solid var(--red)}
+  .gap .ic{font-size:1.6rem;margin-bottom:.5rem}.gap h4{color:var(--navy);font-size:1.05rem;margin-bottom:.35rem}.gap p{color:var(--muted);font-size:.93rem}
+  .qs{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:2rem;counter-reset:q}
+  @media(max-width:900px){.qs{grid-template-columns:1fr}}
+  .q{background:#fff;border:1px dashed #b8c6d8;border-radius:14px;padding:1.2rem 1.3rem 1.2rem 3.6rem;position:relative;font-size:1.02rem;transition:all .25s}
+  .q:hover{border-style:solid;border-color:var(--navy);transform:translateY(-3px)}
+  .q::before{counter-increment:q;content:counter(q);position:absolute;left:1.1rem;top:1.1rem;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+  footer{background:var(--navy);color:#b9cde6;padding:2.5rem 8vw;font-size:.85rem;margin-top:4rem;line-height:1.7}
+  footer b{color:#fff}
+  #tip{position:fixed;pointer-events:none;background:#1b2430;color:#fff;font-size:13px;padding:.5em .75em;border-radius:6px;opacity:0;transition:opacity .12s;z-index:99;max-width:300px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="prog"></div><div id="tip"></div>
+<nav id="nav"><a class="brand" href="/analysis/" style="color:inherit;text-decoration:none">← My Analysis</a>
+  <ul><li><a href="#rule">Rule</a></li><li><a href="#snapshot">Snapshot</a></li><li><a href="#floors">Floors</a></li><li><a href="#check">Check</a></li>
+  <li><a href="#billing">Billing</a></li><li><a href="#gaps">Gaps</a></li><li><a href="#discuss">Discussion</a></li></ul></nav>
+
+<header class="hero">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div class="kicker">Eurotex Knitwear Ltd. · IE &amp; Planning Department</div>
+  <h1>Rental Machine<br><span>Discrepancy</span></h1>
+  <p>EKL &amp; Bally Cotton — updated with the floor audit of every rented machine. Machines are rented on every floor while our own machines stand idle, and part of the rent is paid for machines that are idle or cannot be found.</p>
+  <div class="hstats">
+    <div><div class="n">112</div><div class="l">machines billed as rent</div></div>
+    <div><div class="n">~203</div><div class="l">own machines not running</div></div>
+    <div><div class="n" style="color:#ffb4a6">30</div><div class="l">rented machines billed but not running</div></div>
+  </div>
+  <div><span class="pill">Problem identification · for management discussion</span></div>
+  <div class="meta">HR attendance 21-Nov-2026 · Rental floor audit 22-Nov-2026 · Prepared by Tahmidur Rahman, Manager — IE &amp; Planning</div>
+  <div class="scroll">Scroll to begin<i></i></div>
+</header>
+
+<section class="sec" id="rule">
+  <div class="kick rv">01 · The rule</div>
+  <h2 class="rv d1">A machine should be rented only after all our own machines are in use</h2>
+  <div class="rule">
+    <div class="rbox exp rv l d2"><h3>Expected practice</h3>Each floor uses its own machines first, with a small standby for breakdown. Only the gap above that is rented — and every rented machine is running and accounted for.</div>
+    <div class="neq rv d3">≠</div>
+    <div class="rbox act rv rt d4"><h3>What the audit shows</h3>Every floor already has enough own machines for its operators, yet <b class="r">92 rented machines</b> sit on the floors and <b class="r">~203 own machines</b> are not running. Another <b class="r">20 billed machines</b> are not on any floor.</div>
+  </div>
+  <div class="callout info rv d2">Scope: the 6 machine types on rent — <b class="n">SNLS, Overlock, Flatlock, Bartack, Hole, FOA</b>. EKL 2nd Floor, EKL 5th Floor and Bally Cotton.</div>
+</section>
+
+<section class="sec" id="snapshot">
+  <div class="kick rv">02 · Snapshot</div>
+  <h2 class="rv d1">The numbers do not add up</h2>
+  <div class="kpis">
+    <div class="kpi teal rv d1"><div class="n" data-count="1279">0</div><div class="l">Operators present</div><div class="s">EKL-2nd 456 · EKL-5th 466 · BC 357</div></div>
+    <div class="kpi rv d2"><div class="n" data-count="1343">0</div><div class="l">Machines needed (+5% standby)</div><div class="s">1,279 × 1.05</div></div>
+    <div class="kpi rv d3"><div class="n" data-count="1407">0</div><div class="l">Own machines (6 types)</div><div class="s">EKL-2nd 483 · EKL-5th 490 · BC 434</div></div>
+    <div class="kpi teal rv d4"><div class="n" data-count="64" data-prefix="+">0</div><div class="l">Own machines above need</div><div class="s">No rental needed at 5% standby</div></div>
+    <div class="kpi red rv d1"><div class="n" data-count="112">0</div><div class="l">Machines billed as rent</div><div class="s">On floors 92 · not on any floor 20</div></div>
+    <div class="kpi rv d2"><div class="n" data-count="1286">0</div><div class="l">Machines running (HR)</div><div class="s">EKL-2nd 454 · EKL-5th 466 · BC 366</div></div>
+    <div class="kpi amber rv d3"><div class="n" data-count="203">0</div><div class="l">Own machines not running</div><div class="s">Own on floor − (running − rented running)</div></div>
+    <div class="kpi red rv d4"><div class="n" data-count="30">0</div><div class="l">Rented, billed, not running</div><div class="s">Not found 19 · idle 10 · returned 1</div></div>
+  </div>
+</section>
+
+<section class="sec" id="floors">
+  <div class="kick rv">03 · Floor by floor</div>
+  <h2 class="rv d1">Every floor rents machines while its own machines stand idle</h2>
+  <p class="lead rv d2">Each bar shows all machines on the floor: own running, own not running, rented running and rented idle. The black mark is the number of operators present.</p>
+  <div class="floors" id="floorCards"></div>
+  <div class="legend rv"><span><i class="c-or"></i>Own running</span><span><i class="c-oi"></i>Own not running</span><span><i class="c-rr"></i>Rented running</span><span><i class="c-ri"></i>Rented idle</span><span><i style="background:var(--ink);width:3px"></i>Operators present</span></div>
+  <div class="callout rv d2">On each floor the rented machines that are running (<b class="r">31 · 36 · 15</b>) are fewer than the own machines not running (<b class="a">60 · 60 · 83</b>). Moving own idle machines into the lines would cover every running rental.</div>
+  <p class="note">Own machines not running = own machines on floor − (HR running count − rented machines running on that floor). The HR running count may include a few machine types outside these six.</p>
+</section>
+
+<section class="sec" id="check">
+  <div class="kick rv">04 · Interactive check</div>
+  <h2 class="rv d1">How much rental can each floor justify?</h2>
+  <p class="lead rv d2">Move the standby allowance. A floor can justify rental only for the machines it needs above its own stock. EKL floors stay covered up to ~5–6% standby; Bally Cotton up to ~21%.</p>
+  <div class="ctrl rv d2"><label for="sb">Standby allowance</label><input type="range" id="sb" min="0" max="20" step="1" value="5"><span class="val" id="sbv">5%</span>
+    <div class="presets"><button data-v="0">0%</button><button data-v="5">5%</button><button data-v="10">10%</button><button data-v="15">15%</button></div></div>
+  <div class="sum rv d3">
+    <div><div class="n" id="kNeed">1,343</div><div class="l">Machines needed, all floors</div></div>
+    <div><div class="n">1,407</div><div class="l">Own machines, all floors</div></div>
+    <div class="ok"><div class="n" id="kJ">0</div><div class="l">Rentals justified</div></div>
+    <div class="bad"><div class="n" id="kX">112</div><div class="l">Billed rentals beyond requirement (of 112)</div></div>
+  </div>
+  <div class="rv d3"><table class="t"><thead><tr><th>Floor</th><th>Operators</th><th>Needed</th><th>Own machines</th><th>Own surplus / (gap)</th><th>Rented on floor</th><th>Justified</th><th>Excess</th></tr></thead><tbody id="tb"></tbody></table></div>
+  <div class="verdict rv" id="verdict"></div>
+  <p class="note">The 20 billed machines not on any floor (19 not found, 1 returned) are always counted as excess.</p>
+</section>
+
+<section class="sec" id="billing">
+  <div class="kick rv">05 · Billing discrepancies from the floor audit</div>
+  <h2 class="rv d1">30 billed machines are not running — 19 cannot be found</h2>
+  <div class="rmk">
+    <div class="rm pulse rv d1"><div class="q">Can't Find In Floor But Count in Rent</div><div class="n" data-count="19">0</div><p>billed but not on any floor — SNLS 9, Flatlock 4, Overlock 2, Bartack 2, Hole 2. Includes 2 Mohammadi Tread Link Flatlocks (376 days each) and 4 Firoz SNLS (236–507 days). 3,251 machine-days billed.</p></div>
+    <div class="rm rv d2"><div class="q">Machine IDLE But Count In Rent</div><div class="n" data-count="10">0</div><p>on the floor but idle and still billed — BC 5, EKL-2nd 4, EKL-5th 1. 3 are JS Enterprise Bartacks marked by remark; 7 marked IDLE in status.</p></div>
+    <div class="rm rv d3"><div class="q">Out But Still Count in Rent</div><div class="n" data-count="1">0</div><p>Overlock S/L 78 (New Rakib) returned but still billed. Its out date (27-Sep-2026) is before its in-house date (14-Nov-2026) — record needs checking.</p></div>
+    <div class="rm good rv d4"><div class="q">Rent Not Count</div><div class="n" data-count="2">0</div><p>on our floor but not billed by the vendor (Nabila: 1 FOA in BC, 1 Flatlock in EKL-2nd). Both idle. Not part of the 112.</p></div>
+  </div>
+  <div class="warn rv"><b>Possible double count:</b> serial no. <b>8879851</b> (SNLS, New Rakib) appears twice — S/L 22 and S/L 111, both on EKL-5th Line D.</div>
+  <div class="callout rv d2">Of 14,647 machine-days billed so far, <b class="r">4,074 (28%)</b> are for machines that are not running today.</div>
+</section>
+
+<section class="sec" id="gaps">
+  <div class="kick rv">06 · Control gaps found</div>
+  <h2 class="rv d1">Why this was not visible earlier</h2>
+  <div class="gaps">
+    <div class="gap rv d1"><div class="ic">🧾</div><h4>Rent bills not matched to the floor</h4><p>19 machines are billed but cannot be found; 1 returned machine is still billed; 1 serial is listed twice.</p></div>
+    <div class="gap rv d2"><div class="ic">🔧</div><h4>No status for own machines</h4><p>~203 own machines are not running, with no record of whether they are broken, in store or idle in line.</p></div>
+    <div class="gap rv d3"><div class="ic">✅</div><h4>No own-stock check before renting</h4><p>Rentals rose from July (87 of 112) while each floor already had enough own machines.</p></div>
+    <div class="gap rv d1"><div class="ic">⏳</div><h4>Long rentals not reviewed</h4><p>25 machines on rent for over 6 months, 14 for over a year (oldest 544 days).</p></div>
+  </div>
+</section>
+
+<section class="sec" id="discuss">
+  <div class="kick rv">07 · For management discussion</div>
+  <h2 class="rv d1">Points to decide</h2>
+  <div class="qs">
+    <div class="q rv d1">How should the 19 "Can't Find In Floor" machines be settled with the vendors — and from when should billing stop?</div>
+    <div class="q rv d2">Should the 10 idle rented machines and the 1 returned machine be taken off the bill now?</div>
+    <div class="q rv d1">Should a status check of all own machines (running / idle / breakdown / store) be done on every floor?</div>
+    <div class="q rv d2">Should own idle machines be moved into lines before any rented machine is kept or added?</div>
+    <div class="q rv d1">Who approves a new rental, and should it require a floor-wise own-stock check?</div>
+    <div class="q rv d2">What standby allowance should each floor follow — 5% or another figure?</div>
+  </div>
+  <div class="callout info rv d2">This report identifies the discrepancy. Actions will be finalised after discussion with management.</div>
+</section>
+
+<footer><b>Sources:</b> HR Daily Attendance Report (21-Nov-2026) · Rental Machine Audit — floor audit (22-Nov-2026, 114 machines, 112 billed) · Machine Floor-wise Quantity Statement (22-Oct-2026).<br>
+EKL 2nd Floor is listed as "3rd Floor" in the machine statement and as Sewing-01 in the HR report.</footer>
+
+<script>
+const fmt=n=>n.toLocaleString('en-US');
+const FL=[
+  {k:'EKL-2nd',name:'EKL 2nd Floor',ops:456,run:454,own:483,rr:31,ri:4,types:'SNLS 21 · Flatlock 9 · Overlock 3 · Hole 1 · FOA 1'},
+  {k:'EKL-5th',name:'EKL 5th Floor',ops:466,run:466,own:490,rr:36,ri:1,types:'SNLS 16 · Overlock 15 · Flatlock 5 · Bartack 1'},
+  {k:'BC',name:'Bally Cotton',ops:357,run:366,own:434,rr:15,ri:5,types:'SNLS 10 · Overlock 8 · Bartack 2'}];
+const OFF=20;
+
+/* floor cards */
+(function(){let h='';FL.forEach((f,i)=>{const ownRun=f.run-f.rr,ownIdle=f.own-ownRun,tot=f.own+f.rr+f.ri,need=Math.round(f.ops*1.05);
+  const w=v=>(v/560*100).toFixed(2);
+  h+=`<div class="card fl rv d${i+1}"><h3>${f.name}</h3><div class="sub">Rented on floor: ${f.types}</div>
+  <div class="big"><div><div class="n" style="color:var(--amber)" data-count="${ownIdle}">0</div><div class="l">own not running</div></div>
+  <div><div class="n" style="color:var(--red)" data-count="${f.rr+f.ri}">0</div><div class="l">rented on floor</div></div></div>
+  <div class="stk"><div class="seg c-or" data-w="${w(ownRun)}" data-tip="Own running ~${ownRun}">${ownRun}</div><div class="seg c-oi" data-w="${w(ownIdle)}" data-tip="Own not running ~${ownIdle}">${ownIdle}</div>
+  <div class="seg c-rr" data-w="${w(f.rr)}" data-tip="Rented running ${f.rr}">${f.rr}</div><div class="seg c-ri" data-w="${w(f.ri)}" data-tip="Rented idle ${f.ri}"></div></div>
+  <div class="opl"><div class="mk" style="left:${w(f.ops)}%"><span>${f.ops} operators</span></div></div>
+  <table><tr><td>Operators present</td><td>${f.ops}</td></tr><tr><td>Needed (+5%)</td><td>${need}</td></tr><tr><td>Own machines</td><td>${f.own}</td></tr>
+  <tr><td>Own above need</td><td class="pos">+${f.own-need}</td></tr><tr><td>Machines running (HR)</td><td>${f.run}</td></tr>
+  <tr><td>Rented running / idle</td><td><span style="color:var(--red)">${f.rr}</span> / <span style="color:#e58b77">${f.ri}</span></td></tr><tr><td>Total machines on floor</td><td>${tot}</td></tr></table></div>`;});
+  document.getElementById('floorCards').innerHTML=h;})();
+
+/* calculator */
+let prev={};
+function calc(p){const s=1+p/100;let rows='',tO=0,tN=0,tOw=0,tR=0,tJ=0,tX=0;
+  FL.forEach(f=>{const need=Math.round(f.ops*s),gap=f.own-need,rent=f.rr+f.ri,j=Math.max(0,Math.min(rent,need-f.own)),x=rent-j;
+    tO+=f.ops;tN+=need;tOw+=f.own;tR+=rent;tJ+=j;tX+=x;const fl=prev[f.k]!==undefined&&prev[f.k]!==j?' flash':'';prev[f.k]=j;
+    rows+=`<tr><td>${f.name}</td><td>${f.ops}</td><td>${need}</td><td>${f.own}</td><td class="${gap>=0?'pos':'neg'}">${gap>=0?'+':'−'}${Math.abs(gap)}</td><td>${rent}</td><td class="${j?'pos':''}${fl}">${j}</td><td class="${x?'neg':''}${fl}">${x}</td></tr>`;});
+  rows+=`<tr><td>Not on any floor</td><td>—</td><td>—</td><td>—</td><td>—</td><td>${OFF}</td><td>0</td><td class="neg">${OFF}</td></tr>`;
+  rows+=`<tr class="total"><td>Total</td><td>${fmt(tO)}</td><td>${fmt(tN)}</td><td>${fmt(tOw)}</td><td class="${tOw-tN>=0?'pos':'neg'}">${tOw-tN>=0?'+':'−'}${Math.abs(tOw-tN)}</td><td>${tR+OFF}</td><td>${tJ}</td><td>${tX+OFF}</td></tr>`;
+  document.getElementById('tb').innerHTML=rows;document.getElementById('sbv').textContent=p+'%';
+  document.getElementById('kNeed').textContent=fmt(tN);document.getElementById('kJ').textContent=tJ;document.getElementById('kX').textContent=tX+OFF;
+  document.getElementById('verdict').innerHTML=tJ===0?`At <b>${p}%</b> standby every floor is covered by its own machines — <b class="r">none of the 112 billed rentals is required</b>.`
+    :`At <b>${p}%</b> standby, at most <b class="t">${tJ}</b> rentals can be justified — <b class="r">${tX+OFF} of 112 billed rentals are still beyond requirement</b>.`;}
+const sb=document.getElementById('sb');sb.addEventListener('input',e=>calc(+e.target.value));
+document.querySelectorAll('.presets button').forEach(b=>b.onclick=()=>{sb.value=b.dataset.v;calc(+b.dataset.v);});calc(5);
+
+/* reveal */
+function countUp(el){const end=+el.dataset.count,pre=el.dataset.prefix||'',t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3);el.textContent=pre+fmt(Math.round(end*e));if(p<1)requestAnimationFrame(f);})(t0);}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('in');
+  el.querySelectorAll('[data-count]').forEach(countUp);if(el.dataset.count)countUp(el);
+  el.querySelectorAll('[data-w]').forEach((s,k)=>setTimeout(()=>s.style.width=s.dataset.w+'%',250+k*160));io.unobserve(el);}),{threshold:.2});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+/* tooltip */
+const tip=document.getElementById('tip');
+document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');
+  if(t){tip.textContent=t.dataset.tip;tip.style.opacity=1;tip.style.left=Math.min(e.clientX+14,innerWidth-310)+'px';tip.style.top=(e.clientY+14)+'px';}else tip.style.opacity=0;});
+/* progress + nav */
+const nav=document.getElementById('nav'),prog=document.getElementById('prog'),links=[...document.querySelectorAll('nav ul a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+addEventListener('scroll',()=>{const h=document.documentElement;prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';nav.classList.toggle('solid',h.scrollTop>innerHeight*.6);
+  let cur=-1;secs.forEach((s,i)=>{if(s.getBoundingClientRect().top<innerHeight*.4)cur=i;});links.forEach((a,i)=>a.classList.toggle('on',i===cur));},{passive:true});
+</script>
+</body>
+</html>
