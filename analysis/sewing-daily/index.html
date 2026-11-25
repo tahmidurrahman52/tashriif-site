@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Eurotex Sewing Daily Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<script>
+/* ================== SETTINGS ================== */
+window.DAILY_CONFIG = {
+  sheetId: "1Eajr_T9xzLP8n7hQN8tdPh_hH2j2QxWMEpe_8ICH33o", // Google Sheet "Sewing Summary Report"
+  dailyGid: 779,                                           // "Daily" tab: one row per date x floor
+  excludeUnits: ["EKLB","EDFL"],                           // denim units, never counted
+  refreshMinutes: 10
+};
+/* ============================================== */
+</script>
+<style>
+:root{
+  --bg:#F3F5F8; --panel:#FFFFFF; --panel2:#EEF1F6; --ink:#141C2E; --muted:#5C6780; --line:#DCE1EA;
+  --accent:#D98E2B; --accent2:#2F6FB5; --accent2-soft:#BFD3EC;
+  --good:#1E8E5A; --good-bg:#DDF3E8; --warn:#B7791F; --warn-bg:#FCEFD6; --bad:#C2413A; --bad-bg:#F9E0DE;
+  --display:"Archivo",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --shadow:0 1px 2px rgba(20,28,46,.06),0 4px 16px rgba(20,28,46,.05); --lift:0 8px 28px rgba(20,28,46,.12); color-scheme:light;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1320; --panel:#151D2E; --panel2:#1C263A; --ink:#E8ECF4; --muted:#93A0B8; --line:#26324A;
+  --accent:#F0A84A; --accent2:#6FA6E6; --accent2-soft:#2D4466;
+  --good:#4CC38A; --good-bg:#143326; --warn:#E8B04E; --warn-bg:#3A2C12; --bad:#F07870; --bad-bg:#3D1C1C;
+  --shadow:0 1px 2px rgba(0,0,0,.3); --lift:0 10px 30px rgba(0,0,0,.45); color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20% -10% auto auto;width:60vw;height:60vw;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent2) 14%,transparent),transparent 65%);animation:drift 22s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;inset:auto auto -25% -15%;width:55vw;height:55vw;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 12%,transparent),transparent 65%);animation:drift 26s ease-in-out infinite alternate-reverse}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-6vw,5vh) scale(1.12)}}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+a{color:inherit}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:16px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.eyebrow a{text-decoration:none}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(24px,3.4vw,36px);margin:2px 0 0;letter-spacing:-.01em;text-wrap:balance}
+h1 .when{display:inline-block;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tag{font-family:var(--mono);font-size:11.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--panel)}
+.live{display:inline-flex;align-items:center;gap:6px}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--good);position:relative}
+.live i::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--good);animation:ping 1.8s var(--ease) infinite}
+.live.err i,.live.err i::after{background:var(--bad)}
+@keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.2);opacity:0}}
+.btn{font:600 12.5px var(--body);border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer;transition:border-color .2s,transform .2s}
+.btn:hover{border-color:var(--accent2);transform:translateY(-1px)}
+.btn.icon{padding:5px 10px;font-family:var(--mono)}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);padding:10px 0;margin-bottom:16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--panel2);padding:4px;border-radius:10px;position:relative}
+.seg button{font:600 12.5px var(--body);border:0;background:transparent;color:var(--muted);padding:6px 12px;border-radius:7px;cursor:pointer;transition:color .2s,background .25s,box-shadow .25s}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+.seg button:focus-visible,select:focus-visible,input:focus-visible,th button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+select,input[type=date]{font:500 13px var(--body);color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:5px 10px;max-width:100%}
+.pill{display:inline-block;font:600 11.5px var(--body);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
+
+/* ---------- entrance animation (re-runs on every filter change) ---------- */
+.anim{opacity:0;transform:translateY(16px) scale(.985)}
+.go .anim{animation:rise .65s var(--ease) both;animation-delay:calc(var(--i,0) * 55ms)}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,2fr);gap:14px;margin-bottom:14px}
+@media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}}
+.spot{position:relative;overflow:hidden;border-radius:18px;padding:20px;background:linear-gradient(135deg,#17233B,#1F3A63 55%,#2F6FB5);color:#EAF1FB;box-shadow:var(--lift)}
+.spot::after{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 70%,rgba(255,255,255,.08) 80%,transparent 90%);animation:spin 9s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
+.spot>*{position:relative;z-index:1}
+.spot .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600}
+.spot .rings{display:flex;gap:18px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.ring{position:relative;width:132px;height:132px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .trk{stroke:rgba(255,255,255,.14)}
+.ring .val{transition:stroke-dashoffset 1.4s var(--ease)}
+.ring .lab{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring .lab b{font-family:var(--mono);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.ring .lab span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.spot .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;flex:1;min-width:180px}
+.spot .facts div span{display:block;font-size:11px;opacity:.7}
+.spot .facts div b{font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.spot .verdict{margin-top:14px;font-size:13.5px;line-height:1.45;opacity:.92;max-width:60ch}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:680px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;transition:transform .25s var(--ease),box-shadow .25s,border-color .25s}
+.kpi:hover{transform:translateY(-3px);box-shadow:var(--lift);border-color:color-mix(in srgb,var(--accent2) 40%,var(--line))}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--accent2));opacity:.8}
+.kpi .k{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.kpi .v{font-family:var(--mono);font-weight:600;font-size:clamp(18px,2vw,23px);margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi .s{font-size:11.5px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.up{color:var(--good)} .dn{color:var(--bad)}
+
+/* ---------- factory cards ---------- */
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:6px 0 10px}
+.sec h2{font-family:var(--display);font-size:17px;margin:0}
+.sec p{margin:0;color:var(--muted);font-size:12.5px}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:12px;margin-bottom:16px}
+.uc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;position:relative;overflow:hidden;transition:transform .25s var(--ease),box-shadow .25s,border-color .25s;text-align:left;font:inherit;color:inherit}
+.uc:hover{transform:translateY(-4px);box-shadow:var(--lift)}
+.uc[aria-pressed="true"]{border-color:var(--accent2);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent2) 35%,transparent),var(--lift)}
+.uc .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.uc .nm{font-family:var(--display);font-weight:800;font-size:18px}
+.uc .mid{display:flex;align-items:center;gap:12px;margin-top:8px}
+.mini{width:62px;height:62px;flex:none;position:relative}
+.mini svg{width:100%;height:100%;transform:rotate(-90deg)}
+.mini .trk{stroke:var(--panel2)}
+.mini .val{transition:stroke-dashoffset 1.2s var(--ease)}
+.mini b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:600}
+.uc .st{font-size:12px;color:var(--muted);line-height:1.55}
+.uc .st b{font-family:var(--mono);color:var(--ink);font-weight:600}
+.spark{display:block;width:100%;height:38px;margin-top:8px}
+.spark path.ln{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.go .spark path.ln{animation:draw 1.3s var(--ease) .25s forwards}
+.spark path.ar{opacity:0}
+.go .spark path.ar{animation:fade .8s ease .9s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+
+/* ---------- cards & charts ---------- */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0;transition:box-shadow .25s}
+.card:hover{box-shadow:var(--shadow)}
+.card h2{font-family:var(--display);font-weight:700;font-size:15.5px;margin:0}
+.card .sub{color:var(--muted);font-size:12.5px;margin:2px 0 10px}
+.card .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px}
+.chartbox{position:relative;height:300px}
+.chartbox.tall{height:420px}
+.span2{grid-column:1/-1}
+
+/* ---------- calendar heatmap ---------- */
+.cal{overflow-x:auto}
+.cal table{border-collapse:separate;border-spacing:3px;min-width:100%}
+.cal th{font:600 10.5px var(--mono);color:var(--muted);padding:2px 3px;white-space:nowrap;text-align:center}
+.cal th:first-child{text-align:left;font-family:var(--body);font-size:11.5px;min-width:150px}
+.cal td{height:30px;min-width:30px;border-radius:6px;text-align:center;font:600 10.5px var(--mono);color:#0d1320;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.cal td.na{background:var(--panel2);color:var(--muted);cursor:default}
+.cal td:not(.na):hover{transform:scale(1.18);box-shadow:var(--lift);position:relative;z-index:2}
+.cal td.sel{outline:2px solid var(--ink);outline-offset:1px}
+.cal td.lbl0{text-align:left;font:500 12px var(--body);color:var(--ink);background:none;cursor:default;white-space:nowrap}
+.go .cal td.cell{animation:pop .45s var(--ease) both;animation-delay:calc(var(--j,0) * 6ms)}
+@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+.legend{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#E5786F,#F2C46B,#7CCB9A)}
+
+/* ---------- table ---------- */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table.dt{border-collapse:collapse;width:100%;min-width:1050px;font-variant-numeric:tabular-nums}
+.dt th,.dt td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.dt th:first-child,.dt td:first-child,.dt th:nth-child(2),.dt td:nth-child(2){text-align:left}
+.dt thead th{position:sticky;top:0;background:var(--panel2);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dt th button{all:unset;cursor:pointer}
+.dt th button:hover{color:var(--ink)}
+.dt th[aria-sort] button::after{content:" ▾";color:var(--accent)}
+.dt th[aria-sort="ascending"] button::after{content:" ▴"}
+.dt tbody tr{transition:background .15s}
+.dt tbody tr:hover{background:var(--panel2)}
+.dt tr.unit td{font-weight:600;background:color-mix(in srgb,var(--accent2-soft) 35%,transparent)}
+.dt td.mono{font-family:var(--mono);font-size:12.5px}
+.cellbar{position:relative;display:inline-block;min-width:64px}
+.cellbar span{position:relative;z-index:1}
+.cellbar i{position:absolute;right:0;top:50%;height:16px;transform:translateY(-50%) scaleX(0);transform-origin:right;border-radius:3px;opacity:.22}
+.go .cellbar i{animation:growx .9s var(--ease) .2s forwards}
+@keyframes growx{to{transform:translateY(-50%) scaleX(1)}}
+.neg{color:var(--bad)} .pos{color:var(--good)}
+
+/* ---------- insights ---------- */
+.ins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.ins{grid-template-columns:minmax(0,1fr)}}
+.ins ul{margin:8px 0 0;padding-left:18px}
+.ins li{margin-bottom:8px;max-width:65ch}
+.ins .card h2{display:flex;gap:8px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+.banner{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+.empty{padding:40px 0;text-align:center;color:var(--muted)}
+footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:115ch}
+
+/* ---------- skeleton ---------- */
+#loading{display:grid;gap:12px}
+.sk{border-radius:14px;background:linear-gradient(90deg,var(--panel2) 0%,var(--panel) 50%,var(--panel2) 100%);background-size:200% 100%;animation:shimmer 1.3s linear infinite}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+.skrow{display:grid;grid-template-columns:1.15fr 2fr;gap:12px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.anim{opacity:1;transform:none}.spark path.ln{stroke-dashoffset:0}.spark path.ar{opacity:1}.cellbar i{transform:translateY(-50%)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow"><a href="/analysis/">← My Analysis</a> &nbsp;·&nbsp; Eurotex Group · IE &amp; Planning</div>
+      <h1>Sewing Daily Pulse · <span class="when" id="when">…</span></h1>
+    </div>
+    <div class="meta">
+      <span class="tag live" id="liveTag"><i></i><span id="liveTxt">Connecting…</span></span>
+      <span class="tag" id="rangeTag"></span>
+      <a class="btn" href="/analysis/sewing/">Monthly view</a>
+      <button class="btn" id="refreshBtn" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <div class="bar" role="toolbar" aria-label="Filters">
+    <div class="grp"><span class="lbl">View</span>
+      <div class="seg" id="modeSeg">
+        <button type="button" data-m="day" aria-pressed="true">Day</button>
+        <button type="button" data-m="month" aria-pressed="false">Month</button>
+        <button type="button" data-m="year" aria-pressed="false">Year</button>
+        <button type="button" data-m="range" aria-pressed="false">Custom</button>
+      </div>
+    </div>
+    <div class="grp" id="dayCtl">
+      <button class="btn icon" id="prevDay" type="button" aria-label="Previous production day">◀</button>
+      <input type="date" id="dayIn" aria-label="Production date">
+      <button class="btn icon" id="nextDay" type="button" aria-label="Next production day">▶</button>
+      <button class="btn" id="latestBtn" type="button">Latest</button>
+    </div>
+    <div class="grp" id="monthCtl" hidden><select id="monthSel" aria-label="Month"></select></div>
+    <div class="grp" id="yearCtl" hidden><select id="yearSel" aria-label="Year"></select></div>
+    <div class="grp" id="rangeCtl" hidden>
+      <input type="date" id="fromIn" aria-label="From date"><span class="lbl">to</span><input type="date" id="toIn" aria-label="To date">
+    </div>
+    <div class="grp"><span class="lbl">Unit</span><div class="seg" id="unitSeg"></div></div>
+  </div>
+
+  <div id="loading" aria-label="Loading">
+    <div class="skrow"><div class="sk" style="height:250px"></div><div class="sk" style="height:250px"></div></div>
+    <div class="sk" style="height:150px"></div>
+    <div class="skrow"><div class="sk" style="height:300px"></div><div class="sk" style="height:300px"></div></div>
+  </div>
+
+  <main id="app" hidden>
+    <section class="hero">
+      <div class="spot anim" style="--i:0">
+        <div class="k" id="spotK">Production day</div>
+        <div class="rings">
+          <div class="ring" id="ringPa"></div>
+          <div class="ring" id="ringEff"></div>
+          <div class="facts" id="facts"></div>
+        </div>
+        <div class="verdict" id="verdict"></div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <div class="sec"><h2>Factory pulse</h2><p id="unitsSub">Click a factory to focus the whole page on it</p></div>
+    <section class="units" id="units"></section>
+
+    <section class="grid">
+      <div class="card span2 anim" style="--i:1">
+        <div class="head"><div><h2>Day-by-day trend</h2><p class="sub" id="trendSub"></p></div>
+          <div class="seg" id="trendSeg"><button type="button" data-t="pcs" aria-pressed="true">Pieces &amp; efficiency</button><button type="button" data-t="cm" aria-pressed="false">CM &amp; CM/min</button><button type="button" data-t="hour" aria-pressed="false">Hourly &amp; 1st hour</button></div></div>
+        <div class="chartbox"><canvas id="cTrend"></canvas></div>
+      </div>
+      <div class="card anim" style="--i:2">
+        <div class="head"><div><h2>Target vs achievement</h2><p class="sub" id="tvaSub"></p></div></div>
+        <div class="chartbox"><canvas id="cTva"></canvas></div>
+      </div>
+      <div class="card anim" style="--i:3">
+        <div class="head"><div><h2>Efficiency: target vs achieved</h2><p class="sub">By floor · bar colour shows the gap</p></div></div>
+        <div class="chartbox"><canvas id="cEff"></canvas></div>
+      </div>
+      <div class="card span2 anim" style="--i:4">
+        <div class="head"><div><h2>Floor ranking</h2><p class="sub">Pick any metric · dashed line = group value · also colours the calendar below</p></div>
+          <label class="lbl" for="metricSel" style="display:flex;gap:8px;align-items:center">Metric <select id="metricSel"></select></label></div>
+        <div class="chartbox tall"><canvas id="cRank"></canvas></div>
+      </div>
+      <div class="card anim" style="--i:5">
+        <div class="head"><div><h2>CM productivity map</h2><p class="sub">Achieved efficiency vs CM per manpower per day · bubble = manpower</p></div></div>
+        <div class="chartbox"><canvas id="cMap"></canvas></div>
+      </div>
+      <div class="card anim" style="--i:6">
+        <div class="head"><div><h2>Where the pieces were lost</h2><p class="sub">Target loss pcs by floor (CM value on hover)</p></div></div>
+        <div class="chartbox"><canvas id="cLoss"></canvas></div>
+      </div>
+    </section>
+
+    <section class="card anim" style="--i:7;margin-bottom:14px">
+      <div class="head"><div><h2>Floor × day calendar</h2><p class="sub" id="calSub"></p></div></div>
+      <div class="cal" id="cal"></div>
+      <div class="legend"><span>worse</span><i></i><span>better</span><span style="margin-left:auto">Click a day to open it</span></div>
+    </section>
+
+    <section class="card anim" style="--i:8;margin-bottom:14px">
+      <div class="head"><div><h2>Floor &amp; unit detail</h2><p class="sub">Click a column to sort · unit totals shaded</p></div></div>
+      <div class="tbl"><table class="dt" id="tbl"><thead></thead><tbody></tbody></table></div>
+    </section>
+
+    <section class="ins" id="insights"></section>
+  </main>
+
+  <footer>Data: Google Sheet "Sewing Summary Report", tab <b>Daily</b> (one row per production date and floor, copied each morning from the Click ERP Sewing Summary Report, Day section). EKLB and EDFL (denim) are excluded. Unit, group and multi-day values are recalculated here from floor rows: Pcs achv % = Achievement ÷ Target · Achieved eff % = Earn min ÷ Available min · Target eff % weighted by Available min · CM / earned min = CM ÷ Earn min · CM / avail min = CM ÷ Available min · FOB / MC / hr = FOB ÷ (Running MC × Working hour) · MC cost / hr weighted by machine-hours · CM / MP / day = CM ÷ manpower-days · hourly pcs and 1st hour weighted by running lines.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(function(){
+const CFG=window.DAILY_CONFIG,$=id=>document.getElementById(id);
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmt={int:v=>Math.round(v).toLocaleString("en-US"),k:v=>Math.abs(v)>=1e6?(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?(v/1e3).toFixed(1)+"K":Math.round(v)+"",
+  pct:v=>v.toFixed(1)+"%",usd:v=>"$"+Math.round(v).toLocaleString("en-US"),usdk:v=>Math.abs(v)>=1e6?"$"+(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?"$"+(v/1e3).toFixed(1)+"K":"$"+Math.round(v),
+  d2:v=>"$"+v.toFixed(2),d3:v=>"$"+v.toFixed(3),d4:v=>"$"+v.toFixed(4),n1:v=>v.toFixed(1),n2:v=>v.toFixed(2),pp:v=>(v>0?"+":"")+v.toFixed(1)+" pp"};
+const METRICS=[["pa","Pcs achv %","pct",1],["aeff","Achieved eff %","pct",1],["gap","Eff gap (pp)","pp",1],["ach","Achievement pcs","int",1],["loss","Target loss pcs","int",1],
+ ["cm","Earned CM ($)","usd",1],["fob","Earned FOB ($)","usd",1],["cmmin","CM / earned min ($)","d4",1],["epm","CM / avail min ($)","d4",1],["cmmp","CM / MP / day ($)","d2",1],
+ ["fobmh","FOB / MC / hr ($)","d2",1],["mccost","MC cost / hr ($)","d2",-1],["pmc","Pcs / MC / day","n1",1],["smv","SMV","n2",1],["ahr","Achieved hourly pcs","int",1],
+ ["first","1st hour achv %","pct",1],["hmc","Helper : MC","n2",-1],["wh","Working hour","n2",-1],["short","CM lost ($)","usd",-1]];
+const MI=Object.fromEntries(METRICS.map(m=>[m[0],m]));
+const statusTxt={good:"On target",warn:"Watch",bad:"Critical"};
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+let DATA=[],DATES=[],UNITS=[],mode="day",day=null,month=null,year=null,from=null,to=null,unit="All",metric="pa",trendKind="pcs",sortKey="pa",sortDir=-1,VIEW=null;
+try{const s=JSON.parse(localStorage.getItem("ekl-sew-daily")||"{}");if(MI[s.metric])metric=s.metric;if(s.unit)unit=s.unit;}catch(e){}
+const save=()=>{try{localStorage.setItem("ekl-sew-daily",JSON.stringify({metric,unit}))}catch(e){}};
+
+/* ---------- data ---------- */
+const num=v=>{if(v==null||v==="")return 0;if(typeof v==="number")return v;const n=parseFloat(String(v).replace(/[,$%\s]/g,""));return isFinite(n)?n:0};
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function toISO(c){if(!c)return null;const v=c.v;
+  if(typeof v==="string"){let m=v.match(/^Date\((\d+),(\d+),(\d+)/);if(m)return `${m[1]}-${String(+m[2]+1).padStart(2,"0")}-${String(+m[3]).padStart(2,"0")}`;
+    m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[0];
+    m=v.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{2,4})$/);if(m){const mi=MON.findIndex(x=>x.toLowerCase()===m[2].toLowerCase());let y=+m[3];if(y<100)y+=2000;return `${y}-${String(mi+1).padStart(2,"0")}-${m[1].padStart(2,"0")}`}}
+  if(c.f){const d=new Date(c.f);if(!isNaN(d))return iso(d)}return null}
+const COLS=["date","unit","floor","tgt","ach","teff","aeff","avail","earn","line","mc","hlp","mp","cm","fob","mcc","smv","thr","ahr","wh","first"];
+function fetchJSONP(){return new Promise((res,rej)=>{
+  const cb="__sd"+Date.now(),s=document.createElement("script");let done=false;
+  const end=()=>{done=true;delete window[cb];s.remove()};
+  window[cb]=d=>{end();try{if(d.status==="error")return rej(new Error((d.errors||[])[0]?.detailed_message||"sheet error"));res(d.table)}catch(e){rej(e)}};
+  s.src=`https://docs.google.com/spreadsheets/d/${CFG.sheetId}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=1&gid=${CFG.dailyGid}&t=${Date.now()}`;
+  s.onerror=()=>{if(!done){end();rej(new Error("Daily tab not reachable"))}};
+  setTimeout(()=>{if(!done){end();rej(new Error("timeout"))}},20000);
+  document.head.appendChild(s)})}
+const titleCase=s=>s.toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()).replace(/\b(\d+)(St|Nd|Rd|Th)\b/g,(m,a,b)=>a+b.toLowerCase());
+function floorName(h,u){const m=String(h).match(/^(.*?)SEW[\s-]*(.*)$/i);if(!m)return titleCase(h);const pre=m[1].replace(/[-\s]+$/,"").trim(),f=m[2].trim();
+  if(!f||/^floor$/i.test(f))return !pre||pre.toUpperCase()===String(u).toUpperCase()?"Sewing Floor":titleCase(pre);return titleCase(f)}
+async function load(){
+  $("liveTxt").textContent="Refreshing…";
+  try{
+    const t=await fetchJSONP(),ex=(CFG.excludeUnits||[]).map(x=>x.toUpperCase());
+    const rows=[];
+    for(const r of t.rows){const c=r.c||[];const d=toISO(c[0]);if(!d)continue;
+      const u=String(c[1]?.v??"").trim(),fl=String(c[2]?.v??"").trim();if(!u||!fl||ex.includes(u.toUpperCase()))continue;
+      const o={date:d,unit:u,floor:floorName(fl,u)};for(let i=3;i<COLS.length;i++)o[COLS[i]]=num(c[i]?.v);
+      if(o.tgt||o.ach)rows.push(o)}
+    if(!rows.length)throw new Error("no rows in the Daily tab yet");
+    DATA=rows;DATES=[...new Set(rows.map(r=>r.date))].sort();
+    UNITS=["EKL","BC","TEX1","TEX2","EKGL","CAL"].filter(u=>rows.some(r=>r.unit===u)).concat([...new Set(rows.map(r=>r.unit))].filter(u=>!["EKL","BC","TEX1","TEX2","EKGL","CAL"].includes(u)));
+    $("banner").hidden=true;$("liveTag").classList.remove("err");
+    $("liveTxt").textContent="Live · "+DATES.length+" days · updated "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+    setupControls();render(true);
+    $("loading").hidden=true;$("app").hidden=false;
+  }catch(e){
+    $("liveTag").classList.add("err");$("liveTxt").textContent="Not connected";
+    $("banner").hidden=false;$("banner").textContent=`Could not read the Daily tab of the Google Sheet (${e.message}).`;
+    if(!DATA.length)$("loading").innerHTML=`<div class="empty">Google Sheet-এর Daily tab থেকে data পাওয়া যায়নি।</div>`;
+  }
+}
+
+/* ---------- aggregation ---------- */
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+function agg(rs,name,level,u){
+  const days=new Set(rs.map(r=>r.date)).size||1,o={name,level,unit:u,days};
+  ["tgt","ach","avail","earn","cm","fob"].forEach(k=>o[k]=sum(rs,r=>r[k]));
+  const mpd=sum(rs,r=>r.mp),mcd=sum(rs,r=>r.mc),hlpd=sum(rs,r=>r.hlp),lined=sum(rs,r=>r.line),mch=sum(rs,r=>r.mc*r.wh);
+  o.mp=mpd/days;o.mc=mcd/days;o.hlp=hlpd/days;o.line=lined/days;o.mch=mch;
+  o.teff=o.avail?sum(rs,r=>r.avail*r.teff)/o.avail:0;
+  o.aeff=o.avail?o.earn/o.avail*100:0;
+  o.smv=o.ach?o.earn/o.ach:0;
+  const lw=f=>lined?sum(rs,r=>f(r)*r.line)/lined:0;
+  o.thr=lw(r=>r.thr);o.ahr=lw(r=>r.ahr);o.first=lw(r=>r.first);o.wh=mpd?sum(rs,r=>r.wh*r.mp)/mpd:0;
+  o.loss=o.ach-o.tgt;o.pa=o.tgt?o.ach/o.tgt*100:0;o.gap=o.aeff-o.teff;
+  o.cmpc=o.ach?o.cm/o.ach:0;o.cmmin=o.earn?o.cm/o.earn:0;o.epm=o.avail?o.cm/o.avail:0;o.cmmp=mpd?o.cm/mpd:0;
+  o.fobmh=mch?o.fob/mch:0;const mw=rs.filter(r=>r.mcc>0),mwh=sum(mw,r=>r.mc*r.wh);o.mccost=mwh?sum(mw,r=>r.mcc*r.mc*r.wh)/mwh:0;
+  o.pmc=mcd?o.ach/mcd:0;o.hmc=mcd?hlpd/mcd:0;
+  o.short=Math.max(0,-o.loss)*o.cmpc;o.status=o.pa>=100?"good":o.pa>=90?"warn":"bad";
+  o.lab=level==="Floor"?`${u} - ${name.split(" - ").slice(1).join(" - ").replace(/ Floor$/,"")}`:name;
+  return o}
+
+/* ---------- period ---------- */
+const fmtD=s=>{const d=new Date(s+"T00:00:00");return `${WD[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`};
+const fmtS=s=>{const d=new Date(s+"T00:00:00");return `${d.getDate()} ${MON[d.getMonth()]}`};
+function periodDates(){
+  if(mode==="day")return [day];
+  if(mode==="month")return DATES.filter(d=>d.slice(0,7)===month);
+  if(mode==="year")return DATES.filter(d=>d.slice(0,4)===year);
+  return DATES.filter(d=>d>=from&&d<=to)}
+function prevPeriodDates(){
+  if(mode==="day"){const i=DATES.indexOf(day);return i>0?[DATES[i-1]]:[]}
+  if(mode==="month"){const [y,m]=month.split("-").map(Number);const pm=m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,"0")}`;
+    const cur=DATES.filter(d=>d.slice(0,7)===month),n=cur.length;return DATES.filter(d=>d.slice(0,7)===pm).slice(0,n)}
+  return []}
+function label(){if(mode==="day")return fmtD(day);if(mode==="month"){const [y,m]=month.split("-");return `${MON[+m-1]} ${y}`}if(mode==="year")return "Year "+year;return `${fmtS(from)} – ${fmtS(to)} ${to.slice(0,4)}`}
+function prevLabel(){if(mode==="day"){const p=prevPeriodDates()[0];return p?fmtS(p):""}if(mode==="month")return "same days last month";return ""}
+function buildView(dates){
+  const set=new Set(dates),rs=DATA.filter(r=>set.has(r.date));
+  const fk=[...new Set(rs.map(r=>r.unit+"|"+r.floor))];
+  const floors=fk.map(k=>{const [u,f]=k.split("|");return agg(rs.filter(r=>r.unit===u&&r.floor===f),`${u} - ${f}`,"Floor",u)});
+  const units=UNITS.filter(u=>rs.some(r=>r.unit===u)).map(u=>agg(rs.filter(r=>r.unit===u),u,"Unit",u));
+  const G=agg(rs,"Group","Group","Group");
+  const ordered=[];units.forEach(U=>{floors.filter(f=>f.unit===U.unit).forEach(f=>ordered.push(f));ordered.push(U)});ordered.push(G);
+  return {rows:ordered,G,rs,floors,units,dates}}
+
+/* ---------- controls ---------- */
+function setupControls(){
+  const last=DATES[DATES.length-1];
+  if(!day||!DATES.includes(day))day=last;
+  const months=[...new Set(DATES.map(d=>d.slice(0,7)))].sort().reverse(),years=[...new Set(DATES.map(d=>d.slice(0,4)))].sort().reverse();
+  if(!month||!months.includes(month))month=months[0];if(!year||!years.includes(year))year=years[0];
+  if(!to)to=last;if(!from){const i=Math.max(0,DATES.length-14);from=DATES[i]}
+  $("monthSel").innerHTML=months.map(m=>{const [y,mm]=m.split("-");return `<option value="${m}">${MON[+mm-1]} ${y}</option>`}).join("");$("monthSel").value=month;
+  $("yearSel").innerHTML=years.map(y=>`<option>${y}</option>`).join("");$("yearSel").value=year;
+  ["dayIn","fromIn","toIn"].forEach(id=>{$(id).min=DATES[0];$(id).max=last});
+  $("dayIn").value=day;$("fromIn").value=from;$("toIn").value=to;
+  const seg=$("unitSeg");seg.innerHTML="";
+  if(unit!=="All"&&!UNITS.includes(unit))unit="All";
+  ["All",...UNITS].forEach(u=>{const b=document.createElement("button");b.type="button";b.textContent=u==="All"?"All units":u;b.dataset.u=u;b.onclick=()=>{unit=u;save();render(true)};seg.appendChild(b)});
+}
+function nearestDate(v){if(DATES.includes(v))return v;const after=DATES.find(d=>d>=v);return after||DATES[DATES.length-1]}
+document.querySelectorAll("#modeSeg button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;render(true)});
+$("dayIn").onchange=e=>{if(!e.target.value)return;day=nearestDate(e.target.value);render(true)};
+$("prevDay").onclick=()=>{const i=DATES.indexOf(day);if(i>0){day=DATES[i-1];render(true)}};
+$("nextDay").onclick=()=>{const i=DATES.indexOf(day);if(i<DATES.length-1){day=DATES[i+1];render(true)}};
+$("latestBtn").onclick=()=>{day=DATES[DATES.length-1];mode="day";render(true)};
+$("monthSel").onchange=e=>{month=e.target.value;render(true)};
+$("yearSel").onchange=e=>{year=e.target.value;render(true)};
+$("fromIn").onchange=e=>{if(e.target.value){from=e.target.value;if(from>to)to=from;render(true)}};
+$("toIn").onchange=e=>{if(e.target.value){to=e.target.value;if(to<from)from=to;render(true)}};
+$("refreshBtn").onclick=load;
+document.querySelectorAll("#trendSeg button").forEach(b=>b.onclick=()=>{trendKind=b.dataset.t;document.querySelectorAll("#trendSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));drawTrend()});
+const ms=$("metricSel");METRICS.forEach(m=>{const o=document.createElement("option");o.value=m[0];o.textContent=m[1];ms.appendChild(o)});ms.value=metric;
+ms.onchange=()=>{metric=ms.value;save();drawRank();drawCal()};
+document.addEventListener("keydown",e=>{if(mode!=="day"||/input|select/i.test(document.activeElement?.tagName||""))return;if(e.key==="ArrowLeft")$("prevDay").click();if(e.key==="ArrowRight")$("nextDay").click()});
+
+/* ---------- helpers ---------- */
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const sel=V=>unit==="All"?V.G:(V.units.find(r=>r.unit===unit)||V.G);
+function countUp(el,to,f,dur=1100){if(reduce){el.textContent=f(to);return}const t0=performance.now(),from0=0;
+  (function tick(t){const x=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-x,3);el.textContent=f(from0+(to-from0)*e);if(x<1)requestAnimationFrame(tick)})(t0)}
+function ringSVG(r,sw,cls){const c=2*Math.PI*r;return {c,html:`<svg viewBox="0 0 ${2*r+sw*2} ${2*r+sw*2}"><circle class="trk" cx="${r+sw}" cy="${r+sw}" r="${r}" fill="none" stroke-width="${sw}"/><circle class="val ${cls||""}" cx="${r+sw}" cy="${r+sw}" r="${r}" fill="none" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c}"/></svg>`}}
+function setRing(el,frac,color){const v=el.querySelector(".val"),c=+v.getAttribute("stroke-dasharray");v.style.stroke=color;requestAnimationFrame(()=>requestAnimationFrame(()=>v.style.strokeDashoffset=c*(1-Math.max(0,Math.min(1,frac))))) }
+const stColor=s=>s==="good"?css("--good"):s==="warn"?css("--accent"):css("--bad");
+function heatColor(t){t=Math.max(0,Math.min(1,t));const a=[229,120,111],b=[242,196,107],c=[124,203,154];const m=t<.5?[a,b,t*2]:[b,c,(t-.5)*2];
+  return `rgb(${m[0].map((x,i)=>Math.round(x+(m[1][i]-x)*m[2])).join(",")})`}
+function replay(){const app=$("app");app.classList.remove("go");void app.offsetWidth;app.classList.add("go")}
+
+/* ---------- render ---------- */
+function render(anim){
+  document.querySelectorAll("#modeSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===mode));
+  $("dayCtl").hidden=mode!=="day";$("monthCtl").hidden=mode!=="month";$("yearCtl").hidden=mode!=="year";$("rangeCtl").hidden=mode!=="range";
+  $("dayIn").value=day;const di=DATES.indexOf(day);$("prevDay").disabled=di<=0;$("nextDay").disabled=di>=DATES.length-1;
+  $("unitSeg").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.u===unit));
+  const dates=periodDates();
+  $("when").textContent=label();
+  $("rangeTag").textContent=mode==="day"?`${DATES.indexOf(day)+1} of ${DATES.length} days on file`:`${dates.length} production days`;
+  if(!dates.length){$("kpis").innerHTML="";$("units").innerHTML=`<div class="empty">No production data for this period.</div>`;return}
+  VIEW=buildView(dates);const pd=prevPeriodDates();VIEW.P=pd.length?buildView(pd):null;
+  hero();kpis();unitCards();drawAll();drawCal();drawTable();insights();
+  if(anim)replay()}
+
+function hero(){
+  const r=sel(VIEW),P=VIEW.P?sel(VIEW.P):null;
+  $("spotK").textContent=(unit==="All"?"Group · 6 knit units":unit)+" · "+(mode==="day"?"production day":label());
+  const a=ringSVG(56,9),b=ringSVG(56,9);
+  $("ringPa").innerHTML=a.html+`<div class="lab"><b id="rPa">0%</b><span>Pcs achv</span></div>`;
+  $("ringEff").innerHTML=b.html+`<div class="lab"><b id="rEff">0%</b><span>Efficiency</span></div>`;
+  setRing($("ringPa"),r.pa/100,r.pa>=100?"#7CE0A8":r.pa>=90?"#F6C56B":"#FF8F86");
+  setRing($("ringEff"),r.teff?r.aeff/r.teff:0,r.gap>=0?"#7CE0A8":r.gap>-8?"#F6C56B":"#FF8F86");
+  countUp($("rPa"),r.pa,v=>v.toFixed(1)+"%");countUp($("rEff"),r.aeff,v=>v.toFixed(1)+"%");
+  const F=[["Achieved",fmt.int(r.ach)+" pcs"],["Target",fmt.int(r.tgt)+" pcs"],["Loss",fmt.int(r.loss)+" pcs"],["Target eff",fmt.pct(r.teff)],["Earned CM",fmt.usd(r.cm)],["Earned FOB",fmt.usd(r.fob)]];
+  $("facts").innerHTML=F.map(f=>`<div><span>${f[0]}</span><b>${f[1]}</b></div>`).join("");
+  const d=P?r.pa-P.pa:null;
+  const lead=r.pa>=100?"Target met":r.pa>=90?"Close to target":"Below target";
+  $("verdict").innerHTML=`<b>${lead}.</b> ${fmt.k(Math.abs(Math.min(0,r.loss)))} pcs short${r.short?`, about ${fmt.usdk(r.short)} CM not earned`:""}. Efficiency ${fmt.pct(r.aeff)} vs ${fmt.pct(r.teff)} target (${fmt.pp(r.gap)}).`+
+    (P?` Compared with ${prevLabel()}: achievement ${d>=0?"up":"down"} ${Math.abs(d).toFixed(1)} pp, efficiency ${r.aeff-P.aeff>=0?"up":"down"} ${Math.abs(r.aeff-P.aeff).toFixed(1)} pp.`:"");
+}
+function kpis(){
+  const r=sel(VIEW),P=VIEW.P?sel(VIEW.P):null,G=VIEW.G;
+  const dl=(k,f,good=1)=>{if(!P)return"";const d=r[k]-P[k];if(!isFinite(d))return"";return ` · <b class="${d*good>=0?"up":"dn"}">${d>=0?"▲":"▼"} ${f(Math.abs(d))}</b>`};
+  const K=[["CM / earned min",r.cmmin,fmt.d4,`Avail min ${fmt.d4(r.epm)}`+dl("cmmin",fmt.d4),"--good"],
+    ["CM / MP / day",r.cmmp,fmt.d2,`${fmt.int(r.mp)} manpower`+dl("cmmp",fmt.d2),"--good"],
+    ["CM / pc",r.cmpc,fmt.d3,`FOB/pc ${fmt.d2(r.ach?r.fob/r.ach:0)}`,"--good"],
+    ["FOB / MC / hr",r.fobmh,fmt.d2,`MC cost ${fmt.d2(r.mccost)}/hr`+dl("fobmh",fmt.d2),"--accent2"],
+    ["Hourly output",r.ahr,v=>Math.round(v)+" pcs",`Target ${Math.round(r.thr)} · <b class="${r.ahr>=r.thr?"up":"dn"}">${Math.round(r.ahr-r.thr)}</b>`,"--accent2"],
+    ["1st hour achv",r.first,fmt.pct,"Line start-up"+dl("first",v=>v.toFixed(1)+" pp"),"--accent"],
+    ["Pcs / MC / day",r.pmc,fmt.n1,`${fmt.int(r.mc)} MC · ${fmt.n1(r.line)} lines`,"--accent2"],
+    ["SMV · Helper:MC",r.smv,fmt.n2,`H:MC ${fmt.n2(r.hmc)} · ${fmt.n2(r.wh)} h`,"--accent"]];
+  $("kpis").innerHTML=K.map((k,i)=>`<div class="kpi anim" style="--i:${i+1};--c:var(${k[4]})"><div class="k">${k[0]}</div><div class="v" data-n="${i}">${k[2](0)}</div><div class="s">${k[3]}</div></div>`).join("");
+  K.forEach((k,i)=>countUp($("kpis").querySelector(`[data-n="${i}"]`),k[1],k[2]));
+}
+function sparkPath(vals,w,h){const mn=Math.min(...vals),mx=Math.max(...vals),rg=mx-mn||1;
+  const pts=vals.map((v,i)=>[vals.length>1?i/(vals.length-1)*w:w/2,h-4-(v-mn)/rg*(h-8)]);
+  const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+","+p[1].toFixed(1)).join("");return {d,area:d+`L${w},${h}L0,${h}Z`,len:Math.ceil(pts.reduce((s,p,i)=>i?s+Math.hypot(p[0]-pts[i-1][0],p[1]-pts[i-1][1]):0,0))+2}}
+function unitCards(){
+  const end=VIEW.dates[VIEW.dates.length-1],ei=DATES.indexOf(end),win=DATES.slice(Math.max(0,ei-13),ei+1);
+  $("unitsSub").textContent=`Ring = pcs achievement · line = efficiency over the last ${win.length} production days up to ${fmtS(end)} · click to focus`;
+  const all={name:"All units",unit:"All",...VIEW.G};
+  const list=[all,...VIEW.units];
+  $("units").innerHTML=list.map((u,i)=>{
+    const series=win.map(d=>{const rs=DATA.filter(r=>r.date===d&&(u.unit==="All"||r.unit===u.unit));const a=sum(rs,r=>r.avail);return a?sum(rs,r=>r.earn)/a*100:null}).filter(v=>v!=null);
+    const sp=series.length?sparkPath(series,180,38):null,col=stColor(u.status),rg=ringSVG(25,6);
+    return `<button type="button" class="uc anim" style="--i:${i+2}" data-u="${u.unit}" aria-pressed="${unit===u.unit}">
+      <div class="top"><span class="nm">${u.unit==="All"?"Group":u.unit}</span><span class="pill ${u.status}">${statusTxt[u.status]}</span></div>
+      <div class="mid"><div class="mini" data-f="${u.pa/100}" data-c="${col}">${rg.html}<b>${Math.round(u.pa)}%</b></div>
+      <div class="st">Eff <b>${fmt.pct(u.aeff)}</b> <span class="${u.gap>=0?"up":"dn"}">${fmt.pp(u.gap)}</span><br>CM <b>${fmt.usdk(u.cm)}</b> · <b>${fmt.d4(u.cmmin)}</b>/min<br>Loss <b class="${u.loss<0?"dn":"up"}">${fmt.int(u.loss)}</b> pcs</div></div>
+      ${sp?`<svg class="spark" viewBox="0 0 180 38" preserveAspectRatio="none"><defs><linearGradient id="g${i}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".25"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs><path class="ar" d="${sp.area}" fill="url(#g${i})"/><path class="ln" d="${sp.d}" stroke="${col}" style="--len:${sp.len}"/></svg>`:""}
+    </button>`}).join("");
+  $("units").querySelectorAll(".uc").forEach(b=>{b.onclick=()=>{unit=b.dataset.u;save();render(true)};const m=b.querySelector(".mini");m.querySelector(".val").style.stroke=m.dataset.c;setRing(m,+m.dataset.f,m.dataset.c)});
+}
+
+/* ---------- charts ---------- */
+Chart.defaults.font.family='"IBM Plex Sans",system-ui,sans-serif';Chart.defaults.font.size=11.5;
+const C={};
+function base(extra){const ink=css("--muted"),grid=css("--line");return Object.assign({responsive:true,maintainAspectRatio:false,animation:reduce?false:{duration:900,easing:"easeOutQuart"},
+  plugins:{legend:{labels:{color:ink,boxWidth:10,boxHeight:10,usePointStyle:true}},tooltip:{backgroundColor:css("--ink"),titleColor:css("--bg"),bodyColor:css("--bg"),padding:10}},
+  scales:{x:{ticks:{color:ink},grid:{display:false},border:{color:grid}},y:{ticks:{color:ink},grid:{color:grid},border:{display:false}}}},extra||{})}
+function mk(id,cfg){if(C[id])C[id].destroy();C[id]=new Chart($(id),cfg)}
+const rot={maxRotation:60,minRotation:45};
+const floorsSel=()=>VIEW.floors.filter(r=>unit==="All"||r.unit===unit);
+function trendDates(){if(mode!=="day")return VIEW.dates;const i=DATES.indexOf(day);return DATES.slice(Math.max(0,i-29),i+1)}
+function drawTrend(){
+  const ds=trendDates(),A=css("--accent"),B=css("--accent2"),BS=css("--accent2-soft"),G=css("--good"),ink=css("--muted"),b0=base();
+  const S=ds.map(d=>agg(DATA.filter(r=>r.date===d&&(unit==="All"||r.unit===unit)),d,"Unit",unit));
+  const lbl=ds.map(fmtS),hl=ds.map(d=>mode==="day"&&d===day);
+  $("trendSub").textContent=`${unit==="All"?"Group":unit} · ${ds.length} production days${mode==="day"?" up to the selected day (highlighted)":""} · click a bar to open that day`;
+  const click={onClick:(e,els)=>{if(els.length){day=ds[els[0].index];mode="day";render(true)}}};
+  if(trendKind==="pcs")mk("cTrend",{type:"bar",data:{labels:lbl,datasets:[
+    {label:"Target pcs",data:S.map(r=>r.tgt),backgroundColor:BS,borderRadius:3,yAxisID:"y1",order:3},
+    {label:"Achieved pcs",data:S.map(r=>r.ach),backgroundColor:hl.map((h,i)=>h?A:S[i].pa>=100?G:B),borderRadius:3,yAxisID:"y1",order:2},
+    {type:"line",label:"Achieved eff %",data:S.map(r=>r.aeff),borderColor:css("--ink"),backgroundColor:css("--ink"),tension:.35,pointRadius:hl.map(h=>h?6:2.5),yAxisID:"y",order:1},
+    {type:"line",label:"Target eff %",data:S.map(r=>r.teff),borderColor:A,borderDash:[5,4],pointRadius:0,tension:.35,yAxisID:"y",order:1}]},
+    options:base({...click,plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${c.raw.toFixed(1)}%`:`${c.dataset.label}: ${fmt.int(c.raw)}`,afterBody:it=>`Pcs achv ${fmt.pct(S[it[0].dataIndex].pa)}`}}},
+      scales:{x:{...b0.scales.x,ticks:{color:ink,...(ds.length>16?rot:{})}},y:{...b0.scales.y,position:"right",grid:{display:false},ticks:{color:ink,callback:v=>v+"%"}},y1:{position:"left",grid:{color:css("--line")},ticks:{color:ink,callback:v=>fmt.k(v)},border:{display:false}}}})});
+  if(trendKind==="cm")mk("cTrend",{type:"bar",data:{labels:lbl,datasets:[
+    {label:"Earned CM ($)",data:S.map(r=>r.cm),backgroundColor:hl.map(h=>h?A:BS),borderRadius:3,yAxisID:"y1",order:2},
+    {type:"line",label:"CM / earned min ($)",data:S.map(r=>r.cmmin),borderColor:B,backgroundColor:B,tension:.35,pointRadius:hl.map(h=>h?6:2.5),yAxisID:"y",order:1},
+    {type:"line",label:"CM / avail min ($)",data:S.map(r=>r.epm),borderColor:G,backgroundColor:G,tension:.35,pointRadius:hl.map(h=>h?6:2.5),yAxisID:"y",order:1}]},
+    options:base({...click,plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>c.dataset.yAxisID==="y"?`${c.dataset.label}: ${fmt.d4(c.raw)}`:`${c.dataset.label}: ${fmt.usd(c.raw)}`}}},
+      scales:{x:{...b0.scales.x,ticks:{color:ink,...(ds.length>16?rot:{})}},y:{...b0.scales.y,position:"right",grid:{display:false},ticks:{color:ink,callback:v=>"$"+v.toFixed(3)}},y1:{position:"left",grid:{color:css("--line")},ticks:{color:ink,callback:v=>fmt.usdk(v)},border:{display:false}}}})});
+  if(trendKind==="hour")mk("cTrend",{type:"bar",data:{labels:lbl,datasets:[
+    {label:"Achieved pcs/hr (per line)",data:S.map(r=>r.ahr),backgroundColor:hl.map(h=>h?A:B),borderRadius:3,yAxisID:"y1",order:2},
+    {type:"line",label:"Target pcs/hr",data:S.map(r=>r.thr),borderColor:A,borderDash:[5,4],pointRadius:0,tension:.3,yAxisID:"y1",order:1},
+    {type:"line",label:"1st hour achv %",data:S.map(r=>r.first),borderColor:G,backgroundColor:G,tension:.35,pointRadius:hl.map(h=>h?6:2.5),yAxisID:"y",order:1}]},
+    options:base({...click,scales:{x:{...b0.scales.x,ticks:{color:ink,...(ds.length>16?rot:{})}},y:{...b0.scales.y,position:"right",grid:{display:false},ticks:{color:ink,callback:v=>v+"%"}},y1:{position:"left",grid:{color:css("--line")},ticks:{color:ink},border:{display:false}}}})});
+}
+function drawAll(){
+  drawTrend();
+  const A=css("--accent"),B=css("--accent2"),BS=css("--accent2-soft"),good=css("--good"),bad=css("--bad"),ink=css("--muted"),b0=base(),fl=floorsSel();
+  const tvaRows=unit==="All"?VIEW.units:fl;
+  $("tvaSub").textContent=unit==="All"?"Pieces by unit":`Pieces by floor in ${unit}`;
+  mk("cTva",{type:"bar",data:{labels:tvaRows.map(r=>unit==="All"?r.unit:r.lab.replace(unit+" - ","")),datasets:[
+    {label:"Target",data:tvaRows.map(r=>r.tgt),backgroundColor:BS,borderRadius:5},
+    {label:"Achieved",data:tvaRows.map(r=>r.ach),backgroundColor:tvaRows.map(r=>r.pa>=100?good:r.pa>=90?B:bad),borderRadius:5}]},
+    options:base({plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{afterBody:it=>{const r=tvaRows[it[0].dataIndex];return `Achv ${fmt.pct(r.pa)} · loss ${fmt.int(r.loss)}`}}}},scales:{x:b0.scales.x,y:{...b0.scales.y,ticks:{color:ink,callback:v=>fmt.k(v)}}}})});
+  mk("cEff",{type:"bar",data:{labels:fl.map(r=>r.lab),datasets:[
+    {label:"Target eff %",data:fl.map(r=>r.teff),backgroundColor:BS,borderRadius:3},
+    {label:"Achieved eff %",data:fl.map(r=>r.aeff),backgroundColor:fl.map(r=>r.gap>=0?good:r.gap>-8?A:bad),borderRadius:3}]},
+    options:base({plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${c.dataset.label}: ${c.raw.toFixed(1)}%`,afterBody:it=>"Gap "+fmt.pp(fl[it[0].dataIndex].gap)}}},
+      scales:{x:{...b0.scales.x,ticks:{color:ink,...rot}},y:{...b0.scales.y,suggestedMin:30,ticks:{color:ink,callback:v=>v+"%"}}}})});
+  const sc=r=>r.status==="good"?good:r.status==="warn"?A:bad;
+  mk("cMap",{type:"bubble",data:{datasets:[{label:"Floors",data:fl.map(r=>({x:r.aeff,y:r.cmmp,r:Math.max(5,Math.sqrt(r.mp)*0.9),n:r.lab})),backgroundColor:fl.map(r=>sc(r)+"99"),borderColor:fl.map(sc)}]},
+    options:base({plugins:{legend:{display:false},tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${c.raw.n}: eff ${c.raw.x.toFixed(1)}%, $${c.raw.y.toFixed(2)} CM/MP/day`}}},
+      scales:{x:{...b0.scales.x,grid:{color:css("--line")},title:{display:true,text:"Achieved efficiency %",color:ink}},y:{...b0.scales.y,title:{display:true,text:"CM / MP / day ($)",color:ink}}}})});
+  const lf=[...fl].sort((a,b)=>a.loss-b.loss);
+  mk("cLoss",{type:"bar",data:{labels:lf.map(r=>r.lab),datasets:[{label:"Target loss pcs",data:lf.map(r=>Math.round(r.loss)),backgroundColor:lf.map(r=>r.loss>=0?good:r.pa>=90?A:bad),borderRadius:4}]},
+    options:base({indexAxis:"y",plugins:{legend:{display:false},tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${fmt.int(c.raw)} pcs`,afterLabel:c=>{const r=lf[c.dataIndex];return r.short?`≈ ${fmt.usd(r.short)} CM not earned`:"Target met"}}}},
+      scales:{x:{...b0.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>fmt.k(v)}},y:{...b0.scales.y,grid:{display:false}}}})});
+  drawRank();
+}
+function drawRank(){
+  if(!VIEW)return;const m=MI[metric],f=fmt[m[2]],ink=css("--muted"),b0=base(),G=sel(VIEW);
+  const fl=[...floorsSel()].sort((a,b)=>(b[metric]-a[metric])*m[3]);
+  const vals=fl.map(r=>r[metric]),mx=Math.max(...vals),mn=Math.min(...vals);
+  const col=fl.map(r=>{const t=(r[metric]-mn)/((mx-mn)||1);return heatColor(m[3]>0?t:1-t)});
+  mk("cRank",{type:"bar",data:{labels:fl.map(r=>r.lab),datasets:[{label:m[1],data:vals,backgroundColor:col,borderRadius:5},
+    {type:"line",label:(unit==="All"?"Group":unit)+" value",data:fl.map(()=>G[metric]),borderColor:css("--ink"),borderDash:[6,4],pointRadius:0,borderWidth:1.5}]},
+    options:base({indexAxis:"y",plugins:{...b0.plugins,tooltip:{...b0.plugins.tooltip,callbacks:{label:c=>`${c.dataset.label}: ${f(c.raw)}`}}},
+      scales:{x:{...b0.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>f(+v)}},y:{...b0.scales.y,grid:{display:false}}}})});
+}
+function drawCal(){
+  if(!VIEW)return;const m=MI[metric],f=fmt[m[2]];
+  let ds=mode==="day"?DATES.filter(d=>d.slice(0,7)===day.slice(0,7)):VIEW.dates;if(ds.length>62)ds=ds.slice(-62);
+  $("calSub").textContent=`${m[1]} for each floor and production day${mode==="day"?" in "+MON[+day.slice(5,7)-1]+" "+day.slice(0,4):""}${VIEW.dates.length>62&&mode!=="day"?" (last 62 days)":""} · colour scale per metric`;
+  const fk=[...new Set(DATA.filter(r=>ds.includes(r.date)&&(unit==="All"||r.unit===unit)).map(r=>r.unit+"|"+r.floor))].sort((a,b)=>UNITS.indexOf(a.split("|")[0])-UNITS.indexOf(b.split("|")[0]));
+  const cell={};DATA.forEach(r=>{if(ds.includes(r.date))cell[r.unit+"|"+r.floor+"|"+r.date]=r});
+  const V=fk.map(k=>ds.map(d=>{const r=cell[k+"|"+d];if(!r)return null;const [u,fn]=k.split("|");return agg([r],`${u} - ${fn}`,"Floor",u)[metric]}));
+  const flat=V.flat().filter(v=>v!=null&&isFinite(v)).sort((a,b)=>a-b),q=p=>flat.length?flat[Math.floor((flat.length-1)*p)]:0,lo=q(.05),hi=q(.95);
+  let j=0;
+  $("cal").innerHTML=`<table><thead><tr><th>Floor</th>${ds.map(d=>{const dd=new Date(d+"T00:00:00");return `<th title="${fmtD(d)}">${dd.getDate()}<br>${WD[dd.getDay()].slice(0,2)}</th>`}).join("")}</tr></thead><tbody>${
+    fk.map((k,i)=>{const [u,fn]=k.split("|");return `<tr><td class="lbl0">${u} · ${fn.replace(/ Floor$/,"")}</td>${V[i].map((v,c)=>{if(v==null)return `<td class="na">·</td>`;
+      const t=(v-lo)/((hi-lo)||1),bg=heatColor(m[3]>0?t:1-t),short=m[2]==="pct"?Math.round(v):m[2]==="int"?fmt.k(v):m[2]==="pp"?Math.round(v):f(v).replace("$","");
+      return `<td class="cell${mode==="day"&&ds[c]===day?" sel":""}" style="background:${bg};--j:${j++}" data-d="${ds[c]}" title="${u} · ${fn} · ${fmtD(ds[c])}: ${f(v)}">${short}</td>`}).join("")}</tr>`}).join("")}</tbody></table>`;
+  $("cal").querySelectorAll("td.cell").forEach(td=>td.onclick=()=>{day=td.dataset.d;mode="day";render(true);window.scrollTo({top:0,behavior:reduce?"auto":"smooth"})});
+}
+const TCOLS=[["name","Unit / floor"],["status","Status"],["tgt","Target","int"],["ach","Achieved","int"],["loss","Loss","int"],["pa","Pcs achv","pct"],["teff","Tgt eff","pct"],["aeff","Achv eff","pct"],["gap","Gap","pp"],
+ ["smv","SMV","n2"],["ahr","Hr pcs","int"],["first","1st hr","pct"],["mc","MC","int"],["mp","MP","int"],["cm","CM $","usd"],["cmmin","CM/earn min","d4"],["cmmp","CM/MP/day","d2"],["fobmh","FOB/MC/hr","d2"],["short","CM lost","usd"]];
+const BARS={pa:"--accent2",aeff:"--accent2",cmmp:"--good",short:"--bad"};
+function drawTable(){
+  const t=$("tbl");
+  t.tHead.innerHTML="<tr>"+TCOLS.map(c=>`<th ${c[0]===sortKey?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}><button type="button" data-k="${c[0]}">${c[1]}</button></th>`).join("")+"</tr>";
+  t.tHead.querySelectorAll("button").forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k===sortKey)sortDir*=-1;else{sortKey=k;sortDir=-1}drawTable()});
+  const ord={good:2,warn:1,bad:0};
+  let rs=VIEW.rows.filter(r=>unit==="All"||r.unit===unit||r.level==="Group");
+  rs.sort((a,b)=>{if(a.level==="Group")return 1;if(b.level==="Group")return -1;const av=sortKey==="status"?ord[a.status]:a[sortKey],bv=sortKey==="status"?ord[b.status]:b[sortKey];return typeof av==="string"?av.localeCompare(bv)*sortDir:(av-bv)*sortDir});
+  const F=VIEW.floors,mx={};Object.keys(BARS).forEach(k=>mx[k]=Math.max(1e-9,...F.map(r=>Math.abs(r[k]))));
+  t.tBodies[0].innerHTML=rs.map(r=>`<tr class="${r.level!=="Floor"?"unit":""}">`+TCOLS.map(c=>{
+    if(c[0]==="name")return `<td>${r.level==="Unit"?r.unit+" Total":r.name}</td>`;
+    if(c[0]==="status")return `<td><span class="pill ${r.status}">${statusTxt[r.status]}</span></td>`;
+    const v=r[c[0]],s=fmt[c[2]](v),cls=(c[0]==="loss"||c[0]==="gap")?(v<0?"neg":"pos"):"";
+    if(BARS[c[0]]&&r.level==="Floor")return `<td class="mono ${cls}"><span class="cellbar"><i style="width:${Math.min(100,Math.abs(v)/mx[c[0]]*100)}%;background:var(${BARS[c[0]]})"></i><span>${s}</span></span></td>`;
+    return `<td class="mono ${cls}">${s}</td>`}).join("")+"</tr>").join("");
+}
+function insights(){
+  const G=sel(VIEW),F=floorsSel(),U=VIEW.units,P=VIEW.P;
+  if(!F.length){$("insights").innerHTML="";return}
+  const by=(a,k,d=-1)=>[...a].sort((x,y)=>(x[k]-y[k])*-d);
+  const topF=by(F,"pa")[0],botF=by(F,"pa",1)[0],cmBest=by(F,"cmmin")[0],cmWorst=by(F,"cmmin",1)[0];
+  const onT=U.filter(u=>u.pa>=100).map(u=>u.unit);
+  const lossF=by(F,"loss",1).filter(r=>r.loss<0).slice(0,3);
+  const slow=F.filter(r=>r.first&&r.first<55).sort((a,b)=>a.first-b.first).slice(0,3);
+  const gapF=by(F,"gap",1)[0];
+  let mover="";
+  if(P&&mode==="day"){const pf={};P.floors.forEach(r=>pf[r.name]=r);const ch=F.filter(r=>pf[r.name]).map(r=>({r,d:r.aeff-pf[r.name].aeff})).sort((a,b)=>a.d-b.d);
+    if(ch.length){const dn=ch[0],up=ch[ch.length-1];mover=`<li><b>Biggest swing vs ${prevLabel()}:</b> ${up.r.lab} ${fmt.pp(up.d)} efficiency${dn.d<0?`; ${dn.r.lab} ${fmt.pp(dn.d)}`:""}.</li>`}}
+  const good=[unit==="All"?`<li><b>${onT.length?onT.join(", ")+" hit target":"No unit hit target"}</b>${onT.length?"":`; closest is ${by(U,"pa")[0].unit} at ${fmt.pct(by(U,"pa")[0].pa)}`}.</li>`:"",
+    `<li><b>Best floor: ${topF.lab}</b> at ${fmt.pct(topF.pa)} achievement, ${fmt.pct(topF.aeff)} efficiency.</li>`,
+    `<li><b>Highest CM per earned minute: ${cmBest.lab}</b> at ${fmt.d4(cmBest.cmmin)} (${unit==="All"?"group":unit} ${fmt.d4(G.cmmin)}).</li>`,mover];
+  const bad=[`<li><b>${unit==="All"?"Group":unit} at ${fmt.pct(G.pa)}</b>, ${fmt.k(Math.abs(Math.min(0,G.loss)))} pcs short, about <b>${fmt.usdk(G.short)} CM</b> not earned.</li>`,
+    lossF.length?`<li><b>Most pieces lost:</b> ${lossF.map(r=>`${r.lab} ${fmt.int(r.loss)}`).join(", ")}.</li>`:"",
+    gapF&&gapF.gap<0?`<li><b>Widest efficiency gap: ${gapF.lab}</b> ${fmt.pct(gapF.aeff)} vs ${fmt.pct(gapF.teff)} target (${fmt.pp(gapF.gap)}).</li>`:"",
+    `<li><b>Lowest CM per earned minute: ${cmWorst.lab}</b> at ${fmt.d4(cmWorst.cmmin)}.</li>`];
+  const act=[`<li><b>${botF.lab}:</b> hourly line tracking and bottleneck check; ${fmt.pct(botF.pa)} achievement${botF.gap<0?`, ${fmt.pp(botF.gap)} below target efficiency`:""}.</li>`,
+    slow.length?`<li><b>Start-up loss:</b> 1st hour below 55% at ${slow.map(r=>`${r.lab} (${fmt.pct(r.first)})`).join(", ")}. Input, trims and operators ready before the bell.</li>`:"",
+    G.ahr<G.thr?`<li><b>Hourly pace:</b> ${Math.round(G.ahr)} vs ${Math.round(G.thr)} pcs/hr per line. Follow up the lines furthest behind at the 2nd and 4th hour.</li>`:"",
+    `<li><b>Learn from ${topF.lab}:</b> share its line set-up and supervision with ${botF.unit}.</li>`];
+  $("insights").innerHTML=`<div class="card anim" style="--i:9"><h2><span class="dot" style="background:var(--good)"></span>What's working</h2><ul>${good.join("")}</ul></div>
+   <div class="card anim" style="--i:10"><h2><span class="dot" style="background:var(--bad)"></span>Where it's leaking</h2><ul>${bad.join("")}</ul></div>
+   <div class="card anim" style="--i:11"><h2><span class="dot" style="background:var(--accent)"></span>Actions</h2><ul>${act.join("")}</ul></div>`;
+}
+
+load();
+if(CFG.refreshMinutes)setInterval(()=>{if(!document.hidden)load()},CFG.refreshMinutes*60000);
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>VIEW&&render(false));
+})();
+</script>
+</body>
+</html>
