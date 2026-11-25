@@ -508,7 +508,7 @@ function sparkPath(vals,w,h){const mn=Math.min(...vals),mx=Math.max(...vals),rg=
 function unitCards(){
   const end=VIEW.dates[VIEW.dates.length-1],ei=DATES.indexOf(end),win=DATES.slice(Math.max(0,ei-13),ei+1);
   $("unitsSub").textContent=`Ring = pcs achievement · line = efficiency over the last ${win.length} production days up to ${fmtS(end)} · click to focus`;
-  const all={name:"All units",unit:"All",...VIEW.G};
+  const all={...VIEW.G,name:"All units",unit:"All"};
   const list=[all,...VIEW.units];
   $("units").innerHTML=list.map((u,i)=>{
     const series=win.map(d=>{const rs=DATA.filter(r=>r.date===d&&(u.unit==="All"||r.unit===u.unit));const a=sum(rs,r=>r.avail);return a?sum(rs,r=>r.earn)/a*100:null}).filter(v=>v!=null);
