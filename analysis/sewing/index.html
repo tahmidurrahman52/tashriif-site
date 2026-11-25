@@ -205,7 +205,7 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:110ch}
   <section class="ins" id="insights"></section>
   </main>
 
-  <footer>Data: Google Sheet "Sewing Summary Report" (ERP export pasted as-is); unit and group totals are calculated here from floor columns. Pcs Achv % = Achievement ÷ Target · Efficiency % = ERP floor values, weighted by Available Min for units · CM shortfall = lost pcs × CM/pc. Not tracked (no valid ERP data): Style change, absenteeism, late, helper trainee, NPT, DHU, MMR.</footer>
+  <footer>Data: Google Sheet "Sewing Summary Report" (ERP export pasted as-is); unit and group totals are calculated here from floor columns. Pcs Achv % = Achievement ÷ Target · Efficiency % = ERP floor values, weighted by Available Min for units · CM shortfall = lost pcs × CM/pc. CM / avail min = Earned CM ÷ Available Min · FOB / MC / hr = Earned FOB ÷ machine-hours (Running MC × Working Hour × Working Day) · MC cost / hr = floor values weighted by machine-hours · Cost / avail min = ERP Cost Per Minute (per earned min, given per unit) × Earned Min ÷ Available Min; floors use the unit rate. Unit and group values are recalculated here, not taken from the ERP Total columns. Not tracked (no valid ERP data): Style change, absenteeism, late, helper trainee, NPT, DHU, MMR.</footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -217,10 +217,11 @@ const HEAD={date:"Date",unit:"Unit",floor:"Floor",wd:"Working Days",tgt:"Target 
   line:"Running Line",mc:"Running MC",hlp:"Helper",mp:"Total Manpower",cm:"Earned CM ($)",fob:"Earned FOB ($)",thr:"Target Hourly Pcs",ahr:"Achieved Hourly Pcs",wh:"Working Hour",first:"1st Hr Achv %"};
 const fmt={int:v=>Math.round(v).toLocaleString("en-US"),k:v=>Math.abs(v)>=1e6?(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?(v/1e3).toFixed(1)+"K":Math.round(v)+"",
   pct:v=>v.toFixed(1)+"%",usd:v=>"$"+Math.round(v).toLocaleString("en-US"),usdk:v=>Math.abs(v)>=1e6?"$"+(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?"$"+(v/1e3).toFixed(1)+"K":"$"+Math.round(v),
-  d2:v=>"$"+v.toFixed(2),d3:v=>"$"+v.toFixed(3),d4:v=>"$"+v.toFixed(4),n1:v=>v.toFixed(1),n2:v=>v.toFixed(2),pp:v=>(v>0?"+":"")+v.toFixed(1)+" pp"};
+  d2:v=>"$"+v.toFixed(2),d3:v=>"$"+v.toFixed(3),d4:v=>"$"+v.toFixed(4),d4z:v=>v?"$"+v.toFixed(4):"—",d2z:v=>v?"$"+v.toFixed(2):"—",n1:v=>v.toFixed(1),n2:v=>v.toFixed(2),pp:v=>(v>0?"+":"")+v.toFixed(1)+" pp"};
 const METRICS=[["pa","Pcs Achv %","pct",1],["aeff","Achieved Eff %","pct",1],["gap","Eff gap (pp)","pp",1],["ach","Achievement pcs","int",1],["loss","Target loss pcs","int",1],
  ["cm","Earned CM ($)","usd",1],["fob","Earned FOB ($)","usd",1],["cmpc","CM / pc ($)","d3",1],["fobpc","FOB / pc ($)","d2",1],["cmmin","CM / earned min ($)","d4",1],["cmfob","CM % of FOB","pct",1],
  ["cmmp","CM / MP / day ($)","d2",1],["cmmc","CM / MC / day ($)","d2",1],["pmc","Pcs / MC / day","n1",1],["smv","SMV","n2",1],["ahr","Achieved hourly pcs","int",1],["first","1st hour achv %","pct",1],
+ ["epm","CM / avail min ($)","d4",1],["fobmh","FOB / MC / hr ($)","d2",1],["mccost","MC cost / hr ($)","d2z",-1],["cpa","Cost / avail min ($)","d4z",-1],
  ["hmc","Helper : MC","n2",-1],["wh","Working hour","n2",-1],["short","CM shortfall ($)","usd",-1],["mp","Avg manpower","int",1]];
 const MI=Object.fromEntries(METRICS.map(m=>[m[0],m]));
 const statusTxt={good:"On target",warn:"Watch",bad:"Critical"};
@@ -238,7 +239,7 @@ const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
 /* ERP row label -> field. Rows not listed (absent %, NPT, DHU, MMR …) are ignored. */
 const LABELS={targetpcs:"tgt",achievementpcs:"ach",performance:"perfR",targetefficiency:"teff",achievedefficiency:"aeffR",availablemin:"avail",earnmin:"earn",
   runningline:"line",runningmc:"mc",helper:"hlp",totalmanpower:"mp",earnedcm:"cm",earnedfob:"fob",targethourlypcs:"thr",achievedhourlypcs:"ahr",workinghour:"wh",
-  "1sthrachievement":"first",workingday:"wd",smv:"smvR"};
+  "1sthrachievement":"first",workingday:"wd",smv:"smvR",perhourmccost:"mccR",costperminute:"cpmR"};
 const PCTF=new Set(["first","teff","aeffR","perfR"]);
 const titleCase=s=>s.toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()).replace(/\b(\d+)(St|Nd|Rd|Th)\b/g,(m,a,b)=>a+b.toLowerCase());
 function floorName(h,u){const m=String(h).match(/^(.*?)SEW[\s-]*(.*)$/i);if(!m)return titleCase(h);let pre=m[1].replace(/[-\s]+$/,"").trim(),f=m[2].trim();
@@ -268,6 +269,8 @@ function parseReport(rows){
         if(PCTF.has(f)&&!/%/.test(raw)&&v!==0&&Math.abs(v)<=3)v*=100; // sheet stored 82.17% as 0.8217
         recs[n][f]=v})}
     recs.forEach(r=>{for(const k of Object.values(LABELS))if(r[k]===undefined)r[k]=0;if(!r.wd)r.wd=1});
+    /* ERP gives Cost Per Minute once per unit (per EARNED minute), in the unit first column: copy it to every floor of that unit */
+    const ucpm={};recs.forEach(r=>{if(r.cpmR&&!ucpm[r.unit])ucpm[r.unit]=r.cpmR});recs.forEach(r=>r.cpmR=ucpm[r.unit]||0);
     out.push(...recs.filter(r=>r.tgt||r.ach));periods.push(per);i=j-1;
   }
   return {rows:out,periods};
@@ -334,6 +337,13 @@ function agg(rs,name,level,u){
   o.loss=o.ach-o.tgt;o.pa=o.tgt?o.ach/o.tgt*100:0;o.gap=o.aeff-o.teff;
   o.cmpc=o.ach?o.cm/o.ach:0;o.fobpc=o.ach?o.fob/o.ach:0;o.cmmin=o.earn?o.cm/o.earn:0;o.cmfob=o.fob?o.cm/o.fob*100:0;
   o.cmmp=mpd?o.cm/mpd:0;o.cmmc=mcd?o.cm/mcd:0;o.pmc=mcd?o.ach/mcd:0;o.hmc=mcd?hlpd/mcd:0;
+  /* Own weighted averages (ERP unit "Total" averages for these are not reliable):
+     machine-hours = Running MC x Working Hour x Working Day */
+  const mh=r=>r.mc*r.wh*r.wd,mchr=sum(rs,mh),mw=rs.filter(r=>r.mccR>0);
+  o.mchr=mchr;o.epm=o.avail?o.cm/o.avail:0;o.fobmh=mchr?o.fob/mchr:0;
+  o.mccost=sum(mw,mh)?sum(mw,r=>r.mccR*mh(r))/sum(mw,mh):0;
+  /* ERP Cost Per Minute is per EARNED minute: total cost = rate x earned min, then shown per AVAILABLE minute */
+  o.cost=sum(rs,r=>r.cpmR*r.earn);o.cpa=o.avail?o.cost/o.avail:0;o.cpe=o.earn?o.cost/o.earn:0;
   o.short=Math.max(0,-o.loss)*o.cmpc;o.status=o.pa>=100?"good":o.pa>=90?"warn":"bad";
   o.lab=level==="Floor"?`${u} - ${name.split(" - ").slice(1).join(" - ").replace(/ Floor$/,"")}`:name;
   return o}
@@ -389,7 +399,11 @@ function kpis(){
    ["Pcs / MC / day",fmt.n1(r.pmc),`${fmt.int(r.mc)} running MC · ${fmt.n1(r.line)} lines`],
    ["Hourly output",Math.round(r.ahr)+" pcs",`Target ${Math.round(r.thr)} · <b class="${r.ahr>=r.thr?"up":"dn"}">${Math.round(r.ahr-r.thr)}</b>`],
    ["1st hour achv",fmt.pct(r.first),"Line start-up",r.first],
-   ["Helper : MC",fmt.n2(r.hmc),`${fmt.int(r.hlp)} helpers · ${fmt.n2(r.wh)} h/day`]];
+   ["Helper : MC",fmt.n2(r.hmc),`${fmt.int(r.hlp)} helpers · ${fmt.n2(r.wh)} h/day`],
+   ["CM / avail min",fmt.d4(r.epm),(vs(r.epm,G.epm,fmt.d4)||"Earned CM ÷ available min")+dm("epm",fmt.d4)],
+   ["FOB / MC / hr",fmt.d2(r.fobmh),(vs(r.fobmh,G.fobmh,fmt.d2)||`${fmt.k(r.mchr)} machine-hours`)+dm("fobmh",fmt.d2)],
+   ["MC cost / hr",fmt.d2z(r.mccost),"Weighted by machine-hours"],
+   ["Cost / avail min",fmt.d4z(r.cpa),r.cpa?`Per earned min ${fmt.d4(r.cpe)} · total ${fmt.usdk(r.cost)}`:"No cost data"]];
   $("kpis").innerHTML=K.map((k,i)=>`<div class="kpi${i===0?" hero":""}"><div class="k">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div>${k[3]!==undefined?`<div class="meter"><i style="width:${Math.max(0,Math.min(100,k[3]))}%"></i></div>`:""}</div>`).join("");
   const p=$("statusPill");p.className="pill "+r.status;p.textContent=`${r.name} · ${statusTxt[r.status]}`;
   $("unitSeg").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.u===unit));
@@ -475,7 +489,7 @@ function drawRank(){
       scales:{x:{...b0.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>f(v)}},y:{...b0.scales.y,grid:{display:false}}}})});
 }
 const COLS=[["name","Unit / floor"],["status","Status"],["tgt","Target","int"],["ach","Achieved","int"],["loss","Loss","int"],["pa","Pcs achv","pct"],["teff","Tgt eff","pct"],["aeff","Achv eff","pct"],["gap","Gap","pp"],
- ["smv","SMV","n2"],["ahr","Hr pcs","int"],["first","1st hr","pct"],["mc","MC","int"],["hlp","Helper","int"],["hmc","H:MC","n2"],["mp","MP","int"],["cm","CM $","usd"],["cmpc","CM/pc","d3"],["cmmp","CM/MP/day","d2"],["pmc","Pcs/MC/day","n1"],["short","CM shortfall","usd"]];
+ ["smv","SMV","n2"],["ahr","Hr pcs","int"],["first","1st hr","pct"],["mc","MC","int"],["hlp","Helper","int"],["hmc","H:MC","n2"],["mp","MP","int"],["cm","CM $","usd"],["cmpc","CM/pc","d3"],["cmmp","CM/MP/day","d2"],["pmc","Pcs/MC/day","n1"],["epm","CM/avail min","d4"],["fobmh","FOB/MC/hr","d2"],["mccost","MC cost/hr","d2z"],["cpa","Cost/avail min","d4z"],["short","CM shortfall","usd"]];
 const BARS={pa:"--accent2",aeff:"--accent2",cmmp:"--good",short:"--bad"};
 function drawTable(){
   if(!VIEW)return;const t=$("tbl");
