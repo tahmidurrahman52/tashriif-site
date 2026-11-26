@@ -143,7 +143,7 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:115ch}
 <div class="wrap">
   <header class="top">
     <div>
-      <div class="eyebrow"><a href="/analysis/">← My Analysis</a> &nbsp;·&nbsp; Eurotex Group · Knit order book</div>
+      <div class="eyebrow"><a href="/analysis/">← My Analysis</a> &nbsp;·&nbsp; Eurotex Group · Knit order book 2026</div>
       <h1>Order Book · <span class="when" id="when">2026</span></h1>
     </div>
     <div class="meta">
@@ -156,10 +156,8 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:115ch}
   <div class="bar" role="toolbar" aria-label="Filters">
     <div class="grp"><span class="lbl">Placement</span>
       <div class="seg" id="perSeg">
-        <button type="button" data-p="y2026" aria-pressed="true">2026</button>
+        <button type="button" data-p="y2026" aria-pressed="true">Full year 2026</button>
         <button type="button" data-p="month" aria-pressed="false">Month</button>
-        <button type="button" data-p="y2027" aria-pressed="false">2027 booked</button>
-        <button type="button" data-p="all" aria-pressed="false">All</button>
       </div>
       <select id="monthSel" aria-label="Placement month" hidden></select>
     </div>
@@ -181,7 +179,7 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:115ch}
       <div class="kpis" id="kpis"></div>
     </section>
 
-    <div class="sec"><h2>Factory pipeline</h2><p>Bar = order qty split into exported · sewn, not exported · cut, not sewn · not cut. Click a factory to focus.</p></div>
+    <div class="sec"><h2>Factory pipeline</h2><p>Bar = order qty split into exported · sewn, not exported · cut, not sewn · not cut. Sewing efficiency comes from the monthly ERP sewing report. Click a factory to focus.</p></div>
     <section class="facs" id="facs"></section>
 
     <section class="grid">
@@ -198,10 +196,6 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:115ch}
         <div class="head"><div><h2>Product mix</h2><p class="sub">Order pcs by item type (top 12) with average SMV</p></div></div>
         <div class="chartbox tall"><canvas id="cItem"></canvas></div>
       </div>
-      <div class="card span2 anim" style="--i:4">
-        <div class="head"><div><h2>Price vs work content</h2><p class="sub">Each dot is a PO line · CM per pc against sewing SMV · size = FOB value · colour = factory</p></div></div>
-        <div class="chartbox tall"><canvas id="cScatter"></canvas></div>
-      </div>
     </section>
 
     <section class="card anim" style="--i:5;margin-bottom:14px">
@@ -215,17 +209,22 @@ footer{color:var(--muted);font-size:12px;margin-top:18px;max-width:115ch}
     <section class="card anim" style="--i:6;margin-bottom:14px">
       <div class="head"><div><h2 id="riskTitle">PO watch list</h2><p class="sub" id="riskSub"></p></div>
         <div class="grp">
-          <div class="seg" id="riskSeg"><button type="button" data-r="late" aria-pressed="true">Past delivery</button><button type="button" data-r="due" aria-pressed="false">Due in 14 days</button><button type="button" data-r="open" aria-pressed="false">All open</button><button type="button" data-r="all" aria-pressed="false">All lines</button></div>
-          <input type="search" id="q" placeholder="Search PO, style, buyer, job" aria-label="Search purchase orders">
+          <div class="seg" id="riskSeg"><button type="button" data-r="late" aria-pressed="true">Overdue, not shipped</button><button type="button" data-r="shipped" aria-pressed="false">Delivered</button><button type="button" data-r="due" aria-pressed="false">Due in 14 days</button><button type="button" data-r="open" aria-pressed="false">All open</button><button type="button" data-r="all" aria-pressed="false">All orders</button></div>
+          <input type="search" id="q" placeholder="Search order no., PO, buyer, job" aria-label="Search orders">
         </div></div>
       <div class="tbl"><table class="dt" id="tbl"><thead></thead><tbody></tbody></table></div>
       <div class="more"><span id="cnt"></span><button class="btn" id="moreBtn" type="button">Show more</button></div>
     </section>
 
     <section class="ins" id="insights"></section>
+
+    <section class="card anim" id="next" style="--i:10;margin-top:14px">
+      <div class="head"><div><h2>Already booked for 2027</h2><p class="sub">Kept apart from the 2026 figures above · confirmed orders with a 2027 placement month</p></div></div>
+      <div class="tbl" style="max-height:none"><table class="dt" id="t27" style="min-width:760px"><thead></thead><tbody></tbody></table></div>
+    </section>
   </main>
 
-  <footer>Source: Click ERP → Management Dashboard → Confirm Order details (KNIT, all factories), one row per PO line, grouped by placement month. Snapshot shown in the tag above. Pipeline: Exported = Export qty · Sewn = Sewing − Export · Cut = Cutting − Sewing · Not cut = Order − Cutting (each capped at the order qty). CM ratio = Total CM ÷ Total FOB · CM / ordered min = Total CM ÷ Ordered minutes. "Past delivery" = Del. date before the snapshot date with more than 3% (and 200 pcs) of the order still not exported; days late counted from the ERP Del. date, which may be the buyer delivery date rather than ex-factory. Denim (EKLB, EDFL) is not part of the knit order book.</footer>
+  <footer>Source: Click ERP → Management Dashboard → Confirm Order details (KNIT, all factories), one row per order, grouped by placement month. Everything above the 2027 section covers 2026 placement months only. Snapshot shown in the tag above. Pipeline: Exported = Export qty · Sewn = Sewing − Export · Cut = Cutting − Sewing · Not cut = Order − Cutting (each capped at the order qty). CM ratio = Total CM ÷ Total FOB · CM / ordered min = Total CM ÷ Ordered minutes. "Overdue, not shipped" = Del. date before the snapshot date with more than 3% (and 200 pcs) of the order still not exported · "Delivered" = Del. date passed and the order exported (within 3%) · Sewing efficiency = Earn min / Available min over the factory floors for the months in view (monthly sewing report, Google Sheet Feed tab); days late counted from the ERP Del. date, which may be the buyer delivery date rather than ex-factory. Denim (EKLB, EDFL) is not part of the knit order book.</footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -236,21 +235,46 @@ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim
 const fmt={int:v=>Math.round(v).toLocaleString("en-US"),k:v=>Math.abs(v)>=1e7?(v/1e6).toFixed(1)+"M":Math.abs(v)>=1e6?(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?(v/1e3).toFixed(1)+"K":Math.round(v)+"",
  usdk:v=>Math.abs(v)>=1e6?"$"+(v/1e6).toFixed(2)+"M":Math.abs(v)>=1e3?"$"+(v/1e3).toFixed(1)+"K":"$"+Math.round(v),pct:v=>v.toFixed(1)+"%",d2:v=>"$"+v.toFixed(2),d3:v=>"$"+v.toFixed(3),d4:v=>"$"+v.toFixed(4),n2:v=>v.toFixed(2)};
 const FCOL={EKL:"#2F6FB5",BC:"#1E8E5A",TEX1:"#D98E2B",TEX2:"#8E5BC2",EKGL:"#C2413A",CAL:"#2AA5A0"};
-let D,ROWS=[],MONTHS=[],per="y2026",month=null,fac="All",buyer="All",risk="late",q="",limit=150,sortKey="late",sortDir=-1,ASOF=0;
+let D,ROWS=[],R27=[],M26=[],EFF={},MONTHS=[],per="y2026",month=null,fac="All",buyer="All",risk="late",q="",limit=150,sortKey="late",sortDir=-1,ASOF=0;
 const dnum=s=>+s.replace(/-/g,""),dstr=n=>{const s=String(n);return `${s.slice(6,8)}-${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+s.slice(4,6)-1]}-${s.slice(2,4)}`};
 const toDate=n=>new Date(+String(n).slice(0,4),+String(n).slice(4,6)-1,+String(n).slice(6,8));
 const daysBetween=(a,b)=>Math.round((toDate(b)-toDate(a))/864e5);
 
 fetch("data.json",{cache:"no-cache"}).then(r=>r.json()).then(d=>{D=d;ASOF=dnum(d.asOf);MONTHS=d.months;
   ROWS=d.rows.map(r=>({m:r[0],f:d.factories[r[1]],b:d.buyers[r[2]],it:d.items[r[3]],style:r[4],po:r[5],ord:r[6],cut:r[7],sew:r[8],exp:r[9],cm:r[10],fob:r[11],del:r[12],smv:r[13],min:r[14],tna:r[15],expd:r[16],rcv:r[17],job:r[18]}));
+  R27=ROWS.filter(r=>MONTHS[r.m].endsWith("27"));ROWS=ROWS.filter(r=>MONTHS[r.m].endsWith("26"));M26=MONTHS.map((m,i)=>i).filter(i=>MONTHS[i].endsWith("26"));
   ROWS.forEach(r=>{r.bal=Math.max(0,r.ord-r.exp);r.open=r.bal>Math.max(200,.03*r.ord);r.late=r.open&&r.del&&r.del<ASOF?daysBetween(r.del,ASOF):0;r.due=r.open&&r.del>=ASOF&&daysBetween(ASOF,r.del)<=14;r.cmr=r.fob?r.cm/r.fob*100:0;r.cmpc=r.ord?r.cm/r.ord:0;
-    r.sewp=r.ord?Math.min(100,r.sew/r.ord*100):0;r.cutp=r.ord?Math.min(100,r.cut/r.ord*100):0;r.expp=r.ord?Math.min(100,r.exp/r.ord*100):0;r.fobRisk=r.ord?r.fob*r.bal/r.ord:0});
+    r.sewp=r.ord?Math.min(100,r.sew/r.ord*100):0;r.cutp=r.ord?Math.min(100,r.cut/r.ord*100):0;r.expp=r.ord?Math.min(100,r.exp/r.ord*100):0;r.fobRisk=r.ord?r.fob*r.bal/r.ord:0;r.shipped=!r.open&&r.del&&r.del<ASOF;r.shipLate=r.shipped&&r.expd&&r.expd>r.del?daysBetween(r.del,r.expd):0});
   $("asOf").textContent="ERP snapshot · "+dstr(ASOF);
   setup();render(true);$("loading").hidden=true;$("app").hidden=false;
+  loadEff().then(()=>{facs();insights()}).catch(e=>console.warn("efficiency:",e.message));
 }).catch(e=>{$("loading").innerHTML=`<div class="card">Could not load data.json (${e.message}).</div>`});
 
+/* Sewing efficiency per factory and month from the monthly sewing report (Google Sheet "Feed" tab). */
+function loadEff(){return new Promise((res,rej)=>{const cb="__eff"+Date.now(),sc=document.createElement("script");
+  window[cb]=d=>{delete window[cb];sc.remove();try{
+    const rows=d.table.rows.map(r=>(r.c||[]).map(c=>c&&c.v!=null?String(c.v).replace(/^~/,""):""));
+    const nm=v=>parseFloat(String(v).replace(/[,$%\s]/g,""))||0,MO=["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+    let mon=null;for(let i=0;i<rows.length;i++){const a=String(rows[i][0]||"").trim();
+      const pm=a.match(/production\s*month\s*:?\s*([A-Za-z]{3})[A-Za-z]*[\s\-'.]*(\d{2,4})/i);
+      if(pm){const mi=MO.indexOf(pm[1].toLowerCase());mon=pm[1][0].toUpperCase()+pm[1].slice(1,3).toLowerCase()+"-"+String(pm[2]).slice(-2);if(mi<0)mon=null;continue}
+      if(!/^particulars$/i.test(a)||!mon)continue;
+      const top=rows[i],sub=rows[i+1]||[];let u="";const cols=[];
+      for(let c=1;c<Math.max(top.length,sub.length);c++){if(String(top[c]||"").trim())u=String(top[c]).trim();const h=String(sub[c]||"").trim();
+        if(!h||/^total$/i.test(h)||/grand|EKLB|EDFL/i.test(u))continue;cols.push([c,u])}
+      const find=re=>{for(let j=i+2;j<Math.min(rows.length,i+60);j++){const k=String(rows[j][0]||"");if(/^particulars$/i.test(k.trim()))break;if(re.test(k))return rows[j]}return null};
+      const av=find(/^available\s*min/i),ea=find(/^earn\s*min/i),te=find(/^target\s*efficiency/i);if(!av||!ea)continue;
+      EFF[mon]=EFF[mon]||{};cols.forEach(([c,u])=>{const o=EFF[mon][u]=EFF[mon][u]||{avail:0,earn:0,tav:0};const a=nm(av[c]);o.avail+=a;o.earn+=nm(ea[c]);
+        let t=te?nm(te[c]):0;if(t&&t<=3&&!/%/.test(String(te[c])))t*=100;o.tav+=a*t})}
+    res()}catch(e){rej(e)}};
+  sc.onerror=()=>rej(new Error("Feed not reachable"));
+  sc.src=`https://docs.google.com/spreadsheets/d/1Eajr_T9xzLP8n7hQN8tdPh_hH2j2QxWMEpe_8ICH33o/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=0&gid=777&t=${Date.now()}`;
+  document.head.appendChild(sc)})}
+function effFor(f){const ms=per==="month"?[MONTHS[month]]:M26.map(i=>MONTHS[i]);let a=0,e=0,t=0;
+  ms.forEach(m=>{const x=EFF[m];if(!x)return;Object.entries(x).forEach(([u,o])=>{if(f==="All"||u===f){a+=o.avail;e+=o.earn;t+=o.tav}})});
+  return a?{ach:e/a*100,tgt:t/a}:null}
 function setup(){
-  $("monthSel").innerHTML=MONTHS.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+  $("monthSel").innerHTML=M26.map(i=>`<option value="${i}">${MONTHS[i]}</option>`).join("");
   month=MONTHS.findIndex(m=>m==="Nov-26");if(month<0)month=MONTHS.length-1;$("monthSel").value=month;
   $("facSeg").innerHTML=["All",...D.factories].map(f=>`<button type="button" data-f="${f}" aria-pressed="${f===fac}">${f==="All"?"All":f}</button>`).join("");
   $("facSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{fac=b.dataset.f;render(true)});
@@ -262,12 +286,12 @@ function setup(){
   $("moreBtn").onclick=()=>{limit+=300;drawTable()};
   $("heatSel").onchange=drawHeat;
 }
-const inPer=r=>per==="all"||(per==="y2026"&&MONTHS[r.m].endsWith("26"))||(per==="y2027"&&MONTHS[r.m].endsWith("27"))||(per==="month"&&r.m===month);
+const inPer=r=>per==="y2026"||(per==="month"&&r.m===month);
 const base=()=>ROWS.filter(r=>inPer(r)&&(buyer==="All"||r.b===buyer));
 const cur=()=>base().filter(r=>fac==="All"||r.f===fac);
-function agg(rs){const o={lines:rs.length,ord:0,cut:0,sew:0,exp:0,fob:0,cm:0,min:0,bal:0,lateLines:0,latePcs:0,lateFob:0,dueLines:0,duePcs:0,notCut:0,tnaNot:0,openLines:0};
+function agg(rs){const o={lines:rs.length,ord:0,cut:0,sew:0,exp:0,fob:0,cm:0,min:0,bal:0,lateLines:0,latePcs:0,lateFob:0,dueLines:0,duePcs:0,notCut:0,tnaNot:0,openLines:0,shipLines:0,shipLate:0};
   rs.forEach(r=>{o.ord+=r.ord;o.cut+=Math.min(r.cut,r.ord);o.sew+=Math.min(r.sew,r.ord);o.exp+=Math.min(r.exp,r.ord);o.fob+=r.fob;o.cm+=r.cm;o.min+=r.min;if(r.open){o.openLines++;o.bal+=r.bal}
-    if(r.late){o.lateLines++;o.latePcs+=r.bal;o.lateFob+=r.fobRisk}if(r.due){o.dueLines++;o.duePcs+=r.bal}if(r.cut===0&&r.open)o.notCut++;if(!r.tna)o.tnaNot++});
+    if(r.late){o.lateLines++;o.latePcs+=r.bal;o.lateFob+=r.fobRisk}if(r.due){o.dueLines++;o.duePcs+=r.bal}if(r.shipped){o.shipLines++;if(r.shipLate)o.shipLate++}if(r.cut===0&&r.open)o.notCut++;if(!r.tna)o.tnaNot++});
   o.cutp=o.ord?o.cut/o.ord*100:0;o.sewp=o.ord?o.sew/o.ord*100:0;o.expp=o.ord?o.exp/o.ord*100:0;o.cmr=o.fob?o.cm/o.fob*100:0;o.fobpc=o.ord?o.fob/o.ord:0;o.cmpc=o.ord?o.cm/o.ord:0;
   o.cmmin=o.min?o.cm/o.min:0;o.smv=o.ord?o.min/o.ord:0;o.buyers=new Set(rs.map(r=>r.b)).size;return o}
 const stages=o=>[o.exp,Math.max(0,o.sew-o.exp),Math.max(0,o.cut-o.sew),Math.max(0,o.ord-o.cut)];
@@ -275,7 +299,7 @@ function countUp(el,to,f,dur=1100){if(reduce){el.textContent=f(to);return}const 
 function ring(el,frac,label,color){const r=42,sw=8,c=2*Math.PI*r;el.innerHTML=`<svg viewBox="0 0 ${2*r+2*sw} ${2*r+2*sw}"><circle class="trk" cx="${r+sw}" cy="${r+sw}" r="${r}" fill="none" stroke-width="${sw}"/><circle class="val" cx="${r+sw}" cy="${r+sw}" r="${r}" fill="none" stroke-width="${sw}" stroke-linecap="round" stroke="${color}" stroke-dasharray="${c}" stroke-dashoffset="${c}"/></svg><div class="lab"><b>0%</b><span>${label}</span></div>`;
   const v=el.querySelector(".val");requestAnimationFrame(()=>requestAnimationFrame(()=>v.style.strokeDashoffset=c*(1-Math.min(1,frac/100))));countUp(el.querySelector("b"),frac,x=>Math.round(x)+"%")}
 function replay(){const a=$("app");a.classList.remove("go");void a.offsetWidth;a.classList.add("go")}
-const label=()=>per==="y2026"?"2026":per==="y2027"?"2027 booked":per==="all"?"All months":MONTHS[month];
+const label=()=>per==="y2026"?"2026":MONTHS[month];
 
 function render(anim){
   document.querySelectorAll("#perSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.p===per));$("monthSel").hidden=per!=="month";
@@ -284,26 +308,26 @@ function render(anim){
   if(buyer!=="All"&&!bl.includes(buyer))buyer="All";
   $("buySel").innerHTML=`<option value="All">All buyers (${bl.length})</option>`+bl.map(b=>`<option${b===buyer?" selected":""}>${b}</option>`).join("");
   $("when").textContent=label()+(fac!=="All"?" · "+fac:"")+(buyer!=="All"?" · "+buyer:"");
-  hero();kpis();facs();drawMonth();drawBuyer();drawItem();drawScatter();drawHeat();drawTable();insights();if(anim)replay()}
+  hero();kpis();facs();drawMonth();drawBuyer();drawItem();drawHeat();drawTable();insights();draw27();if(anim)replay()}
 
 function hero(){const o=agg(cur());
-  $("spotK").textContent=`Confirmed orders · ${o.lines.toLocaleString()} PO lines · ${o.buyers} buyers`;
+  $("spotK").textContent=`Confirmed orders · ${o.lines.toLocaleString()} orders · ${o.buyers} buyers · ${label()}`;
   countUp($("bigQty"),o.ord,v=>fmt.int(v)+" ");$("bigQty").insertAdjacentHTML("beforeend","");
   setTimeout(()=>{$("bigQty").innerHTML=fmt.int(o.ord)+" <small>pcs</small>"},reduce?0:1150);
   $("bigVal").textContent=`${fmt.usdk(o.fob)} FOB · ${fmt.usdk(o.cm)} CM`;
   ring($("rCut"),o.cutp,"Cut","#F6C56B");ring($("rSew"),o.sewp,"Sewn","#8AB8E0");ring($("rExp"),o.expp,"Exported","#7CE0A8");
-  $("verdict").innerHTML=o.lateLines?`<b>${o.lateLines} PO lines past delivery</b> with ${fmt.k(o.latePcs)} pcs (≈ ${fmt.usdk(o.lateFob)} FOB) still to ship.${o.dueLines?` Another ${o.dueLines} lines (${fmt.k(o.duePcs)} pcs) fall due in the next 14 days.`:""}`:
-    `No PO line in this view is past its delivery date with a meaningful balance.${o.dueLines?` ${o.dueLines} lines (${fmt.k(o.duePcs)} pcs) fall due in the next 14 days.`:""}`}
+  $("verdict").innerHTML=o.lateLines?`<b>${o.lateLines} orders past their delivery date and not yet shipped</b>, ${fmt.k(o.latePcs)} pcs (≈ ${fmt.usdk(o.lateFob)} FOB). ${o.shipLines} orders whose date has passed are delivered.${o.dueLines?` Another ${o.dueLines} orders (${fmt.k(o.duePcs)} pcs) fall due in the next 14 days.`:""}`:
+    `No order in this view is past its delivery date with a meaningful balance.${o.dueLines?` ${o.dueLines} orders (${fmt.k(o.duePcs)} pcs) fall due in the next 14 days.`:""}`}
 function kpis(){const o=agg(cur());
   const K=[["FOB / pc",o.fobpc,fmt.d2,`Total ${fmt.usdk(o.fob)}`,"--accent2"],["CM / pc",o.cmpc,fmt.d3,`CM ratio ${fmt.pct(o.cmr)}`,"--good"],["CM / ordered min",o.cmmin,fmt.d4,`${fmt.k(o.min)} ordered min`,"--good"],["Avg SMV",o.smv,fmt.n2,"Weighted by order qty","--accent"],
-    ["Open balance",o.bal,fmt.k,`${o.openLines} open lines · pcs not exported`,"--accent"],["Past delivery",o.latePcs,fmt.k,`${o.lateLines} lines · ${fmt.usdk(o.lateFob)} FOB`,"--bad"],["Due ≤ 14 days",o.duePcs,fmt.k,`${o.dueLines} lines`,"--warn"],["Not cut yet",o.notCut,v=>Math.round(v)+" lines",`TNA not done: ${o.tnaNot}`,"--bad"]];
+    ["Open balance",o.bal,fmt.k,`${o.openLines} open orders · pcs not exported`,"--accent"],["Overdue, not shipped",o.latePcs,fmt.k,`${o.lateLines} orders · ${fmt.usdk(o.lateFob)} FOB`,"--bad"],["Due ≤ 14 days",o.duePcs,fmt.k,`${o.dueLines} orders · ${o.shipLines} delivered so far`,"--warn"],["Not cut yet",o.notCut,v=>Math.round(v)+" orders",`TNA not done: ${o.tnaNot}`,"--bad"]];
   $("kpis").innerHTML=K.map((k,i)=>`<div class="kpi anim" style="--i:${i+1};--c:var(${k[4]})"><div class="k">${k[0]}</div><div class="v" data-n="${i}">0</div><div class="s">${k[3]}</div></div>`).join("");
   K.forEach((k,i)=>countUp($("kpis").querySelector(`[data-n="${i}"]`),k[1],k[2]))}
 function facs(){const B=base();
   const list=["All",...D.factories].map(f=>({f,o:agg(f==="All"?B:B.filter(r=>r.f===f))})).filter(x=>x.o.lines);
   $("facs").innerHTML=list.map(({f,o},i)=>{const s=stages(o),t=o.ord||1,cols=["var(--s1)","var(--s2)","var(--s3)","var(--s4)"];
-    return `<button type="button" class="fc anim" style="--i:${i+2}" data-f="${f}" aria-pressed="${fac===f}"><div class="nm">${f==="All"?"Group":f}<span class="pill ${o.lateLines>20?"bad":o.lateLines?"warn":"good"}">${o.lateLines} late</span></div>
-    <div class="st"><b>${fmt.k(o.ord)}</b> pcs · <b>${fmt.usdk(o.fob)}</b><br>CM <b>${fmt.pct(o.cmr)}</b> · <b>${fmt.d4(o.cmmin)}</b>/min · SMV <b>${fmt.n2(o.smv)}</b><br>Sewn <b>${Math.round(o.sewp)}%</b> · Exported <b>${Math.round(o.expp)}%</b></div>
+    return `<button type="button" class="fc anim" style="--i:${i+2}" data-f="${f}" aria-pressed="${fac===f}"><div class="nm">${f==="All"?"Group":f}<span class="pill ${o.lateLines>20?"bad":o.lateLines?"warn":"good"}">${o.lateLines} overdue</span></div>
+    <div class="st"><b>${fmt.int(o.lines)}</b> orders · <b>${fmt.k(o.ord)}</b> pcs · <b>${fmt.usdk(o.fob)}</b><br>${(()=>{const e=effFor(f);return e?`Sewing eff <b>${fmt.pct(e.ach)}</b> <span class="${e.ach>=e.tgt?"up":"dn"}">vs ${fmt.pct(e.tgt)} target</span><br>`:`Sewing eff <b>${Object.keys(EFF).length?"–":"…"}</b><br>`})()}CM <b>${fmt.pct(o.cmr)}</b> · <b>${fmt.d4(o.cmmin)}</b>/min · SMV <b>${fmt.n2(o.smv)}</b><br>Sewn <b>${Math.round(o.sewp)}%</b> · Exported <b>${Math.round(o.expp)}%</b></div>
     <div class="pipe">${s.map((v,j)=>`<i style="width:${v/t*100}%;background:${cols[j]};--i:${j}" title="${["Exported","Sewn","Cut","Not cut"][j]}: ${fmt.int(v)}"></i>`).join("")}</div></button>`}).join("");
   $("facs").querySelectorAll(".fc").forEach(b=>b.onclick=()=>{fac=b.dataset.f;render(true)})}
 
@@ -313,19 +337,19 @@ function opts(extra){const ink=css("--muted"),grid=css("--line");return Object.a
   plugins:{legend:{labels:{color:ink,boxWidth:10,boxHeight:10,usePointStyle:true}},tooltip:{backgroundColor:css("--ink"),titleColor:css("--bg"),bodyColor:css("--bg"),padding:10}},
   scales:{x:{ticks:{color:ink},grid:{display:false},border:{color:grid}},y:{ticks:{color:ink},grid:{color:grid},border:{display:false}}}},extra||{})}
 function drawMonth(){
-  const rs=ROWS.filter(r=>(buyer==="All"||r.b===buyer)&&(fac==="All"||r.f===fac));const idx=MONTHS.map((m,i)=>i);
-  const A=idx.map(i=>agg(rs.filter(r=>r.m===i))),S=A.map(stages),ink=css("--muted"),o=opts(),hl=i=>per==="month"?i===month:inPer({m:i});
+  const rs=ROWS.filter(r=>(buyer==="All"||r.b===buyer)&&(fac==="All"||r.f===fac));const idx=M26;
+  const A=idx.map(i=>agg(rs.filter(r=>r.m===i))),S=A.map(stages),ink=css("--muted"),o=opts(),hl=i=>per==="month"?i===month:true;
   const ds=[["Exported",0,"--s1"],["Sewn",1,"--s2"],["Cut",2,"--s3"],["Not cut",3,"--s4"]].map(([l,j,c])=>({label:l,data:S.map(s=>s[j]),backgroundColor:idx.map(i=>css(c)+(hl(i)?"":"66")),stack:"p",borderRadius:2,yAxisID:"y",order:2}));
   ds.push({type:"line",label:"FOB $",data:A.map(a=>a.fob),borderColor:css("--accent"),backgroundColor:css("--accent"),tension:.35,pointRadius:4,yAxisID:"y1",order:1});
-  mk("cMonth",{type:"bar",data:{labels:MONTHS,datasets:ds},options:opts({onClick:(e,els)=>{if(els.length){month=els[0].index;per="month";$("monthSel").value=month;render(true)}},
-    plugins:{...o.plugins,legend:{display:false},tooltip:{...o.plugins.tooltip,callbacks:{label:c=>c.dataset.yAxisID==="y1"?`FOB: ${fmt.usdk(c.raw)}`:`${c.dataset.label}: ${fmt.int(c.raw)} pcs`,afterBody:it=>{const a=A[it[0].dataIndex];return `Order ${fmt.int(a.ord)} pcs · CM ${fmt.pct(a.cmr)} · ${a.lateLines} lines past delivery`}}}},
+  mk("cMonth",{type:"bar",data:{labels:idx.map(i=>MONTHS[i]),datasets:ds},options:opts({onClick:(e,els)=>{if(els.length){month=idx[els[0].index];per="month";$("monthSel").value=month;render(true)}},
+    plugins:{...o.plugins,legend:{display:false},tooltip:{...o.plugins.tooltip,callbacks:{label:c=>c.dataset.yAxisID==="y1"?`FOB: ${fmt.usdk(c.raw)}`:`${c.dataset.label}: ${fmt.int(c.raw)} pcs`,afterBody:it=>{const a=A[it[0].dataIndex];return `${a.lines} orders · ${fmt.int(a.ord)} pcs · CM ${fmt.pct(a.cmr)} · ${a.lateLines} overdue, not shipped`}}}},
     scales:{x:{...o.scales.x,stacked:true},y:{...o.scales.y,stacked:true,ticks:{color:ink,callback:v=>fmt.k(v)}},y1:{position:"right",grid:{display:false},ticks:{color:ink,callback:v=>fmt.usdk(v)},border:{display:false}}}})})}
 function drawBuyer(){const rs=cur(),m={};rs.forEach(r=>{(m[r.b]=m[r.b]||[]).push(r)});
   const L=Object.entries(m).map(([b,a])=>({b,o:agg(a)})).sort((x,y)=>y.o.fob-x.o.fob).slice(0,15),ink=css("--muted"),o=opts();
   mk("cBuyer",{type:"bar",data:{labels:L.map(x=>x.b),datasets:[{label:"FOB $",data:L.map(x=>x.o.fob),backgroundColor:L.map(x=>x.b===buyer?css("--accent"):css("--accent2")),borderRadius:5,xAxisID:"x"},
     {type:"line",label:"CM ratio %",data:L.map(x=>x.o.cmr),showLine:false,pointRadius:6,pointStyle:"rectRot",borderColor:css("--good"),backgroundColor:css("--good"),xAxisID:"x1"}]},
     options:opts({indexAxis:"y",onClick:(e,els)=>{if(els.length){const b=L[els[0].index].b;buyer=buyer===b?"All":b;render(true)}},
-      plugins:{...o.plugins,tooltip:{...o.plugins.tooltip,callbacks:{label:c=>c.dataset.xAxisID==="x1"?`CM ratio ${c.raw.toFixed(1)}%`:`FOB ${fmt.usdk(c.raw)}`,afterBody:it=>{const x=L[it[0].dataIndex].o;return `${fmt.int(x.ord)} pcs · ${x.lines} lines · sewn ${Math.round(x.sewp)}% · exp ${Math.round(x.expp)}%`}}}},
+      plugins:{...o.plugins,tooltip:{...o.plugins.tooltip,callbacks:{label:c=>c.dataset.xAxisID==="x1"?`CM ratio ${c.raw.toFixed(1)}%`:`FOB ${fmt.usdk(c.raw)}`,afterBody:it=>{const x=L[it[0].dataIndex].o;return `${fmt.int(x.ord)} pcs · ${x.lines} orders · sewn ${Math.round(x.sewp)}% · exp ${Math.round(x.expp)}%`}}}},
       scales:{x:{...o.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>fmt.usdk(v)}},x1:{position:"top",min:0,max:50,grid:{display:false},ticks:{color:css("--good"),callback:v=>v+"%"}},y:{...o.scales.y,grid:{display:false}}}})})}
 function drawItem(){const rs=cur(),m={};rs.forEach(r=>{(m[r.it]=m[r.it]||[]).push(r)});
   const L=Object.entries(m).map(([b,a])=>({b,o:agg(a)})).sort((x,y)=>y.o.ord-x.o.ord).slice(0,12),ink=css("--muted"),o=opts();
@@ -333,12 +357,8 @@ function drawItem(){const rs=cur(),m={};rs.forEach(r=>{(m[r.it]=m[r.it]||[]).pus
     {type:"line",label:"Avg SMV",data:L.map(x=>x.o.smv),showLine:false,pointRadius:6,borderColor:css("--accent"),backgroundColor:css("--accent"),xAxisID:"x1"}]},
     options:opts({indexAxis:"y",plugins:{...o.plugins,tooltip:{...o.plugins.tooltip,callbacks:{label:c=>c.dataset.xAxisID==="x1"?`SMV ${c.raw.toFixed(2)}`:`${fmt.int(c.raw)} pcs`,afterBody:it=>{const x=L[it[0].dataIndex].o;return `FOB/pc ${fmt.d2(x.fobpc)} · CM/pc ${fmt.d3(x.cmpc)} · CM ${fmt.pct(x.cmr)}`}}}},
       scales:{x:{...o.scales.x,grid:{color:css("--line")},ticks:{color:ink,callback:v=>fmt.k(v)}},x1:{position:"top",min:0,grid:{display:false},ticks:{color:css("--accent")}},y:{...o.scales.y,grid:{display:false}}}})})}
-function drawScatter(){const rs=cur().filter(r=>r.ord>0&&r.smv>0),mx=Math.max(1,...rs.map(r=>r.fob)),ink=css("--muted"),o=opts();
-  const ds=D.factories.filter(f=>rs.some(r=>r.f===f)).map(f=>({label:f,data:rs.filter(r=>r.f===f).map(r=>({x:r.smv,y:r.cmpc,r:2+Math.sqrt(r.fob/mx)*14,p:r})),backgroundColor:FCOL[f]+"88",borderColor:FCOL[f]}));
-  mk("cScatter",{type:"bubble",data:{datasets:ds},options:opts({plugins:{...o.plugins,tooltip:{...o.plugins.tooltip,callbacks:{label:c=>{const p=c.raw.p;return [`${p.f} · ${p.b} · ${p.style}`,`PO ${p.po} · ${p.it}`,`SMV ${p.smv} · CM/pc ${fmt.d3(p.cmpc)} · CM ${fmt.pct(p.cmr)}`,`${fmt.int(p.ord)} pcs · FOB ${fmt.usdk(p.fob)}`]}}}},
-    scales:{x:{...o.scales.x,type:"logarithmic",grid:{color:css("--line")},title:{display:true,text:"Sewing SMV (log scale)",color:ink},ticks:{color:ink,callback:v=>[2,3,5,7,10,15,20,30].includes(v)?v:""}},y:{...o.scales.y,type:"logarithmic",title:{display:true,text:"CM per pc $ (log scale)",color:ink},ticks:{color:ink,callback:v=>[.1,.2,.3,.5,1,2,5].includes(+v.toFixed(2))?"$"+v:""}}}})})}
 function heatColor(t){t=Math.max(0,Math.min(1,t));const a=[229,120,111],b=[242,196,107],c=[124,203,154];const m=t<.5?[a,b,t*2]:[b,c,(t-.5)*2];return `rgb(${m[0].map((x,i)=>Math.round(x+(m[1][i]-x)*m[2])).join(",")})`}
-function drawHeat(){const k=$("heatSel").value,rs=ROWS.filter(r=>buyer==="All"||r.b===buyer),idx=MONTHS.map((m,i)=>i).filter(i=>per==="y2026"?MONTHS[i].endsWith("26"):per==="y2027"?MONTHS[i].endsWith("27"):true);
+function drawHeat(){const k=$("heatSel").value,rs=ROWS.filter(r=>buyer==="All"||r.b===buyer),idx=M26;
   const F=fac==="All"?D.factories:[fac];const V=F.map(f=>idx.map(i=>{const a=rs.filter(r=>r.f===f&&r.m===i);return a.length?agg(a)[k]:null}));
   const flat=V.flat().filter(v=>v!=null).sort((a,b)=>a-b),lo=flat[Math.floor(flat.length*.05)]||0,hi=flat[Math.floor(flat.length*.95)]||1,good=k!=="smv";
   const f=v=>k==="ord"?fmt.k(v):k==="fob"?fmt.usdk(v).replace("$",""):k==="cmmin"?v.toFixed(3):k==="smv"?v.toFixed(1):Math.round(v)+"";
@@ -346,21 +366,26 @@ function drawHeat(){const k=$("heatSel").value,rs=ROWS.filter(r=>buyer==="All"||
   let j=0;$("heat").innerHTML=`<table><thead><tr><th>Factory</th>${idx.map(i=>`<th>${MONTHS[i]}</th>`).join("")}</tr></thead><tbody>${F.map((fc,a)=>`<tr><td class="rl">${fc}</td>${V[a].map((v,b)=>v==null?`<td class="na">–</td>`:
     `<td class="cell" data-f="${fc}" data-m="${idx[b]}" style="--j:${j++};background:${heatColor(good?(v-lo)/((hi-lo)||1):1-(v-lo)/((hi-lo)||1))}" title="${fc} · ${MONTHS[idx[b]]}: ${f(v)}">${f(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   $("heat").querySelectorAll("td.cell").forEach(td=>td.onclick=()=>{fac=td.dataset.f;month=+td.dataset.m;per="month";$("monthSel").value=month;render(true)})}
-const TC=[["f","Factory"],["b","Buyer"],["style","Style"],["po","PO"],["it","Item"],["del","Del. date"],["late","Days late"],["ord","Order"],["prog","Cut · Sew · Exp"],["bal","Balance pcs"],["fobRisk","FOB at risk"],["cmr","CM %"],["smv","SMV"],["tna","TNA"]];
+const TC=[["f","Factory"],["b","Buyer"],["style","Order No."],["po","PO"],["it","Item"],["del","Del. date"],["expd","Export date"],["late","Status"],["ord","Order qty"],["prog","Cut · Sew · Exp"],["bal","Balance pcs"],["fobRisk","FOB at risk"],["cmr","CM %"],["smv","SMV"],["tna","TNA"]];
 function drawTable(){
-  let rs=cur();if(risk==="late")rs=rs.filter(r=>r.late);else if(risk==="due")rs=rs.filter(r=>r.due);else if(risk==="open")rs=rs.filter(r=>r.open);
+  let rs=cur();if(risk==="late")rs=rs.filter(r=>r.late);else if(risk==="shipped")rs=rs.filter(r=>r.shipped);else if(risk==="due")rs=rs.filter(r=>r.due);else if(risk==="open")rs=rs.filter(r=>r.open);
   if(q)rs=rs.filter(r=>(r.po+" "+r.style+" "+r.b+" "+r.job+" "+r.it).toLowerCase().includes(q));
+  if(risk==="shipped"&&sortKey==="late"){sortKey="del"}
   const key=sortKey==="prog"?"sewp":sortKey;rs.sort((a,b)=>{const x=a[key],y=b[key];return typeof x==="string"?x.localeCompare(y)*sortDir:(x-y)*sortDir});
   const tot=rs.reduce((s,r)=>s+r.bal,0),fr=rs.reduce((s,r)=>s+r.fobRisk,0);
-  $("riskTitle").textContent={late:"PO watch list · past delivery",due:"PO watch list · due in the next 14 days",open:"Open PO lines",all:"All PO lines"}[risk];
-  $("riskSub").textContent=`${rs.length.toLocaleString()} lines · ${fmt.int(tot)} pcs not exported · ≈ ${fmt.usdk(fr)} FOB · click a column to sort`;
+  $("riskTitle").textContent={late:"Order watch list · overdue, not shipped",shipped:"Order watch list · delivered (date passed, exported)",due:"Order watch list · due in the next 14 days",open:"Open orders",all:"All orders"}[risk];
+  $("riskSub").textContent=risk==="shipped"?`${rs.length.toLocaleString()} orders · ${fmt.int(rs.reduce((s,r)=>s+r.exp,0))} pcs exported · ${rs.filter(r=>r.shipLate).length} exported after the Del. date · click a column to sort`:`${rs.length.toLocaleString()} orders · ${fmt.int(tot)} pcs not exported · ≈ ${fmt.usdk(fr)} FOB · click a column to sort`;
   const t=$("tbl");t.tHead.innerHTML="<tr>"+TC.map(c=>`<th ${c[0]===sortKey?`aria-sort="${sortDir>0?"ascending":"descending"}"`:""}><button type="button" data-k="${c[0]}">${c[1]}</button></th>`).join("")+"</tr>";
   t.tHead.querySelectorAll("button").forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(k===sortKey)sortDir*=-1;else{sortKey=k;sortDir=-1}drawTable()});
   t.tBodies[0].innerHTML=rs.slice(0,limit).map(r=>`<tr><td>${r.f}</td><td class="trunc" title="${r.b}">${r.b}</td><td class="trunc" title="${r.style}">${r.style}</td><td class="trunc" title="${r.po} · ${r.job}">${r.po}</td><td class="trunc" title="${r.it}">${r.it}</td>
-    <td class="mono">${r.del?dstr(r.del):"–"}</td><td class="mono ${r.late>30?"dn":""}">${r.late||(r.due?"due":"")}</td><td class="mono">${fmt.int(r.ord)}</td>
+    <td class="mono">${r.del?dstr(r.del):"–"}</td><td class="mono">${r.expd?dstr(r.expd):"–"}</td><td class="mono">${r.late?`<span class="${r.late>30?"dn":""}">${r.late} days late</span>`:r.shipped?(r.shipLate?`<span class="dn">shipped +${r.shipLate}d</span>`:`<span class="up">shipped on time</span>`):r.due?`due in ${daysBetween(ASOF,r.del)}d`:r.open?"open":"done"}</td><td class="mono">${fmt.int(r.ord)}</td>
     <td class="mono"><span class="mini"><i style="width:${r.expp}%;background:var(--s1)"></i><i style="width:${Math.max(0,r.sewp-r.expp)}%;background:var(--s2)"></i><i style="width:${Math.max(0,r.cutp-r.sewp)}%;background:var(--s3)"></i></span>${Math.round(r.cutp)}·${Math.round(r.sewp)}·${Math.round(r.expp)}</td>
     <td class="mono">${fmt.int(r.bal)}</td><td class="mono">${fmt.usdk(r.fobRisk)}</td><td class="mono ${r.cmr<15?"dn":""}">${r.cmr.toFixed(1)}</td><td class="mono">${r.smv}</td><td>${r.tna?"Done":'<span class="pill bad">Not done</span>'}</td></tr>`).join("");
-  $("cnt").textContent=`Showing ${Math.min(limit,rs.length).toLocaleString()} of ${rs.length.toLocaleString()}`;$("moreBtn").hidden=limit>=rs.length}
+  $("cnt").textContent=`Showing ${Math.min(limit,rs.length).toLocaleString()} of ${rs.length.toLocaleString()} orders`;$("moreBtn").hidden=limit>=rs.length}
+function draw27(){const t=$("t27"),ms=[...new Set(R27.map(r=>r.m))].sort((a,b)=>a-b);if(!R27.length){$("next").hidden=true;return}
+  const cell=(a)=>{let o=0,f=0;a.forEach(r=>{o+=r.ord;f+=r.fob});return a.length?`${a.length} · ${fmt.k(o)} pcs<br><span style="color:var(--muted)">${fmt.usdk(f)}</span>`:"–"};
+  t.tHead.innerHTML="<tr><th>Factory</th>"+ms.map(m=>`<th>${MONTHS[m]}</th>`).join("")+"<th>Total</th></tr>";
+  t.tBodies[0].innerHTML=[...D.factories,"All"].map(f=>{const a=R27.filter(r=>f==="All"||r.f===f);return `<tr class="${f==="All"?"unit":""}"><td>${f==="All"?"Group":f}</td>${ms.map(m=>`<td class="mono">${cell(a.filter(r=>r.m===m))}</td>`).join("")}<td class="mono"><b>${cell(a)}</b></td></tr>`}).join("")}
 function insights(){const rs=cur(),o=agg(rs);if(!rs.length){$("insights").innerHTML="";return}
   const grp=k=>{const m={};rs.forEach(r=>{(m[r[k]]=m[r[k]]||[]).push(r)});return Object.entries(m).map(([g,a])=>({g,o:agg(a)}))};
   const F=grp("f"),B=grp("b").filter(x=>x.o.fob>o.fob*.01);
@@ -371,15 +396,15 @@ function insights(){const rs=cur(),o=agg(rs);if(!rs.length){$("insights").innerH
   const lowLines=rs.filter(r=>r.cmr>0&&r.cmr<15).length,oldest=rs.filter(r=>r.late).sort((a,b)=>b.late-a.late)[0];
   const good=[F.length>1?`<li><b>Best CM per ordered minute: ${bestF.g}</b> at ${fmt.d4(bestF.o.cmmin)} (CM ratio ${fmt.pct(bestF.o.cmr)}).</li>`:"",
     bestB?`<li><b>Richest buyer: ${bestB.g}</b> at ${fmt.pct(bestB.o.cmr)} CM ratio on ${fmt.usdk(bestB.o.fob)} FOB.</li>`:"",
-    `<li><b>${Math.round(o.expp)}% exported, ${Math.round(o.sewp)}% sewn</b> of ${fmt.k(o.ord)} pcs in ${label()}.</li>`];
-  const bad=[o.lateLines?`<li><b>${o.lateLines} lines past delivery</b>, ${fmt.k(o.latePcs)} pcs and ≈ ${fmt.usdk(o.lateFob)} FOB; most in ${lateF.g} (${fmt.k(lateF.o.latePcs)} pcs).</li>`:"",
+    `<li><b>${Math.round(o.expp)}% exported, ${Math.round(o.sewp)}% sewn</b> of ${fmt.k(o.ord)} pcs (${fmt.int(o.lines)} orders) in ${label()}; ${o.shipLines} orders past their date are delivered.</li>`,(()=>{const e=effFor(fac);return e?`<li><b>Sewing efficiency ${fmt.pct(e.ach)}</b> against ${fmt.pct(e.tgt)} target for ${fac==="All"?"the group":fac} in ${label()}.</li>`:""})()];
+  const bad=[o.lateLines?`<li><b>${o.lateLines} orders overdue and not shipped</b>, ${fmt.k(o.latePcs)} pcs and ≈ ${fmt.usdk(o.lateFob)} FOB; most in ${lateF.g} (${fmt.k(lateF.o.latePcs)} pcs).</li>`:"",
     lateB.length?`<li><b>Buyers most exposed:</b> ${lateB.map(x=>`${x.g} ${fmt.k(x.o.latePcs)} pcs`).join(", ")}.</li>`:"",
-    lowB&&F.length?`<li><b>Thinnest margin: ${lowB.g}</b> at ${fmt.pct(lowB.o.cmr)} CM ratio; ${lowLines} PO lines are below 15%.</li>`:"",
+    lowB&&F.length?`<li><b>Thinnest margin: ${lowB.g}</b> at ${fmt.pct(lowB.o.cmr)} CM ratio; ${lowLines} orders are below 15%.</li>`:"",
     F.length>1?`<li><b>Lowest CM per minute: ${worstF.g}</b> at ${fmt.d4(worstF.o.cmmin)}.</li>`:""];
-  const act=[oldest?`<li><b>Oldest open line:</b> ${oldest.b} ${oldest.po} (${oldest.f}), ${oldest.late} days past ${dstr(oldest.del)}, ${fmt.int(oldest.bal)} pcs open. Confirm ship-out or cancellation.</li>`:"",
-    o.notCut?`<li><b>${o.notCut} open lines not cut yet.</b> Check fabric and PP status with planning before they fall due.</li>`:"",
+  const act=[oldest?`<li><b>Oldest overdue order:</b> ${oldest.b} · ${oldest.style} (${oldest.f}), ${oldest.late} days past ${dstr(oldest.del)}, ${fmt.int(oldest.bal)} pcs open. Confirm ship-out or cancellation.</li>`:"",
+    o.notCut?`<li><b>${o.notCut} open orders not cut yet.</b> Check fabric and PP status with planning before they fall due.</li>`:"",
     `<li><b>Concentration:</b> top 3 buyers (${top.map(x=>x.g).join(", ")}) are ${share.toFixed(0)}% of FOB in this view.</li>`,
-    o.tnaNot?`<li><b>${o.tnaNot} lines with TNA not done.</b> Follow up the TNA owner.</li>`:""];
+    o.tnaNot?`<li><b>${o.tnaNot} orders with TNA not done.</b> Follow up the TNA owner.</li>`:""];
   $("insights").innerHTML=`<div class="card anim" style="--i:7"><h2><span class="dot" style="background:var(--good)"></span>What's working</h2><ul>${good.join("")}</ul></div>
    <div class="card anim" style="--i:8"><h2><span class="dot" style="background:var(--bad)"></span>Where it's leaking</h2><ul>${bad.join("")}</ul></div>
    <div class="card anim" style="--i:9"><h2><span class="dot" style="background:var(--accent)"></span>Actions</h2><ul>${act.join("")}</ul></div>`}
